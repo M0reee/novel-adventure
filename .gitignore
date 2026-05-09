@@ -1,0 +1,35 @@
+# 世界库（含小说原文切块、私有设定、玩家存档），不应提交公共仓库
+worlds/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.eggs/
+build/
+dist/
+
+# 操作系统/编辑器噪音
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 测试与覆盖率
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# 日志/数据文件
+*.log
+*.sqlite
+*.sqlite-journal
