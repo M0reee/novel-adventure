@@ -16,6 +16,7 @@ from common import (
     write_jsonl,
     world_dir,
 )
+from rpg_profile import apply_rpg_profile_to_state, build_rpg_profile, load_rpg_profile
 
 
 ENTITY_LIMITS = {
@@ -357,15 +358,18 @@ def merge(world: str) -> None:
     write_jsonl(wdir / "curated_facts.jsonl", curated_rows(outputs))
     write_json(wdir / "quality_report.json", quality_report(facts, grouped, outputs))
 
+    profile = build_rpg_profile(world)
+    manifest["rpg_profile"] = "rpg_profile.json"
     patches_path = wdir / "canon_patches.jsonl"
     if not patches_path.exists():
         write_jsonl(patches_path, [])
     player_state_path = wdir / "player_state.json"
     if not player_state_path.exists():
-        write_json(player_state_path, default_player_state(world))
+        write_json(player_state_path, apply_rpg_profile_to_state(default_player_state(world), profile, force_starter=True))
     else:
         state = read_json(player_state_path, {})
         state = migrate_player_state(state, world)
+        state = apply_rpg_profile_to_state(state, load_rpg_profile(world))
         if "action_log" in state:
             state["action_log"] = state["action_log"][-30:]
         write_json(player_state_path, state)
@@ -381,6 +385,7 @@ def merge(world: str) -> None:
         "timeline.json",
         "game_rules.json",
         "adventure_hooks.json",
+        "rpg_profile.json",
         "curated_facts.jsonl",
         "quality_report.json",
     ]

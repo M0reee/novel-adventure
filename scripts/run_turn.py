@@ -7,6 +7,7 @@ from typing import Any
 from common import default_player_state, migrate_player_state, read_json, write_json, world_dir
 from game_math import computed_stats
 from retrieve import retrieve
+from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
 
 
 HIGH_RISK_WORDS = ("硬闯", "强闯", "击杀", "挑战", "突破", "偷袭", "抢夺", "潜入", "威胁", "追杀")
@@ -115,6 +116,8 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
     wdir = world_dir(world)
     state_path = wdir / "player_state.json"
     state = migrate_player_state(read_json(state_path, default_player_state(world)), world)
+    rpg_profile = load_rpg_profile(world)
+    state = apply_rpg_profile_to_state(state, rpg_profile)
     meta = state.setdefault("meta", {})
     player = state.setdefault("player", {})
     query = " ".join(
@@ -169,10 +172,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
         *[f"- {line}" for line in state_changes],
         "",
         "## 人物属性",
-        f"- HP：{int(stats.get('hp', 0))}/{int(stats.get('max_hp', 0))}",
-        f"- MP：{int(stats.get('mp', 0))}/{int(stats.get('max_mp', 0))}",
-        f"- 攻击/防御/速度：{int(stats.get('attack', 0))}/{int(stats.get('defense', 0))}/{int(stats.get('speed', 0))}",
-        f"- 命中/闪避/暴击：{stats.get('hit_rate', 0):.0%}/{stats.get('dodge_rate', 0):.0%}/{stats.get('crit_rate', 0):.0%}",
+        *format_stat_block(stats, rpg_profile),
         "",
         "## 世界动态",
         *(canon_lines or ["- 暂未检索到强相关 canon；本回合只做低影响推进。"]),

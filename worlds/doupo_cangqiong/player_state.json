@@ -35,42 +35,87 @@
     "resources": {},
     "inventory": [],
     "equipment": {
-      "weapon": {
-        "item_id": "worn_training_staff",
-        "name": "旧练习木棍",
-        "slot": "weapon",
+      "primary": {
+        "item_id": "starter_primary",
+        "name": "入门武器",
+        "slot": "武器",
         "stats": {
           "attack": 2
         },
-        "description": "普通练习武器，只提供少量攻击力。"
+        "description": "符合当前世界观的基础随身器物，只提供少量攻击加成。"
       },
-      "armor": {
-        "item_id": "plain_cloth",
-        "name": "粗布衣",
-        "slot": "armor",
+      "defense": {
+        "item_id": "starter_defense",
+        "name": "粗制护具",
+        "slot": "护具",
         "stats": {
           "defense": 1
         },
-        "description": "普通衣物，防护有限。"
+        "description": "基础防护型随身器物，防护有限。"
       },
-      "accessory": null
+      "special": null
     },
     "skills": [
       {
-        "skill_id": "guarded_strike",
-        "name": "稳健一击",
+        "skill_id": "starter_attack",
+        "name": "入门斗技",
         "type": "attack",
         "mp_cost": 0,
+        "resource_cost_label": "斗气",
         "cooldown": 0,
         "power": 1.0,
         "accuracy_modifier": 0.0,
         "crit_modifier": 0.0,
         "effects": [],
-        "description": "基础攻击动作，伤害稳定，没有额外消耗。"
+        "description": "最基础的斗技运用，伤害稳定，没有额外消耗。"
       }
     ],
     "active_effects": [],
-    "status_effects": []
+    "status_effects": [],
+    "stat_labels": {
+      "level": "实力阶位",
+      "exp": "历练",
+      "exp_to_next": "下阶段历练",
+      "hp": "生命",
+      "max_hp": "生命上限",
+      "mp": "斗气",
+      "max_mp": "斗气上限",
+      "attack": "攻击",
+      "defense": "防御",
+      "speed": "速度",
+      "hit_rate": "命中",
+      "dodge_rate": "闪避",
+      "crit_rate": "暴击",
+      "crit_damage": "暴伤",
+      "damage_bonus": "增伤",
+      "damage_reduction": "减伤",
+      "coins": "金币",
+      "equipment": "随身器物",
+      "skills": "斗技",
+      "active_effects": "状态效果",
+      "inventory": "行囊"
+    },
+    "rpg_systems": {
+      "resource_name": "斗气",
+      "currency_name": "金币",
+      "equipment_name": "随身器物",
+      "skill_name": "斗技",
+      "effect_name": "状态效果",
+      "equipment_slots": [
+        "武器",
+        "护具",
+        "纳戒",
+        "异火",
+        "丹药"
+      ],
+      "special_system_id": "douqi_gear",
+      "canon_first_completion": true,
+      "allow_ai_gap_filling": true,
+      "gap_filling_rule": "先用原文蒸馏到的硬设定；缺失数值只允许补成低影响、可解释、可被 canon_patches 覆盖的游戏参数。"
+    },
+    "currencies_display": {
+      "coins": "金币"
+    }
   },
   "background": {
     "origin": "乌坦城无名少年",
@@ -87,5 +132,12 @@
   "relationships": [],
   "active_quests": [],
   "world_events": [],
-  "action_log": []
+  "action_log": [],
+  "rpg_profile": {
+    "file": "rpg_profile.json",
+    "version": 1,
+    "resource_name": "斗气",
+    "equipment_name": "随身器物",
+    "skill_name": "斗技"
+  }
 }

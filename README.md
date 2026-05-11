@@ -79,17 +79,20 @@ python scripts/list_worlds.py
 python scripts/start_game.py
 ```
 
-`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json`，不需要手写。
+`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json` 和 `rpg_profile.json`，不需要手写。
 
 ## RPG 数值核心
 
-角色状态现在包含 `stats`、`currencies`、`inventory`、`equipment`、`skills`、`active_effects`：
+角色状态现在包含 `stats`、`currencies`、`inventory`、`equipment`、`skills`、`active_effects`。内部计算字段保持稳定，但玩家看到的名称由 `rpg_profile.json` 映射到世界观：
 
-- `HP/MP`、攻击、防御、速度、命中、闪避、暴击、暴击伤害、伤害加深、伤害减免都会参与计算。
+- 通用内部字段是 `hp/mp/attack/defense/speed/hit_rate/dodge_rate/crit_rate/crit_damage/damage_bonus/damage_reduction`。
+- 展示层会按小说蒸馏结果改名，例如 `mp` 可显示为斗气、魂力、灵力、内力、能源或理智。
+- 装备系统也会按世界观改名，例如普通装备、法宝、魂骨、机甲模块、封印物。
 - 装备的 `stats` 会进入最终属性。
 - Buff/Debuff 放在 `active_effects`，通过 `modifiers` 修改属性，并按 `duration_turns` 递减。
-- 技能包含 `mp_cost`、`power`、命中/暴击修正和效果。
-- 战斗用 `scripts/combat.py` 结算，奖励包含经验、货币和物品掉落。
+- 技能包含 `mp_cost`、`power`、命中/暴击修正和效果；`mp_cost` 的展示名称由世界资源决定。
+- 战斗用 `scripts/combat.py` 结算，奖励包含历练/经验、世界货币和物品掉落。
+- 缺失数值可以由系统补成低影响可玩参数，但必须写入结构化文件，并且可被 `canon_patches.jsonl` 覆盖。
 
 公式示例：
 
@@ -104,7 +107,8 @@ python scripts/start_game.py
 
 ```bash
 python scripts/game_math.py --world doupo_cangqiong
-python scripts/combat.py --world doupo_cangqiong --enemy training_dummy --skill guarded_strike --dry-run
+python scripts/combat.py --world doupo_cangqiong --enemy training_dummy --skill starter_attack --dry-run
+python scripts/rpg_profile.py --world doupo_cangqiong
 ```
 
 ## 安装为 Skill
@@ -160,6 +164,7 @@ novel-adventure/
 ```text
 chunks.jsonl            # 切块文本
 world_profile.json      # 自动生成的小说题材/profile
+rpg_profile.json        # 世界观 RPG 术语、资源、装备槽、技能名和战斗公式映射
 opening.json            # 开场身份、场景、动机和开局选项
 facts.jsonl             # 抽取出的设定事实
 world_bible.json        # 世界观

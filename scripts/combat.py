@@ -9,6 +9,7 @@ from typing import Any
 
 from common import migrate_player_state, read_json, write_json, world_dir
 from game_math import computed_stats, damage_roll, skill_by_id, tick_effects
+from rpg_profile import apply_rpg_profile_to_state, load_rpg_profile
 
 
 ENEMY_TEMPLATES: dict[str, dict[str, Any]] = {
@@ -65,17 +66,21 @@ def enemy_stats(enemy: dict[str, Any]) -> dict[str, float]:
     return {key: float(value) for key, value in enemy.get("stats", {}).items()}
 
 
-def apply_rewards(state: dict[str, Any], rewards: dict[str, Any], rng: random.Random) -> list[str]:
+def apply_rewards(state: dict[str, Any], rewards: dict[str, Any], rng: random.Random, rpg_profile: dict[str, Any]) -> list[str]:
     player = state.setdefault("player", {})
     stats = player.setdefault("stats", {})
     currencies = player.setdefault("currencies", {"coins": 0})
     inventory = player.setdefault("inventory", [])
     messages: list[str] = []
+    terms = rpg_profile.get("terminology", {})
+    exp_label = terms.get("exp", "经验")
+    level_label = terms.get("level", "等级")
+    currency_label = rpg_profile.get("systems", {}).get("currency_name", "货币")
 
     exp = int(rewards.get("exp", 0))
     if exp:
         stats["exp"] = int(stats.get("exp", 0)) + exp
-        messages.append(f"获得经验 {exp}")
+        messages.append(f"获得{exp_label} {exp}")
         while int(stats.get("exp", 0)) >= int(stats.get("exp_to_next", 100)):
             stats["exp"] = int(stats["exp"]) - int(stats.get("exp_to_next", 100))
             stats["level"] = int(stats.get("level", 1)) + 1
@@ -86,7 +91,7 @@ def apply_rewards(state: dict[str, Any], rewards: dict[str, Any], rng: random.Ra
             stats["defense"] = int(stats.get("defense", 5)) + 1
             stats["hp"] = stats["max_hp"]
             stats["mp"] = stats["max_mp"]
-            messages.append(f"等级提升到 {stats['level']}")
+            messages.append(f"{level_label}提升到 {stats['level']}")
 
     coins_range = rewards.get("coins", [0, 0])
     if isinstance(coins_range, list) and len(coins_range) == 2:
@@ -95,7 +100,7 @@ def apply_rewards(state: dict[str, Any], rewards: dict[str, Any], rng: random.Ra
         coins = int(coins_range or 0)
     if coins:
         currencies["coins"] = int(currencies.get("coins", 0)) + coins
-        messages.append(f"获得货币 {coins}")
+        messages.append(f"获得{currency_label} {coins}")
 
     for item in rewards.get("items", []):
         if rng.random() <= float(item.get("drop_rate", 1.0)):
@@ -106,14 +111,17 @@ def apply_rewards(state: dict[str, Any], rewards: dict[str, Any], rng: random.Ra
 
 def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id: str | None, seed: int | None = None) -> dict[str, Any]:
     state = migrate_player_state(state, state.get("meta", {}).get("world", "unknown"))
+    rpg_profile = load_rpg_profile(state.get("meta", {}).get("world", "unknown"))
+    state = apply_rpg_profile_to_state(state, rpg_profile)
     rng = random.Random(seed)
     player = state["player"]
     skill = skill_by_id(player, skill_id)
     p_stats = computed_stats(state)
     e_stats = enemy_stats(enemy)
+    resource_label = rpg_profile.get("systems", {}).get("resource_name", "能量")
 
     if p_stats.get("mp", 0) < float(skill.get("mp_cost", 0)):
-        return {"status": "blocked", "messages": [f"法力不足，无法使用 {skill.get('name')}。"], "state": state}
+        return {"status": "blocked", "messages": [f"{resource_label}不足，无法使用 {skill.get('name')}。"], "state": state}
     player["stats"]["mp"] = max(0, float(player["stats"].get("mp", 0)) - float(skill.get("mp_cost", 0)))
 
     player_attack = damage_roll(p_stats, e_stats, skill, rng)
@@ -126,7 +134,7 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
     rewards: list[str] = []
     if int(enemy["stats"].get("hp", 0)) <= 0:
         messages.append(f"{enemy.get('name')} 被击败。")
-        rewards = apply_rewards(state, enemy.get("rewards", {}), rng)
+        rewards = apply_rewards(state, enemy.get("rewards", {}), rng, rpg_profile)
     elif float(e_stats.get("attack", 0)) > 0:
         enemy_attack = damage_roll(e_stats, computed_stats(state), {"name": "反击", "power": 1.0}, rng)
         player["stats"]["hp"] = max(0, int(player["stats"].get("hp", 0)) - int(enemy_attack["damage"]))

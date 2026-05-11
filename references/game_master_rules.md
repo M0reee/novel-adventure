@@ -24,7 +24,8 @@ Rules:
 - Convert setting into gameplay: actions, requirements, risks, costs, rewards, consequences.
 - Keep `player_state.json` as the source of truth for current state.
 - Keep `action_log` to the latest 30 entries.
-- Numeric state is not free-form narration. HP, MP, attack, defense, speed, hit, dodge, crit, EXP, coins, inventory, equipment, skills, and Buff/Debuff changes must be represented in `player_state.json`.
+- Numeric state is not free-form narration. HP, resource, attack, defense, speed, hit, dodge, crit, EXP, currency, inventory, equipment, skills, and Buff/Debuff changes must be represented in `player_state.json`.
+- World-facing RPG terms come from `rpg_profile.json`. Use "斗气", "魂力", "灵力", "内力", "能源", "魂骨", "法宝", or other inferred names when the profile says so; do not hard-code MP, mana, coins, or generic equipment in narration.
 - Equipment and active effects must affect computed stats through `scripts/game_math.py`.
 - Combat and combat rewards should be settled with `scripts/combat.py` or equivalent deterministic formulas before narration.
 - If a skill, item, or Buff is introduced, give it concrete fields: id, name, stat modifiers or effects, duration/cost, and how it participates in calculations.

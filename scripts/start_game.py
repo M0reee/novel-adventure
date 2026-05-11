@@ -6,6 +6,7 @@ import argparse
 from common import default_player_state, migrate_player_state, read_json, write_json, world_dir
 from list_worlds import discover_worlds, format_worlds
 from opening import ensure_opening, format_opening
+from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
 
 
 def choose_world() -> str:
@@ -27,15 +28,18 @@ def choose_world() -> str:
 def initialize_state(world: str, reset: bool = False) -> dict:
     wdir = world_dir(world)
     opening = ensure_opening(world)
+    rpg_profile = load_rpg_profile(world)
     state_path = wdir / "player_state.json"
     if reset or not state_path.exists():
         state = default_player_state(world)
+        state = apply_rpg_profile_to_state(state, rpg_profile, force_starter=True)
         state["background"] = opening.get("player_background", state.get("background", {}))
         state["meta"]["current_location"] = opening.get("starting_location", state["meta"].get("current_location", "未确定起点"))
         state["meta"]["current_time"] = opening.get("starting_time", state["meta"].get("current_time", "第一日 清晨"))
         write_json(state_path, state)
     else:
         state = migrate_player_state(read_json(state_path, {}), world)
+        state = apply_rpg_profile_to_state(state, rpg_profile)
         if not state.get("background"):
             state["background"] = opening.get("player_background", {})
         write_json(state_path, state)
@@ -56,7 +60,8 @@ def main() -> None:
     player = state.get("player", {})
     print(f"- 身份：{player.get('identity')}")
     print(f"- 境界/等级：{player.get('realm_or_level')}")
-    print(f"- 生命/法力：{player.get('stats', {}).get('hp')}/{player.get('stats', {}).get('max_hp')} HP, {player.get('stats', {}).get('mp')}/{player.get('stats', {}).get('max_mp')} MP")
+    for line in format_stat_block(player.get("stats", {}), load_rpg_profile(world)):
+        print(line)
     print("")
     print("输入下一步行动，例如：")
     print(f"python scripts/run_turn.py --world {world} --input \"观察周围环境\"")

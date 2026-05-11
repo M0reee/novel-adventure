@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "world": "doupo_cangqiong",
+  "genre": "xuanhuan",
+  "design": "内部计算字段保持通用；面向玩家的名称、装备槽、技能类型和货币由本文件映射到世界观。",
+  "terminology": {
+    "level": "实力阶位",
+    "exp": "历练",
+    "exp_to_next": "下阶段历练",
+    "hp": "生命",
+    "max_hp": "生命上限",
+    "mp": "斗气",
+    "max_mp": "斗气上限",
+    "attack": "攻击",
+    "defense": "防御",
+    "speed": "速度",
+    "hit_rate": "命中",
+    "dodge_rate": "闪避",
+    "crit_rate": "暴击",
+    "crit_damage": "暴伤",
+    "damage_bonus": "增伤",
+    "damage_reduction": "减伤",
+    "coins": "金币",
+    "equipment": "随身器物",
+    "skills": "斗技",
+    "active_effects": "状态效果",
+    "inventory": "行囊"
+  },
+  "systems": {
+    "resource_name": "斗气",
+    "currency_name": "金币",
+    "equipment_name": "随身器物",
+    "skill_name": "斗技",
+    "effect_name": "状态效果",
+    "equipment_slots": [
+      "武器",
+      "护具",
+      "纳戒",
+      "异火",
+      "丹药"
+    ],
+    "special_system_id": "douqi_gear",
+    "canon_first_completion": true,
+    "allow_ai_gap_filling": true,
+    "gap_filling_rule": "先用原文蒸馏到的硬设定；缺失数值只允许补成低影响、可解释、可被 canon_patches 覆盖的游戏参数。"
+  },
+  "formulas": {
+    "hit_chance": "clamp(命中 + 技能命中修正 - 目标闪避, 5%, 98%)",
+    "damage": "max(1, 攻击 * 技能倍率 - 目标防御) * 暴击倍率 * (1 + 增伤) * (1 - 目标减伤)",
+    "resource_cost": "技能先检查并扣除斗气；不足则行动失败。",
+    "rewards": "击败敌人可获得历练、金币和掉落物，具体数值必须写入 player_state.json。"
+  },
+  "starter_kit": {
+    "equipment": {
+      "primary": {
+        "item_id": "starter_primary",
+        "name": "入门武器",
+        "slot": "武器",
+        "stats": {
+          "attack": 2
+        },
+        "description": "符合当前世界观的基础随身器物，只提供少量攻击加成。"
+      },
+      "defense": {
+        "item_id": "starter_defense",
+        "name": "粗制护具",
+        "slot": "护具",
+        "stats": {
+          "defense": 1
+        },
+        "description": "基础防护型随身器物，防护有限。"
+      },
+      "special": null
+    },
+    "skills": [
+      {
+        "skill_id": "starter_attack",
+        "name": "入门斗技",
+        "type": "attack",
+        "mp_cost": 0,
+        "resource_cost_label": "斗气",
+        "cooldown": 0,
+        "power": 1.0,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.0,
+        "effects": [],
+        "description": "最基础的斗技运用，伤害稳定，没有额外消耗。"
+      }
+    ]
+  },
+  "derived_from": {
+    "method": "keyword_profile_and_canon_files",
+    "resource_candidates": [
+      "斗气",
+      "魂力",
+      "灵力",
+      "法力",
+      "魔力",
+      "真气",
+      "查克拉",
+      "灵压",
+      "气血",
+      "精神力",
+      "能源"
+    ],
+    "completion_policy": "canon first, then conservative playable defaults"
+  }
+}
