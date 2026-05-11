@@ -1,0 +1,177 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Locations define entry conditions, risk, local resources, and default actions.",
+  "locations": [
+    {
+      "name": "乌坦城",
+      "summary": "加玛帝国东北部城市，萧家早期根基所在；适合低阶玩家打听情报、购买基础资源、接触家族与拍卖场事件。",
+      "risk_level": "low",
+      "entry_conditions": [
+        "知道地点",
+        "未被当地势力驱逐"
+      ],
+      "available_actions": [
+        "打听情报",
+        "交易",
+        "寻找 NPC"
+      ],
+      "resources": [
+        "情报",
+        "低阶资源"
+      ],
+      "failure_consequences": [
+        "消耗时间"
+      ]
+    },
+    {
+      "name": "萧家",
+      "summary": "乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务。",
+      "risk_level": "low",
+      "entry_conditions": [
+        "知道地点",
+        "未被当地势力驱逐"
+      ],
+      "available_actions": [
+        "打听情报",
+        "交易",
+        "寻找 NPC"
+      ],
+      "resources": [
+        "情报",
+        "低阶资源"
+      ],
+      "failure_consequences": [
+        "消耗时间"
+      ]
+    },
+    {
+      "name": "魔兽山脉",
+      "summary": "乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线。",
+      "risk_level": "high",
+      "entry_conditions": [
+        "知道路线",
+        "具备最低自保能力"
+      ],
+      "available_actions": [
+        "探索",
+        "采集资源",
+        "遭遇敌人",
+        "撤退"
+      ],
+      "resources": [
+        "药材",
+        "魔核",
+        "机缘",
+        "危险情报"
+      ],
+      "failure_consequences": [
+        "受伤",
+        "迷路",
+        "遭遇强敌",
+        "资源损耗"
+      ]
+    },
+    {
+      "name": "云岚宗",
+      "summary": "加玛帝国强大宗门，和退婚、三年之约等主线冲突有关；贸然挑衅会引来宗门级后果。",
+      "risk_level": "medium",
+      "entry_conditions": [
+        "知道路线",
+        "具备最低自保能力"
+      ],
+      "available_actions": [
+        "探索",
+        "采集资源",
+        "遭遇敌人",
+        "撤退"
+      ],
+      "resources": [
+        "药材",
+        "魔核",
+        "机缘",
+        "危险情报"
+      ],
+      "failure_consequences": [
+        "受伤",
+        "迷路",
+        "遭遇强敌",
+        "资源损耗"
+      ]
+    },
+    {
+      "name": "迦南学院",
+      "summary": "大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口。",
+      "risk_level": "low",
+      "entry_conditions": [
+        "知道地点",
+        "未被当地势力驱逐"
+      ],
+      "available_actions": [
+        "打听情报",
+        "交易",
+        "寻找 NPC"
+      ],
+      "resources": [
+        "情报",
+        "低阶资源"
+      ],
+      "failure_consequences": [
+        "消耗时间"
+      ]
+    },
+    {
+      "name": "黑角域",
+      "summary": "秩序混乱、强者和交易并存的区域；适合高风险交易、争夺功法斗技和卷入势力冲突。",
+      "risk_level": "high",
+      "entry_conditions": [
+        "知道路线",
+        "具备最低自保能力"
+      ],
+      "available_actions": [
+        "探索",
+        "采集资源",
+        "遭遇敌人",
+        "撤退"
+      ],
+      "resources": [
+        "药材",
+        "魔核",
+        "机缘",
+        "危险情报"
+      ],
+      "failure_consequences": [
+        "受伤",
+        "迷路",
+        "遭遇强敌",
+        "资源损耗"
+      ]
+    },
+    {
+      "name": "中州",
+      "summary": "斗气大陆强者和顶级势力集中的核心舞台；玩家低阶时只能通过传闻和远期目标接触。",
+      "risk_level": "high",
+      "entry_conditions": [
+        "知道路线",
+        "具备最低自保能力"
+      ],
+      "available_actions": [
+        "探索",
+        "采集资源",
+        "遭遇敌人",
+        "撤退"
+      ],
+      "resources": [
+        "药材",
+        "魔核",
+        "机缘",
+        "危险情报"
+      ],
+      "failure_consequences": [
+        "受伤",
+        "迷路",
+        "遭遇强敌",
+        "资源损耗"
+      ]
+    }
+  ]
+}

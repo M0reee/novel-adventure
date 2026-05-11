@@ -22,6 +22,9 @@ FULL_REQUIRED_FILES = [
     "rpg_profile.json",
     "item_market.json",
     "quest_templates.json",
+    "location_runtime.json",
+    "relationship_rules.json",
+    "encounter_state.json",
     "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
@@ -38,6 +41,9 @@ PRESET_REQUIRED_FILES = [
     "rpg_profile.json",
     "item_market.json",
     "quest_templates.json",
+    "location_runtime.json",
+    "relationship_rules.json",
+    "encounter_state.json",
     "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
@@ -71,6 +77,9 @@ def qa(world: str) -> None:
     rpg_profile = read_json(wdir / "rpg_profile.json", {})
     market = read_json(wdir / "item_market.json", {})
     quests = read_json(wdir / "quest_templates.json", {})
+    location_runtime = read_json(wdir / "location_runtime.json", {})
+    relationship_rules = read_json(wdir / "relationship_rules.json", {})
+    encounter_state = read_json(wdir / "encounter_state.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
     index_rows = count_index_rows(wdir / "retrieval.sqlite")
     is_preset = bool(manifest.get("preset_world"))
@@ -94,6 +103,9 @@ def qa(world: str) -> None:
         ("worldview_labels", bool(player_state.get("player", {}).get("stat_labels", {}).get("mp")), player_state.get("player", {}).get("stat_labels", {}).get("mp", "missing")),
         ("item_market", len(market.get("items", [])) >= 3, str(len(market.get("items", [])))),
         ("quest_templates", len(quests.get("quests", [])) >= 1, str(len(quests.get("quests", [])))),
+        ("location_runtime", len(location_runtime.get("locations", [])) >= 3, str(len(location_runtime.get("locations", [])))),
+        ("relationship_rules", len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])) >= 3, str(len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])))),
+        ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
         ("opening", bool(read_json(wdir / "opening.json", {})), "present" if read_json(wdir / "opening.json", {}) else "missing"),
     ]
 

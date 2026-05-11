@@ -1,0 +1,6 @@
+{
+  "world": "doupo_cangqiong",
+  "active": null,
+  "history": [],
+  "policy": "Active enemies persist between turns until defeated, escaped, or cleared."
+}

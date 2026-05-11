@@ -79,7 +79,7 @@ python scripts/list_worlds.py
 python scripts/start_game.py
 ```
 
-`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json` 和 `quest_templates.json`，不需要手写。
+`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json` 和 `encounter_state.json`，不需要手写。
 
 ## RPG 数值核心
 
@@ -111,16 +111,22 @@ python scripts/combat.py --world doupo_cangqiong --enemy training_dummy --skill 
 python scripts/rpg_profile.py --world doupo_cangqiong
 python scripts/economy.py --world doupo_cangqiong
 python scripts/quest_runtime.py --world doupo_cangqiong
+python scripts/location_runtime.py --world doupo_cangqiong
+python scripts/relationship_runtime.py --world doupo_cangqiong
+python scripts/encounter_runtime.py --world doupo_cangqiong
 ```
 
 ## 行动结算
 
-`scripts/action_resolver.py` 会把自然语言行动分成交易、修炼、战斗、任务、情报和高风险行动，并调用对应规则：
+`scripts/action_resolver.py` 会把自然语言行动分成交易、修炼、战斗、任务、地点、社交、物品、情报和高风险行动，并调用对应规则：
 
 - 交易读取 `item_market.json`，会判断价格、货币、是否买得起、替代获取路径。
 - 修炼会检查突破资源、护法和安全地点；不能一句话直接突破。
-- 战斗调用 `combat.py`，伤害、消耗和奖励必须落到结构化状态。
-- 任务读取 `quest_templates.json`，玩家明确接取后才写入 `active_quests`。
+- 战斗调用 `combat.py`，并用 `encounter_state.json` 保存连续遭遇。
+- 任务读取 `quest_templates.json`，玩家明确接取后才写入 `active_quests`，后续目标由 `quest_progress.py` 推进。
+- 地点行动读取 `location_runtime.json`，会更新当前位置、风险和可用行动。
+- 社交行动读取 `relationship_rules.json`，会把 NPC/势力关系写入 `relationships`。
+- 物品行动通过 `inventory_runtime.py`，使用、装备、Buff 必须进入结构化状态。
 - 情报行动只给信息和路线，不直接赠送物品、境界或胜利。
 
 ## 安装为 Skill
@@ -163,6 +169,11 @@ novel-adventure/
 │   ├── rpg_profile.py       # 世界观 RPG 术语与系统映射
 │   ├── economy.py           # 物品价格、购买条件和替代获取路径
 │   ├── quest_runtime.py     # 冒险钩子 → 任务模板
+│   ├── quest_progress.py    # 推进任务目标与奖励
+│   ├── location_runtime.py  # 地点入口、风险、资源、行动
+│   ├── relationship_runtime.py # NPC/势力关系规则
+│   ├── inventory_runtime.py # 物品使用、装备、Buff
+│   ├── encounter_runtime.py # 连续战斗遭遇状态
 │   ├── action_resolver.py   # 自然语言行动 → 规则结算
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
@@ -183,6 +194,9 @@ world_profile.json      # 自动生成的小说题材/profile
 rpg_profile.json        # 世界观 RPG 术语、资源、装备槽、技能名和战斗公式映射
 item_market.json        # 物品价格、稀有度、购买条件、替代获取路径
 quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
+location_runtime.json   # 地点风险、入口条件、资源和默认行动
+relationship_rules.json # NPC/势力关系分数和影响规则
+encounter_state.json    # 当前遭遇和历史战斗记录
 opening.json            # 开场身份、场景、动机和开局选项
 facts.jsonl             # 抽取出的设定事实
 world_bible.json        # 世界观

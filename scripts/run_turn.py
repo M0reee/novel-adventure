@@ -164,6 +164,8 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
     state["action_log"] = state["action_log"][-30:]
     if not dry_run:
         write_json(state_path, state)
+        for filename, data in resolution.get("runtime_files", {}).items():
+            write_json(wdir / filename, data)
 
     canon_lines = summarize_canon(canon_rows)
     playable_lines = summarize_playable(canon_rows)

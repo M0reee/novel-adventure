@@ -17,7 +17,10 @@ from common import (
     world_dir,
 )
 from economy import build_economy
+from encounter_runtime import build_encounter_state
+from location_runtime import build_locations
 from quest_runtime import build_quests
+from relationship_runtime import build_relationship_rules
 from rpg_profile import apply_rpg_profile_to_state, build_rpg_profile, load_rpg_profile
 
 
@@ -363,9 +366,15 @@ def merge(world: str) -> None:
     profile = build_rpg_profile(world)
     build_economy(world)
     build_quests(world)
+    build_locations(world)
+    build_relationship_rules(world)
+    build_encounter_state(world)
     manifest["rpg_profile"] = "rpg_profile.json"
     manifest["item_market"] = "item_market.json"
     manifest["quest_templates"] = "quest_templates.json"
+    manifest["location_runtime"] = "location_runtime.json"
+    manifest["relationship_rules"] = "relationship_rules.json"
+    manifest["encounter_state"] = "encounter_state.json"
     patches_path = wdir / "canon_patches.jsonl"
     if not patches_path.exists():
         write_jsonl(patches_path, [])
@@ -394,6 +403,9 @@ def merge(world: str) -> None:
         "rpg_profile.json",
         "item_market.json",
         "quest_templates.json",
+        "location_runtime.json",
+        "relationship_rules.json",
+        "encounter_state.json",
         "curated_facts.jsonl",
         "quality_report.json",
     ]
