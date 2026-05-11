@@ -32,6 +32,8 @@ Preferred one-command build:
 
 `python scripts/build_world.py --world <slug> --input <file_or_dir> --profile auto`
 
+This also creates `opening.json` and a RPG-ready `player_state.json` schema for custom worlds.
+
 Manual build:
 
 1. Import TXT/MD:
@@ -42,11 +44,13 @@ Manual build:
    `python scripts/extract.py --world <slug>`
 4. Merge canon:
    `python scripts/merge.py --world <slug>`
-5. Distill merged canon into game-ready rules:
+5. Generate opening:
+   `python scripts/opening.py --world <slug> --rebuild`
+6. Distill merged canon into game-ready rules:
    `python scripts/distill_playable.py --world <slug>`
-6. Build retrieval index:
+7. Build retrieval index:
    `python scripts/index.py --world <slug>`
-7. Optional deterministic QA:
+8. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -57,6 +61,12 @@ Manual build:
 4. Put user corrections in `worlds/<slug>/canon_patches.jsonl`; patches override merged canon.
 
 ### Play Turn
+
+List or choose a world:
+
+`python scripts/list_worlds.py`
+
+`python scripts/start_game.py --world <slug> --reset`
 
 Run:
 
@@ -69,6 +79,8 @@ For immediate testing, use the included redacted preset:
 Each turn must use retrieved canon, update `player_state.json`, and return scene narration, action result, state changes, world dynamics, 3-5 action options, and a custom action prompt.
 
 Most important rule: the agent is a game master and rules judge, not a wish fulfiller. Player actions must be checked against canon, current state, resources, risk, time, location, relationships, and power limits before success is granted.
+
+RPG rule: numeric outcomes must come from structured state and scripts. Character stats live in `player_state.json` under `stats`, `equipment`, `skills`, `active_effects`, and `inventory`. Use `scripts/game_math.py` to inspect computed stats and `scripts/combat.py` for combat/reward settlement; do not invent HP, MP, damage, EXP, coins, equipment, skill, or Buff changes in narration without writing them into state.
 
 ## References
 

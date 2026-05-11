@@ -10,10 +10,79 @@
     "name": "旅人",
     "identity": "乌坦城无名少年",
     "realm_or_level": "斗之气低段",
+    "stats": {
+      "level": 1,
+      "exp": 0,
+      "exp_to_next": 100,
+      "hp": 100,
+      "max_hp": 100,
+      "mp": 40,
+      "max_mp": 40,
+      "attack": 12,
+      "defense": 5,
+      "speed": 8,
+      "hit_rate": 0.95,
+      "dodge_rate": 0.03,
+      "crit_rate": 0.05,
+      "crit_damage": 1.5,
+      "damage_bonus": 0.0,
+      "damage_reduction": 0.0
+    },
+    "currencies": {
+      "coins": 0
+    },
     "attributes": {},
     "resources": {},
-    "equipment": [],
+    "inventory": [],
+    "equipment": {
+      "weapon": {
+        "item_id": "worn_training_staff",
+        "name": "旧练习木棍",
+        "slot": "weapon",
+        "stats": {
+          "attack": 2
+        },
+        "description": "普通练习武器，只提供少量攻击力。"
+      },
+      "armor": {
+        "item_id": "plain_cloth",
+        "name": "粗布衣",
+        "slot": "armor",
+        "stats": {
+          "defense": 1
+        },
+        "description": "普通衣物，防护有限。"
+      },
+      "accessory": null
+    },
+    "skills": [
+      {
+        "skill_id": "guarded_strike",
+        "name": "稳健一击",
+        "type": "attack",
+        "mp_cost": 0,
+        "cooldown": 0,
+        "power": 1.0,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.0,
+        "effects": [],
+        "description": "基础攻击动作，伤害稳定，没有额外消耗。"
+      }
+    ],
+    "active_effects": [],
     "status_effects": []
+  },
+  "background": {
+    "origin": "乌坦城无名少年",
+    "opening_scene": "清晨的乌坦城尚未完全醒来，你站在萧家练武场外，听见场内少年们运转斗气时压低的呼吸声。",
+    "motivation": "你不甘心一辈子只在旁边看别人修炼，想真正踏入斗气之路。",
+    "starting_conflict": "你没有丹药、没有正式师承，也没有足够的钱，连稳定使用练武场都需要争取。",
+    "starting_hooks": [
+      "萧家练武场",
+      "乌坦城拍卖场",
+      "薰儿的善意",
+      "药老与异火的传闻"
+    ]
   },
   "relationships": [],
   "active_quests": [],

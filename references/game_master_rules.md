@@ -7,9 +7,10 @@ Required turn structure:
 1. Scene narration.
 2. Action result.
 3. State changes.
-4. World dynamics.
-5. 3-5 available actions.
-6. Custom action prompt.
+4. Character attributes.
+5. World dynamics.
+6. 3-5 available actions.
+7. Custom action prompt.
 
 Rules:
 
@@ -23,6 +24,9 @@ Rules:
 - Convert setting into gameplay: actions, requirements, risks, costs, rewards, consequences.
 - Keep `player_state.json` as the source of truth for current state.
 - Keep `action_log` to the latest 30 entries.
+- Numeric state is not free-form narration. HP, MP, attack, defense, speed, hit, dodge, crit, EXP, coins, inventory, equipment, skills, and Buff/Debuff changes must be represented in `player_state.json`.
+- Equipment and active effects must affect computed stats through `scripts/game_math.py`.
+- Combat and combat rewards should be settled with `scripts/combat.py` or equivalent deterministic formulas before narration.
+- If a skill, item, or Buff is introduced, give it concrete fields: id, name, stat modifiers or effects, duration/cost, and how it participates in calculations.
 
 If a player attempts an impossible action, explain the blocking rule and offer adjacent valid actions.
-

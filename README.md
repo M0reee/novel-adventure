@@ -31,12 +31,14 @@ git clone https://github.com/M0reee/novel-adventure.git
 cd novel-adventure
 
 # 方式 A：直接玩内置试玩预设
-python scripts/run_turn.py --world doupo_cangqiong --input "我在乌坦城找药老打听异火和修炼斗气的方法"
+python scripts/start_game.py --world doupo_cangqiong --reset
+python scripts/run_turn.py --world doupo_cangqiong --input "观察萧家练武场，确认自己能接触哪些修炼机会"
 
 # 方式 B：把自己的小说切块入库（输入可以是单文件，也可以是目录）
 python scripts/build_world.py --world fanren --input /path/to/novel.txt --profile auto
 
 # 然后开始玩
+python scripts/start_game.py --world fanren --reset
 python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹的消息"
 ```
 
@@ -51,6 +53,7 @@ python scripts/ingest.py --world fanren --input /path/to/novel.txt
 python scripts/bootstrap_profile.py --world fanren
 python scripts/extract.py --world fanren
 python scripts/merge.py --world fanren
+python scripts/opening.py --world fanren --rebuild
 python scripts/distill_playable.py --world fanren
 python scripts/index.py --world fanren
 python scripts/qa_world.py --world fanren
@@ -63,9 +66,45 @@ python scripts/qa_world.py --world fanren
 ## 规则裁定
 ## 行动结果
 ## 状态变化
+## 人物属性
 ## 世界动态
 ## 可执行行动
 ## 自定义行动
+```
+
+## 世界选择与开场
+
+```bash
+python scripts/list_worlds.py
+python scripts/start_game.py
+```
+
+`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json`，不需要手写。
+
+## RPG 数值核心
+
+角色状态现在包含 `stats`、`currencies`、`inventory`、`equipment`、`skills`、`active_effects`：
+
+- `HP/MP`、攻击、防御、速度、命中、闪避、暴击、暴击伤害、伤害加深、伤害减免都会参与计算。
+- 装备的 `stats` 会进入最终属性。
+- Buff/Debuff 放在 `active_effects`，通过 `modifiers` 修改属性，并按 `duration_turns` 递减。
+- 技能包含 `mp_cost`、`power`、命中/暴击修正和效果。
+- 战斗用 `scripts/combat.py` 结算，奖励包含经验、货币和物品掉落。
+
+公式示例：
+
+```text
+命中率 = clamp(攻击方 hit_rate + 技能命中修正 - 防守方 dodge_rate, 0.05, 0.98)
+基础伤害 = max(1, 攻击方 attack * 技能 power - 防守方 defense)
+最终伤害 = 基础伤害 * (1 + damage_bonus) * (1 - damage_reduction)
+暴击时最终伤害再乘 crit_damage
+```
+
+调试命令：
+
+```bash
+python scripts/game_math.py --world doupo_cangqiong
+python scripts/combat.py --world doupo_cangqiong --enemy training_dummy --skill guarded_strike --dry-run
 ```
 
 ## 安装为 Skill
@@ -86,7 +125,7 @@ python scripts/install.py --target agents --force
 python scripts/install.py --destination /path/to/skills --force
 ```
 
-安装脚本默认**不会**复制 `worlds/`，避免把小说原文和私设带进公共 Skill 包。
+安装脚本只复制公开瘦身预设 `worlds/doupo_cangqiong/`，不会复制其他私有世界，也会排除 `chunks.jsonl`、`facts.jsonl`、`source_index.jsonl` 等原文/原始抽取文件。
 
 ## 目录结构
 
@@ -102,6 +141,11 @@ novel-adventure/
 │   ├── distill_playable.py  # 结构化设定 → 可玩规则
 │   ├── index.py             # 建 SQLite FTS 索引
 │   ├── retrieve.py          # 场景检索
+│   ├── list_worlds.py       # 列出可游玩世界
+│   ├── start_game.py        # 选择世界并初始化开场
+│   ├── opening.py           # 生成 opening.json
+│   ├── game_math.py         # RPG 属性与公式
+│   ├── combat.py            # 战斗与奖励结算
 │   ├── run_turn.py          # 跑一回合
 │   ├── build_world.py       # 一键完整构建
 │   ├── qa_world.py          # 蒸馏质量检查
@@ -116,6 +160,7 @@ novel-adventure/
 ```text
 chunks.jsonl            # 切块文本
 world_profile.json      # 自动生成的小说题材/profile
+opening.json            # 开场身份、场景、动机和开局选项
 facts.jsonl             # 抽取出的设定事实
 world_bible.json        # 世界观
 power_system.json       # 修炼/能力体系

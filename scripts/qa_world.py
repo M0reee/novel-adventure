@@ -19,6 +19,7 @@ FULL_REQUIRED_FILES = [
     "locations.json",
     "npcs.json",
     "game_rules.json",
+    "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
 ]
@@ -31,6 +32,7 @@ PRESET_REQUIRED_FILES = [
     "locations.json",
     "npcs.json",
     "game_rules.json",
+    "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
 ]
@@ -59,6 +61,7 @@ def qa(world: str) -> None:
     manifest = read_json(wdir / "manifest.json", {})
     quality = read_json(wdir / "quality_report.json", {})
     playable = read_json(wdir / "playable_canon.json", {})
+    player_state = read_json(wdir / "player_state.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
     index_rows = count_index_rows(wdir / "retrieval.sqlite")
     is_preset = bool(manifest.get("preset_world"))
@@ -77,6 +80,8 @@ def qa(world: str) -> None:
         ("long_summaries", long_summary_count(playable_entries) <= max(5, len(playable_entries) // 10), str(long_summary_count(playable_entries))),
         ("locations", int(entity_counts.get("location", 0)) >= 5, str(entity_counts.get("location", 0))),
         ("npcs", int(entity_counts.get("npc", 0)) >= 5, str(entity_counts.get("npc", 0))),
+        ("rpg_stats", bool(player_state.get("player", {}).get("stats")), "present" if player_state.get("player", {}).get("stats") else "missing"),
+        ("opening", bool(read_json(wdir / "opening.json", {})), "present" if read_json(wdir / "opening.json", {}) else "missing"),
     ]
 
     print(f"World QA: {world}")

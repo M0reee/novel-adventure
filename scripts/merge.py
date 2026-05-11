@@ -8,6 +8,7 @@ from typing import Any
 from common import (
     default_player_state,
     load_manifest,
+    migrate_player_state,
     read_json,
     read_jsonl,
     save_manifest,
@@ -364,9 +365,10 @@ def merge(world: str) -> None:
         write_json(player_state_path, default_player_state(world))
     else:
         state = read_json(player_state_path, {})
+        state = migrate_player_state(state, world)
         if "action_log" in state:
             state["action_log"] = state["action_log"][-30:]
-            write_json(player_state_path, state)
+        write_json(player_state_path, state)
 
     manifest["merged_files"] = [
         "world_bible.json",

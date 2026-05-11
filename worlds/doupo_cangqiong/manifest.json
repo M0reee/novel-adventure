@@ -5,7 +5,7 @@
   "preset_world": true,
   "source_redacted": true,
   "created_at": "2026-05-11T00:00:00",
-  "updated_at": "2026-05-11T14:10:52",
+  "updated_at": "2026-05-11T15:33:45",
   "chunk_count": 0,
   "fact_count": 0,
   "curated_fact_count": 56,
@@ -25,5 +25,6 @@
     "quality_report.json"
   ],
   "playable_canon": "playable_canon.json",
-  "playable_canon_count": 56
+  "playable_canon_count": 56,
+  "opening": "opening.json"
 }

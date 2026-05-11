@@ -371,6 +371,80 @@ def text_window(text: str, start: int, end: int, before: int = 80, after: int = 
     return normalize_space(text[max(0, start - before) : min(len(text), end + after)]).replace("\n", " ")
 
 
+def default_stats() -> dict[str, float]:
+    return {
+        "level": 1,
+        "exp": 0,
+        "exp_to_next": 100,
+        "hp": 100,
+        "max_hp": 100,
+        "mp": 40,
+        "max_mp": 40,
+        "attack": 12,
+        "defense": 5,
+        "speed": 8,
+        "hit_rate": 0.95,
+        "dodge_rate": 0.03,
+        "crit_rate": 0.05,
+        "crit_damage": 1.5,
+        "damage_bonus": 0.0,
+        "damage_reduction": 0.0,
+    }
+
+
+def starter_skill() -> dict[str, Any]:
+    return {
+        "skill_id": "guarded_strike",
+        "name": "稳健一击",
+        "type": "attack",
+        "mp_cost": 0,
+        "cooldown": 0,
+        "power": 1.0,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.0,
+        "effects": [],
+        "description": "基础攻击动作，伤害稳定，没有额外消耗。",
+    }
+
+
+def starter_equipment() -> dict[str, Any]:
+    return {
+        "weapon": {
+            "item_id": "worn_training_staff",
+            "name": "旧练习木棍",
+            "slot": "weapon",
+            "stats": {"attack": 2},
+            "description": "普通练习武器，只提供少量攻击力。",
+        },
+        "armor": {
+            "item_id": "plain_cloth",
+            "name": "粗布衣",
+            "slot": "armor",
+            "stats": {"defense": 1},
+            "description": "普通衣物，防护有限。",
+        },
+        "accessory": None,
+    }
+
+
+def default_background(world_name: str) -> dict[str, Any]:
+    if "doupo" in world_name:
+        return {
+            "origin": "乌坦城无名少年",
+            "opening_scene": "清晨的乌坦城尚未完全醒来，你站在萧家练武场外，听见场内少年们运转斗气时压低的呼吸声。",
+            "motivation": "你不甘心一辈子只在旁边看别人修炼，想真正踏入斗气之路。",
+            "starting_conflict": "你没有丹药、没有正式师承，也没有足够的钱，连稳定使用练武场都需要争取。",
+            "starting_hooks": ["萧家练武场", "乌坦城拍卖场", "薰儿的善意", "药老与异火的传闻"],
+        }
+    return {
+        "origin": "无名旅人",
+        "opening_scene": "你站在这个世界的边缘，身上只有最基础的装备和一点尚未验证的野心。",
+        "motivation": "你想在这个世界获得立足之地，并找到属于自己的道路。",
+        "starting_conflict": "你缺少资源、关系和可靠情报，任何成长都需要付出时间与代价。",
+        "starting_hooks": ["观察周围", "寻找安全地点", "打听资源", "接触本地人物"],
+    }
+
+
 def default_player_state(world_name: str) -> dict[str, Any]:
     return {
         "meta": {
@@ -382,18 +456,54 @@ def default_player_state(world_name: str) -> dict[str, Any]:
         },
         "player": {
             "name": "旅人",
-            "identity": "未定",
-            "realm_or_level": "凡人",
+            "identity": "乌坦城无名少年" if "doupo" in world_name else "未定",
+            "realm_or_level": "斗之气低段" if "doupo" in world_name else "凡人",
+            "stats": default_stats(),
+            "currencies": {"coins": 0},
             "attributes": {},
             "resources": {},
-            "equipment": [],
+            "inventory": [],
+            "equipment": starter_equipment(),
+            "skills": [starter_skill()],
+            "active_effects": [],
             "status_effects": [],
         },
+        "background": default_background(world_name),
         "relationships": [],
         "active_quests": [],
         "world_events": [],
         "action_log": [],
     }
+
+
+def migrate_player_state(state: dict[str, Any], world_name: str) -> dict[str, Any]:
+    default = default_player_state(world_name)
+    state.setdefault("meta", default["meta"])
+    state.setdefault("background", default["background"])
+    player = state.setdefault("player", {})
+    player.setdefault("name", default["player"]["name"])
+    player.setdefault("identity", default["player"]["identity"])
+    player.setdefault("realm_or_level", default["player"]["realm_or_level"])
+    player.setdefault("stats", default_stats())
+    for key, value in default_stats().items():
+        player["stats"].setdefault(key, value)
+    player.setdefault("currencies", {"coins": 0})
+    player.setdefault("inventory", [])
+    if isinstance(player.get("equipment"), list):
+        old_equipment = player.get("equipment", [])
+        player["equipment"] = starter_equipment()
+        player["legacy_equipment_notes"] = old_equipment
+    player.setdefault("equipment", starter_equipment())
+    player.setdefault("skills", [starter_skill()])
+    player.setdefault("active_effects", [])
+    player.setdefault("status_effects", [])
+    player.setdefault("attributes", {})
+    player.setdefault("resources", {})
+    state.setdefault("relationships", [])
+    state.setdefault("active_quests", [])
+    state.setdefault("world_events", [])
+    state.setdefault("action_log", [])
+    return state
 
 
 def load_manifest(path: Path, world: str) -> dict[str, Any]:

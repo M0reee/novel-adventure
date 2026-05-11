@@ -16,15 +16,22 @@ TARGETS = {
     "project-claude": Path.cwd() / ".claude" / "skills",
     "project-agents": Path.cwd() / ".agents" / "skills",
 }
-EXCLUDE_DIRS = {"worlds", "__pycache__", ".git"}
+EXCLUDE_DIRS = {"__pycache__", ".git"}
 EXCLUDE_SUFFIXES = {".pyc", ".sqlite", ".db", ".db-wal", ".db-shm"}
+PUBLIC_PRESET_WORLDS = {"doupo_cangqiong"}
+RAW_WORLD_FILES = {"chunks.jsonl", "facts.jsonl", "source_index.jsonl"}
 
 
-def ignore(_dir: str, names: list[str]) -> set[str]:
+def ignore(directory: str, names: list[str]) -> set[str]:
     ignored = set()
+    current = Path(directory)
+    if current.name == "worlds":
+        return {name for name in names if name not in PUBLIC_PRESET_WORLDS}
     for name in names:
         path = Path(name)
-        if name in EXCLUDE_DIRS or path.suffix in EXCLUDE_SUFFIXES:
+        if name in EXCLUDE_DIRS or name in RAW_WORLD_FILES:
+            ignored.add(name)
+        elif path.suffix in EXCLUDE_SUFFIXES and not (current.name in PUBLIC_PRESET_WORLDS and name == "retrieval.sqlite"):
             ignored.add(name)
     return ignored
 

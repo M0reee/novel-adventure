@@ -10,6 +10,7 @@ from extract import extract
 from index import build_index
 from ingest import ingest
 from merge import merge
+from opening import build_opening
 
 
 def build(world: str, input_path: Path, profile: str, target_chars: int, max_chars: int, sample_chunks: int) -> None:
@@ -21,6 +22,7 @@ def build(world: str, input_path: Path, profile: str, target_chars: int, max_cha
     else:
         extract(world, profile)
     merge(world)
+    build_opening(world)
     distill(world)
     build_index(world)
     print(f"Build complete for world={world} profile={profile}")

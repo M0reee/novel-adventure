@@ -4,7 +4,8 @@ from __future__ import annotations
 import argparse
 from typing import Any
 
-from common import default_player_state, read_json, write_json, world_dir
+from common import default_player_state, migrate_player_state, read_json, write_json, world_dir
+from game_math import computed_stats
 from retrieve import retrieve
 
 
@@ -71,18 +72,18 @@ def adjudicate_action(player_input: str, state: dict[str, Any], canon_rows: list
         status = "partial_or_blocked"
         verdict = "高风险行动需要前置条件"
         consequence = "你的行动触碰了当前世界硬规则或高风险边界，不能直接成功；本回合转为试探、准备或寻找替代路径。"
-    elif any(word in player_input for word in CULTIVATION_WORDS):
-        status = "conditional"
-        verdict = "修炼行动受境界、资源和地点限制"
-        consequence = "你尝试运转力量体系内的修炼路径，进展取决于资源、地点安全和当前境界限制。"
-    elif any(word in player_input for word in TRADE_WORDS):
-        status = "conditional"
-        verdict = "交易行动受价格、稀缺度和势力关系影响"
-        consequence = "交易行动展开；价格、真假和旁人觊觎会根据当地势力与物品稀缺度变化。"
     elif any(word in player_input for word in INFO_WORDS):
         status = "allowed"
         verdict = "信息行动可执行但消耗时间"
         consequence = "你放慢节奏收集信息，获得了更清晰的局势判断，但也消耗了一段时间。"
+    elif any(word in player_input for word in TRADE_WORDS):
+        status = "conditional"
+        verdict = "交易行动受价格、稀缺度和势力关系影响"
+        consequence = "交易行动展开；价格、真假和旁人觊觎会根据当地势力与物品稀缺度变化。"
+    elif any(word in player_input for word in CULTIVATION_WORDS):
+        status = "conditional"
+        verdict = "修炼行动受境界、资源和地点限制"
+        consequence = "你尝试运转力量体系内的修炼路径，进展取决于资源、地点安全和当前境界限制。"
 
     if "凡人" in realm and any(word in player_input for word in ("御剑", "飞行", "天劫", "元婴", "金丹")):
         status = "blocked"
@@ -113,7 +114,7 @@ def build_options(player_input: str, state: dict[str, Any], canon_rows: list[dic
 def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
     wdir = world_dir(world)
     state_path = wdir / "player_state.json"
-    state = read_json(state_path, default_player_state(world))
+    state = migrate_player_state(read_json(state_path, default_player_state(world)), world)
     meta = state.setdefault("meta", {})
     player = state.setdefault("player", {})
     query = " ".join(
@@ -150,6 +151,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
 
     canon_lines = summarize_canon(canon_rows)
     playable_lines = summarize_playable(canon_rows)
+    stats = computed_stats(state)
     options = build_options(player_input, state, canon_rows)
     output = [
         "## 场景叙事",
@@ -165,6 +167,12 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
         "",
         "## 状态变化",
         *[f"- {line}" for line in state_changes],
+        "",
+        "## 人物属性",
+        f"- HP：{int(stats.get('hp', 0))}/{int(stats.get('max_hp', 0))}",
+        f"- MP：{int(stats.get('mp', 0))}/{int(stats.get('max_mp', 0))}",
+        f"- 攻击/防御/速度：{int(stats.get('attack', 0))}/{int(stats.get('defense', 0))}/{int(stats.get('speed', 0))}",
+        f"- 命中/闪避/暴击：{stats.get('hit_rate', 0):.0%}/{stats.get('dodge_rate', 0):.0%}/{stats.get('crit_rate', 0):.0%}",
         "",
         "## 世界动态",
         *(canon_lines or ["- 暂未检索到强相关 canon；本回合只做低影响推进。"]),
