@@ -18,10 +18,39 @@ BLOCKING_MARKERS = ("不可", "不能", "禁止", "无法", "必须", "需要", 
 
 def summarize_canon(rows: list[dict[str, Any]]) -> list[str]:
     lines = []
-    for row in rows[:8]:
+    seen: set[tuple[str, str]] = set()
+    for row in rows:
+        row_type = str(row.get("type", ""))
+        if row_type.startswith("playable_"):
+            continue
+        key = (row_type, str(row.get("name", "")))
+        if key in seen:
+            continue
+        seen.add(key)
         claim = row.get("claim", "").strip()
         if claim:
-            lines.append(f"- [{row.get('type')}] {row.get('name')}: {claim[:120]}")
+            lines.append(f"- [{row_type}] {row.get('name')}: {claim[:140]}")
+        if len(lines) >= 6:
+            break
+    return lines
+
+
+def summarize_playable(rows: list[dict[str, Any]]) -> list[str]:
+    lines = []
+    seen_names: set[str] = set()
+    for row in rows:
+        row_type = str(row.get("type", ""))
+        if not row_type.startswith("playable_"):
+            continue
+        name = str(row.get("name", ""))
+        if name in seen_names:
+            continue
+        seen_names.add(name)
+        claim = row.get("claim", "").strip()
+        if claim:
+            lines.append(f"- [{row_type}] {name}: {claim[:180]}")
+        if len(lines) >= 4:
+            break
     return lines
 
 
@@ -120,6 +149,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
         write_json(state_path, state)
 
     canon_lines = summarize_canon(canon_rows)
+    playable_lines = summarize_playable(canon_rows)
     options = build_options(player_input, state, canon_rows)
     output = [
         "## 场景叙事",
@@ -138,6 +168,9 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
         "",
         "## 世界动态",
         *(canon_lines or ["- 暂未检索到强相关 canon；本回合只做低影响推进。"]),
+        "",
+        "## 主持约束",
+        *(playable_lines or ["- 未检索到额外可玩规则；按基础 canon、状态和风险裁定。"]),
         "",
         "## 可执行行动",
         *[f"{idx}. {option}" for idx, option in enumerate(options, 1)],

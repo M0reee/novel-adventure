@@ -31,19 +31,24 @@ git clone https://github.com/M0reee/novel-adventure.git
 cd novel-adventure
 
 # 1. 把小说切块入库（输入可以是单文件，也可以是目录）
-python scripts/ingest.py --world fanren --input /path/to/novel.txt
+python scripts/build_world.py --world fanren --input /path/to/novel.txt --profile auto
 
-# 2. 抽取世界设定
-python scripts/extract.py --world fanren
-
-# 3. 合并成结构化世界库
-python scripts/merge.py --world fanren
-
-# 4. 建检索索引
-python scripts/index.py --world fanren
-
-# 5. 开始玩
+# 2. 开始玩
 python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹的消息"
+```
+
+`--profile auto` 会先从样本章节生成 `world_profile.json`，再用它指导全书抽取。已有专门 profile 时也可以指定，例如 `--profile doupo`。
+
+如果要手动分步执行：
+
+```bash
+python scripts/ingest.py --world fanren --input /path/to/novel.txt
+python scripts/bootstrap_profile.py --world fanren
+python scripts/extract.py --world fanren
+python scripts/merge.py --world fanren
+python scripts/distill_playable.py --world fanren
+python scripts/index.py --world fanren
+python scripts/qa_world.py --world fanren
 ```
 
 每个回合 AI 会按以下结构回应：
@@ -86,11 +91,15 @@ novel-adventure/
 ├── README.md
 ├── scripts/
 │   ├── ingest.py            # TXT/MD → 切块
+│   ├── bootstrap_profile.py # 样本章节 → 自动 profile
 │   ├── extract.py           # 切块 → 设定事实
 │   ├── merge.py             # 事实 → 结构化世界库
+│   ├── distill_playable.py  # 结构化设定 → 可玩规则
 │   ├── index.py             # 建 SQLite FTS 索引
 │   ├── retrieve.py          # 场景检索
 │   ├── run_turn.py          # 跑一回合
+│   ├── build_world.py       # 一键完整构建
+│   ├── qa_world.py          # 蒸馏质量检查
 │   ├── install.py           # 安装为 Skill
 │   └── common.py
 ├── references/              # 抽取 schema、判罚规则、风格指南
@@ -101,14 +110,18 @@ novel-adventure/
 
 ```text
 chunks.jsonl            # 切块文本
+world_profile.json      # 自动生成的小说题材/profile
 facts.jsonl             # 抽取出的设定事实
 world_bible.json        # 世界观
 power_system.json       # 修炼/能力体系
 factions.json           # 势力
 locations.json          # 地点
 npcs.json               # NPC
+items.json              # 物品
+techniques.json         # 功法/技法
 timeline.json           # 时间线
 adventure_hooks.json    # 冒险钩子
+playable_canon.json     # 二次蒸馏后的可玩规则
 player_state.json       # 玩家存档
 canon_patches.jsonl     # 用户校正的设定补丁
 retrieval.sqlite        # 检索索引
@@ -167,12 +180,15 @@ python scripts/index.py --world fanren
 ## 已知限制
 
 - V1 只支持 TXT / MD，**不支持** EPUB / PDF（可以先转 TXT）
-- V1 的 extractor 是**启发式**，质量不如 LLM 蒸馏；可在 `extract.py` 里接 LLM provider 提升
+- V1 的 extractor 是**启发式 + 自动 profile**，质量不如深度 LLM 蒸馏；可在 `extract.py` 或新增 provider 里接 LLM 提升
 - 中文检索使用 SQLite FTS + LIKE 兜底，适合本地轻量使用
 - `worlds/` 可能含版权文本，**不要**公开发布
 
 ## 路线图
 
+- [x] 自动生成 `world_profile.json`
+- [x] 二次蒸馏 `playable_canon.json`
+- [x] 一键构建与 QA 脚本
 - [ ] 把 `extract.py` 接入可插拔的 LLM provider
 - [ ] EPUB / PDF 导入
 - [ ] 多人合作模式（一桌跑团）

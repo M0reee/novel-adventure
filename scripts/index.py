@@ -15,31 +15,34 @@ CANON_FILES = [
     "factions.json",
     "locations.json",
     "npcs.json",
+    "items.json",
+    "techniques.json",
     "timeline.json",
     "game_rules.json",
     "adventure_hooks.json",
+    "playable_canon.json",
 ]
 
 
 def infer_type(source: str, path: str) -> str:
-    if "world_laws" in path:
-        return "world_law"
-    if "style_signals" in path:
-        return "style_signal"
-    if "realms" in path:
-        return "power_realm"
-    if "cultivation_rules" in path:
-        return "cultivation_rule"
-    if "factions" in path:
-        return "faction"
-    if "locations" in path:
-        return "location"
-    if "npcs" in path:
-        return "npc"
-    if "events" in path:
-        return "event"
-    if "hooks" in path:
-        return "playable_hook"
+    if source == "playable_canon.json":
+        return "playable_canon"
+    checks = [
+        ("world_laws", "world_law"),
+        ("style_signals", "style_signal"),
+        ("realms", "power_realm"),
+        ("cultivation_rules", "cultivation_rule"),
+        ("factions", "faction"),
+        ("locations", "location"),
+        ("npcs", "npc"),
+        ("items", "item"),
+        ("techniques", "technique"),
+        ("events", "event"),
+        ("hooks", "playable_hook"),
+    ]
+    for marker, ftype in checks:
+        if marker in path:
+            return ftype
     if source == "game_rules.json":
         return "game_rule"
     return Path(source).stem
@@ -50,10 +53,33 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
 
     def visit(node: Any, path: str) -> None:
         if isinstance(node, dict):
-            if "name" in node and ("summary" in node or "claims" in node):
-                claim = node.get("summary", "")
-                if node.get("claims"):
-                    claim = " ".join(claim_item.get("claim", "") for claim_item in node["claims"][:4]) or claim
+            if source == "playable_canon.json" and "name" in node and "play_rule" in node:
+                claim = " ".join(
+                    str(part)
+                    for part in [
+                        node.get("summary", ""),
+                        node.get("play_rule", ""),
+                        " ".join(node.get("entry_conditions", [])),
+                        " ".join(node.get("risks", [])),
+                        " ".join(node.get("rewards", [])),
+                    ]
+                    if part
+                )[:700]
+                rows.append(
+                    {
+                        "id": f"{source}:{path}:{node.get('name')}",
+                        "type": f"playable_{node.get('type', 'canon')}",
+                        "name": node.get("name", ""),
+                        "claim": claim,
+                        "aliases": "",
+                        "evidence": node.get("source_type", ""),
+                        "source_json": source,
+                        "quality": float(node.get("source_quality", 0.8)),
+                        "score": float(node.get("source_score", 0.0)),
+                    }
+                )
+            elif "name" in node and ("summary" in node or "claims" in node):
+                claim = str(node.get("summary", ""))[:520]
                 rows.append(
                     {
                         "id": f"{source}:{path}:{node.get('name')}",
@@ -63,6 +89,8 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
                         "aliases": " ".join(node.get("aliases", [])),
                         "evidence": " ".join(node.get("evidence_chunk_ids", [])),
                         "source_json": source,
+                        "quality": float(node.get("quality", 0.5)),
+                        "score": float(node.get("score", 0.0)),
                     }
                 )
             for key, value in node.items():
@@ -87,6 +115,8 @@ def add_patch_rows(wdir: Path) -> list[dict[str, Any]]:
                 "aliases": patch.get("priority", ""),
                 "evidence": patch.get("reason", ""),
                 "source_json": "canon_patches.jsonl",
+                "quality": 1.0,
+                "score": 999.0,
             }
         )
     return rows
@@ -116,6 +146,8 @@ def build_index(world: str) -> None:
                 aliases TEXT,
                 evidence TEXT,
                 source_json TEXT,
+                quality REAL,
+                score REAL,
                 search_text TEXT
             )
             """
@@ -129,9 +161,7 @@ def build_index(world: str) -> None:
             """
         )
         for row in rows:
-            search_text = " ".join(
-                str(row.get(key, "")) for key in ("type", "name", "claim", "aliases", "evidence", "source_json")
-            )
+            search_text = " ".join(str(row.get(key, "")) for key in ("type", "name", "claim", "aliases", "evidence", "source_json"))
             values = (
                 row["id"],
                 row["type"],
@@ -140,9 +170,11 @@ def build_index(world: str) -> None:
                 row["aliases"],
                 row["evidence"],
                 row["source_json"],
+                row["quality"],
+                row["score"],
                 search_text,
             )
-            conn.execute("INSERT OR REPLACE INTO canon VALUES (?, ?, ?, ?, ?, ?, ?, ?)", values)
+            conn.execute("INSERT OR REPLACE INTO canon VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", values)
             conn.execute("INSERT INTO canon_fts VALUES (?, ?, ?, ?, ?, ?)", values[:5] + (search_text,))
         conn.commit()
     finally:

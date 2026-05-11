@@ -28,6 +28,267 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_DIR = SCRIPT_DIR.parent
 WORLDS_DIR = SKILL_DIR / "worlds"
 
+CHINESE_PUNCT_RE = re.compile(r"(?<=[。！？!?；;])\s*")
+
+DOUPO_REALMS = [
+    "斗之力",
+    "斗之气",
+    "斗者",
+    "斗师",
+    "大斗师",
+    "斗灵",
+    "斗王",
+    "斗皇",
+    "斗宗",
+    "斗尊",
+    "半圣",
+    "斗圣",
+    "斗帝",
+]
+
+DOUPO_NPCS = [
+    "萧炎",
+    "药老",
+    "药尘",
+    "纳兰嫣然",
+    "萧薰儿",
+    "薰儿",
+    "美杜莎",
+    "彩鳞",
+    "云韵",
+    "萧战",
+    "萧玄",
+    "小医仙",
+    "紫研",
+    "海波东",
+    "雅妃",
+    "韩枫",
+    "云山",
+    "云棱",
+    "古河",
+    "林焱",
+    "苏千",
+    "萧厉",
+    "萧鼎",
+    "魂天帝",
+    "古元",
+    "烛坤",
+    "净莲妖圣",
+    "萧媚",
+    "萧玉",
+    "若琳",
+    "琥嘉",
+    "吴昊",
+    "白山",
+    "范痨",
+    "范凌",
+    "莫天行",
+    "曜天火",
+    "风尊者",
+    "慕青鸾",
+    "曹颖",
+    "丹晨",
+    "玄空子",
+    "慕骨老人",
+    "凤清儿",
+    "凰天",
+    "魂玉",
+    "萧潇",
+]
+
+
+DOUPO_FACTIONS = [
+    "萧家",
+    "云岚宗",
+    "纳兰家",
+    "米特尔家族",
+    "特米尔家族",
+    "加玛帝国",
+    "迦南学院",
+    "内院",
+    "炼药师公会",
+    "狼头佣兵团",
+    "蛇人族",
+    "黑角域",
+    "魂殿",
+    "魂族",
+    "古族",
+    "炎盟",
+    "星陨阁",
+    "丹塔",
+    "焚炎谷",
+    "花宗",
+    "天府联盟",
+    "太虚古龙族",
+    "萧族",
+    "雷族",
+    "炎族",
+    "药族",
+    "石族",
+    "灵族",
+    "天妖凰族",
+    "九幽地冥蟒族",
+    "狮冥宗",
+    "冰河谷",
+    "冥河盟",
+]
+
+
+DOUPO_LOCATIONS = [
+    "乌坦城",
+    "萧家后山",
+    "魔兽山脉",
+    "加玛帝国",
+    "塔戈尔沙漠",
+    "黑岩城",
+    "云岚山",
+    "云岚宗",
+    "迦南学院",
+    "黑角域",
+    "中州",
+    "星陨阁",
+    "丹塔",
+    "古界",
+    "魂界",
+    "天焚炼气塔",
+    "岩浆世界",
+    "萧家",
+    "特米尔拍卖场",
+    "米特尔拍卖场",
+    "漠城",
+    "石漠城",
+    "蛇人圣城",
+    "黑印城",
+    "枫城",
+    "星界",
+    "兽域",
+    "莽荒古域",
+    "菩提古树",
+    "妖火空间",
+]
+
+
+DOUPO_ITEMS = [
+    "玄重尺",
+    "纳戒",
+    "筑基灵液",
+    "聚气散",
+    "青莲地心火",
+    "陨落心炎",
+    "骨灵冷火",
+    "海心焰",
+    "净莲妖火",
+    "虚无吞炎",
+    "异火",
+    "魔核",
+    "紫叶兰草",
+    "洗骨花",
+    "冰灵寒泉",
+    "血莲丹",
+    "复灵紫丹",
+    "阴阳玄龙丹",
+    "菩提子",
+    "菩提心",
+]
+
+
+DOUPO_TECHNIQUES = [
+    "焚诀",
+    "佛怒火莲",
+    "八极崩",
+    "吸掌",
+    "吹火掌",
+    "焰分噬浪尺",
+    "三千雷动",
+    "天火三玄变",
+    "黄泉天怒",
+    "怒狮狂罡",
+    "紫云翼",
+    "狮山裂",
+    "大天造化掌",
+    "帝印决",
+    "开山印",
+    "翻海印",
+    "覆地印",
+]
+
+
+
+PROFILES: dict[str, dict[str, Any]] = {
+    "generic": {
+        "realm_terms": [],
+        "known_npcs": [],
+        "known_factions": [],
+        "known_locations": [],
+        "known_items": [],
+        "known_techniques": [],
+        "faction_suffixes": ("宗", "门", "派", "族", "家族", "学院", "帝国", "皇室", "公会", "联盟", "佣兵团", "殿", "阁", "谷", "塔"),
+        "location_suffixes": ("城", "山", "谷", "林", "域", "国", "院", "塔", "沙漠", "山脉", "洞府", "遗迹", "空间", "界"),
+    },
+    "doupo": {
+        "realm_terms": DOUPO_REALMS,
+        "known_npcs": DOUPO_NPCS,
+        "known_factions": DOUPO_FACTIONS,
+        "known_locations": DOUPO_LOCATIONS,
+        "known_items": DOUPO_ITEMS,
+        "known_techniques": DOUPO_TECHNIQUES,
+        "faction_suffixes": ("宗", "族", "家族", "学院", "帝国", "皇室", "公会", "联盟", "佣兵团", "殿"),
+        "location_suffixes": ("城", "山", "山脉", "沙漠", "学院", "帝国", "域", "塔", "界", "谷", "空间"),
+    },
+}
+
+
+def get_profile(name: str | None) -> dict[str, Any]:
+    profile_name = (name or "generic").lower()
+    if profile_name not in PROFILES:
+        raise SystemExit(f"Unknown profile: {profile_name}. Available: {', '.join(sorted(PROFILES))}")
+    profile = dict(PROFILES["generic"])
+    profile.update(PROFILES[profile_name])
+    profile["name"] = profile_name
+    return profile
+
+
+def _as_list(value: Any) -> list[str]:
+    if not value:
+        return []
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    return [str(value).strip()]
+
+
+def _as_tuple(value: Any, fallback: tuple[str, ...]) -> tuple[str, ...]:
+    values = _as_list(value)
+    return tuple(values) if values else fallback
+
+
+def load_world_profile(wdir: Path, profile_name: str | None = None) -> dict[str, Any]:
+    """Load a built-in profile or a generated worlds/<slug>/world_profile.json."""
+    requested = (profile_name or "").lower()
+    if requested in PROFILES:
+        return get_profile(requested)
+
+    manifest = read_json(wdir / "manifest.json", {})
+    manifest_profile = str(manifest.get("profile") or "").lower()
+    if not requested:
+        requested = manifest_profile or "generic"
+    if requested in PROFILES:
+        return get_profile(requested)
+
+    profile_path = wdir / "world_profile.json"
+    if not profile_path.exists():
+        return get_profile("generic")
+
+    generated = read_json(profile_path, {})
+    profile = get_profile("generic")
+    for key in ("realm_terms", "known_npcs", "known_factions", "known_locations", "known_items", "known_techniques"):
+        profile[key] = _as_list(generated.get(key))
+    profile["faction_suffixes"] = _as_tuple(generated.get("faction_suffixes"), profile["faction_suffixes"])
+    profile["location_suffixes"] = _as_tuple(generated.get("location_suffixes"), profile["location_suffixes"])
+    profile["genre"] = generated.get("genre", "unknown")
+    profile["schema"] = generated.get("schema", {})
+    profile["name"] = generated.get("profile", requested or "auto")
+    return profile
+
 
 def world_dir(slug: str) -> Path:
     if not re.fullmatch(r"[A-Za-z0-9_-]+", slug):
@@ -38,7 +299,7 @@ def world_dir(slug: str) -> Path:
 
 
 def read_text(path: Path) -> str:
-    for encoding in ("utf-8", "utf-8-sig", "gb18030"):
+    for encoding in ("utf-8", "utf-8-sig", "gb18030", "gbk"):
         try:
             return path.read_text(encoding=encoding)
         except UnicodeDecodeError:
@@ -84,22 +345,38 @@ def now_iso() -> str:
 
 def normalize_space(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = text.replace("\u3000", " ")
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{4,}", "\n\n\n", text)
     return text.strip()
 
 
+def clean_source_text(text: str) -> str:
+    text = normalize_space(text)
+    text = re.sub(r"-{6,}.*?用户上传之内容开始.*?-{6,}", "\n", text, flags=re.S)
+    text = re.sub(r"声明：本书为TXT图书下载网.*?(?:免费下载服务。|内容开始)", "\n", text, flags=re.S)
+    text = re.sub(r"分节阅读\s*\d+", "\n", text)
+    text = re.sub(r"更多.*?请到.*?(?:\n|$)", "\n", text)
+    text = re.sub(r"www\.[A-Za-z0-9_.-]+|bookdown\.com\.cn", "", text, flags=re.I)
+    text = re.sub(r"\n\s*[-=]{8,}\s*\n", "\n", text)
+    return normalize_space(text)
+
+
 def sentence_split(text: str) -> list[str]:
-    parts = re.split(r"(?<=[。！？!?；;])\s*", text)
-    return [part.strip() for part in parts if part.strip()]
+    pieces = CHINESE_PUNCT_RE.split(text)
+    return [piece.strip() for piece in pieces if piece and piece.strip()]
+
+
+def text_window(text: str, start: int, end: int, before: int = 80, after: int = 140) -> str:
+    return normalize_space(text[max(0, start - before) : min(len(text), end + after)]).replace("\n", " ")
 
 
 def default_player_state(world_name: str) -> dict[str, Any]:
     return {
         "meta": {
             "world": world_name,
-            "current_time": "第1日 清晨",
-            "current_location": "未确定起点",
+            "current_time": "第一日 清晨",
+            "current_location": "乌坦城萧家后山" if "doupo" in world_name else "未确定起点",
             "current_stage": "开局",
             "turn": 0,
         },
@@ -137,4 +414,3 @@ def load_manifest(path: Path, world: str) -> dict[str, Any]:
 def save_manifest(path: Path, manifest: dict[str, Any]) -> None:
     manifest["updated_at"] = now_iso()
     write_json(path / "manifest.json", manifest)
-

@@ -6,6 +6,8 @@ import re
 from pathlib import Path
 
 from common import (
+    clean_source_text,
+    get_profile,
     load_manifest,
     normalize_space,
     read_text,
@@ -17,7 +19,7 @@ from common import (
 
 
 CHAPTER_RE = re.compile(
-    r"^\s*((?:第[零〇一二三四五六七八九十百千万两\d]+[章节回卷集部].{0,40})|(?:Chapter\s+\d+.{0,60})|(?:#{1,3}\s+.{1,80}))\s*$",
+    r"^\s*(?:正文\s*)?(?:(第[一二三四五六七八九十百千万零两\d]+[章节回卷部][^\n]{0,50})|(Chapter\s+\d+[^\n]{0,60})|([#]{1,3}\s+[^\n]{1,80}))\s*$",
     re.IGNORECASE,
 )
 
@@ -38,10 +40,10 @@ def split_chapters(text: str) -> list[tuple[str, str]]:
         match = CHAPTER_RE.match(line)
         if match and current_lines:
             chapters.append((current_title, current_lines))
-            current_title = match.group(1).strip("# ")
+            current_title = next(group for group in match.groups() if group).strip("# ")
             current_lines = []
         elif match:
-            current_title = match.group(1).strip("# ")
+            current_title = next(group for group in match.groups() if group).strip("# ")
         else:
             current_lines.append(line)
     if current_lines:
@@ -78,7 +80,8 @@ def split_long_text(text: str, target_chars: int, max_chars: int) -> list[str]:
     return [chunk for chunk in chunks if chunk]
 
 
-def ingest(world: str, input_path: Path, target_chars: int, max_chars: int) -> None:
+def ingest(world: str, input_path: Path, target_chars: int, max_chars: int, profile_name: str) -> None:
+    profile = get_profile(profile_name)
     wdir = world_dir(world)
     source_files = iter_source_files(input_path)
     if not source_files:
@@ -88,13 +91,15 @@ def ingest(world: str, input_path: Path, target_chars: int, max_chars: int) -> N
     source_index = []
     order = 0
     for source_file in source_files:
-        text = normalize_space(read_text(source_file))
+        raw_text = read_text(source_file)
+        text = clean_source_text(raw_text)
         file_hash = sha1_text(text, 16)
         source_index.append(
             {
                 "source_file": str(source_file),
                 "text_hash": file_hash,
                 "char_count": len(text),
+                "raw_char_count": len(raw_text),
             }
         )
         for chapter_title, chapter_text in split_chapters(text):
@@ -115,10 +120,12 @@ def ingest(world: str, input_path: Path, target_chars: int, max_chars: int) -> N
     write_jsonl(wdir / "source_index.jsonl", source_index)
     write_jsonl(wdir / "chunks.jsonl", chunks)
     manifest = load_manifest(wdir, world)
+    manifest["profile"] = profile["name"]
     manifest["source_files"] = source_index
     manifest["chunk_count"] = len(chunks)
+    manifest["ingester"] = "cleaning_v2"
     save_manifest(wdir, manifest)
-    print(f"Ingested {len(source_files)} file(s), {len(chunks)} chunk(s) into {wdir}")
+    print(f"Ingested {len(source_files)} file(s), {len(chunks)} chunk(s) into {wdir} with profile={profile['name']}")
 
 
 def main() -> None:
@@ -127,10 +134,10 @@ def main() -> None:
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--target-chars", type=int, default=4000)
     parser.add_argument("--max-chars", type=int, default=6000)
+    parser.add_argument("--profile", default="generic", choices=["generic", "doupo"])
     args = parser.parse_args()
-    ingest(args.world, args.input, args.target_chars, args.max_chars)
+    ingest(args.world, args.input, args.target_chars, args.max_chars, args.profile)
 
 
 if __name__ == "__main__":
     main()
-
