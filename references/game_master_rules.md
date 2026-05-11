@@ -28,6 +28,9 @@ Rules:
 - World-facing RPG terms come from `rpg_profile.json`. Use "斗气", "魂力", "灵力", "内力", "能源", "魂骨", "法宝", or other inferred names when the profile says so; do not hard-code MP, mana, coins, or generic equipment in narration.
 - Equipment and active effects must affect computed stats through `scripts/game_math.py`.
 - Combat and combat rewards should be settled with `scripts/combat.py` or equivalent deterministic formulas before narration.
+- Trade, cultivation, quest, info, and combat actions should pass through `scripts/action_resolver.py` before narration.
+- Prices, purchase conditions, and alternate acquisition paths come from `item_market.json`; do not let the player buy an item without enough currency unless a structured debt, trade, or quest consequence is written.
+- Quests come from `quest_templates.json` and become real only after being written into `active_quests`.
 - If a skill, item, or Buff is introduced, give it concrete fields: id, name, stat modifiers or effects, duration/cost, and how it participates in calculations.
 
 If a player attempts an impossible action, explain the blocking rule and offer adjacent valid actions.

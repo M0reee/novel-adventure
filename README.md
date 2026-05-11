@@ -79,7 +79,7 @@ python scripts/list_worlds.py
 python scripts/start_game.py
 ```
 
-`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json` 和 `rpg_profile.json`，不需要手写。
+`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json` 和 `quest_templates.json`，不需要手写。
 
 ## RPG 数值核心
 
@@ -109,7 +109,19 @@ python scripts/start_game.py
 python scripts/game_math.py --world doupo_cangqiong
 python scripts/combat.py --world doupo_cangqiong --enemy training_dummy --skill starter_attack --dry-run
 python scripts/rpg_profile.py --world doupo_cangqiong
+python scripts/economy.py --world doupo_cangqiong
+python scripts/quest_runtime.py --world doupo_cangqiong
 ```
+
+## 行动结算
+
+`scripts/action_resolver.py` 会把自然语言行动分成交易、修炼、战斗、任务、情报和高风险行动，并调用对应规则：
+
+- 交易读取 `item_market.json`，会判断价格、货币、是否买得起、替代获取路径。
+- 修炼会检查突破资源、护法和安全地点；不能一句话直接突破。
+- 战斗调用 `combat.py`，伤害、消耗和奖励必须落到结构化状态。
+- 任务读取 `quest_templates.json`，玩家明确接取后才写入 `active_quests`。
+- 情报行动只给信息和路线，不直接赠送物品、境界或胜利。
 
 ## 安装为 Skill
 
@@ -148,6 +160,10 @@ novel-adventure/
 │   ├── list_worlds.py       # 列出可游玩世界
 │   ├── start_game.py        # 选择世界并初始化开场
 │   ├── opening.py           # 生成 opening.json
+│   ├── rpg_profile.py       # 世界观 RPG 术语与系统映射
+│   ├── economy.py           # 物品价格、购买条件和替代获取路径
+│   ├── quest_runtime.py     # 冒险钩子 → 任务模板
+│   ├── action_resolver.py   # 自然语言行动 → 规则结算
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
 │   ├── run_turn.py          # 跑一回合
@@ -165,6 +181,8 @@ novel-adventure/
 chunks.jsonl            # 切块文本
 world_profile.json      # 自动生成的小说题材/profile
 rpg_profile.json        # 世界观 RPG 术语、资源、装备槽、技能名和战斗公式映射
+item_market.json        # 物品价格、稀有度、购买条件、替代获取路径
+quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
 opening.json            # 开场身份、场景、动机和开局选项
 facts.jsonl             # 抽取出的设定事实
 world_bible.json        # 世界观

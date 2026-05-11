@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from typing import Any
 
+from action_resolver import resolve_action
 from common import default_player_state, migrate_player_state, read_json, write_json, world_dir
 from game_math import computed_stats
 from retrieve import retrieve
@@ -94,13 +95,14 @@ def adjudicate_action(player_input: str, state: dict[str, Any], canon_rows: list
     return {"status": status, "verdict": verdict, "consequence": consequence}
 
 
-def build_options(player_input: str, state: dict[str, Any], canon_rows: list[dict[str, Any]]) -> list[str]:
+def build_options(player_input: str, state: dict[str, Any], canon_rows: list[dict[str, Any]], resolution: dict[str, Any]) -> list[str]:
     location = state.get("meta", {}).get("current_location", "当前位置")
-    options = [
+    options = list(resolution.get("options", []))
+    options.extend([
         f"继续在{location}谨慎探索，优先确认风险。",
         "寻找可交流的 NPC，打听势力、资源或任务线索。",
         "整理背包和状态，选择是否修炼、休整或交易。",
-    ]
+    ])
     for row in canon_rows:
         if row.get("type") == "location" or "location" in row.get("type", ""):
             options.append(f"转向与「{row.get('name')}」相关的地点线索。")
@@ -109,7 +111,13 @@ def build_options(player_input: str, state: dict[str, Any], canon_rows: list[dic
         if "hook" in row.get("type", "") or row.get("source_json") == "adventure_hooks.json":
             options.append(f"追踪冒险钩子：{row.get('name')}。")
             break
-    return options[:5]
+    deduped: list[str] = []
+    for option in options:
+        if option and option not in deduped:
+            deduped.append(option)
+        if len(deduped) >= 5:
+            break
+    return deduped
 
 
 def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
@@ -129,12 +137,13 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
         ]
     )
     canon_rows = retrieve(world, query, limit)
-    adjudication = adjudicate_action(player_input, state, canon_rows)
-    result = adjudication["consequence"]
+    resolution = resolve_action(world, player_input, state, canon_rows)
+    result = resolution["consequence"]
     turn = int(meta.get("turn", 0)) + 1
 
     state_changes = [
         f"回合数：{meta.get('turn', 0)} -> {turn}",
+        *resolution.get("state_changes", []),
         "行动记录已追加。" if not dry_run else "dry-run 未写入行动记录。",
     ]
     meta["turn"] = turn
@@ -144,7 +153,11 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
             "turn": turn,
             "action": player_input,
             "result": result,
-            "adjudication": adjudication,
+            "resolution": {
+                "kind": resolution.get("kind"),
+                "status": resolution.get("status"),
+                "verdict": resolution.get("verdict"),
+            },
             "canon_used": [row.get("id") for row in canon_rows[:8]],
         }
     )
@@ -155,15 +168,16 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
     canon_lines = summarize_canon(canon_rows)
     playable_lines = summarize_playable(canon_rows)
     stats = computed_stats(state)
-    options = build_options(player_input, state, canon_rows)
+    options = build_options(player_input, state, canon_rows, resolution)
     output = [
         "## 场景叙事",
         f"你选择：{player_input}",
         "当前世界以检索到的设定为边界推进。相关规则和线索在暗处收束，场景不会脱离既有 canon。",
         "",
         "## 规则裁定",
-        f"- 裁定：{adjudication['verdict']}",
-        f"- 状态：{adjudication['status']}",
+        f"- 行动类型：{resolution.get('kind', 'general')}",
+        f"- 裁定：{resolution['verdict']}",
+        f"- 状态：{resolution['status']}",
         "",
         "## 行动结果",
         result,

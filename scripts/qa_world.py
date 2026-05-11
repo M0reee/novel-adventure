@@ -20,6 +20,8 @@ FULL_REQUIRED_FILES = [
     "npcs.json",
     "game_rules.json",
     "rpg_profile.json",
+    "item_market.json",
+    "quest_templates.json",
     "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
@@ -34,6 +36,8 @@ PRESET_REQUIRED_FILES = [
     "npcs.json",
     "game_rules.json",
     "rpg_profile.json",
+    "item_market.json",
+    "quest_templates.json",
     "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
@@ -65,6 +69,8 @@ def qa(world: str) -> None:
     playable = read_json(wdir / "playable_canon.json", {})
     player_state = read_json(wdir / "player_state.json", {})
     rpg_profile = read_json(wdir / "rpg_profile.json", {})
+    market = read_json(wdir / "item_market.json", {})
+    quests = read_json(wdir / "quest_templates.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
     index_rows = count_index_rows(wdir / "retrieval.sqlite")
     is_preset = bool(manifest.get("preset_world"))
@@ -86,6 +92,8 @@ def qa(world: str) -> None:
         ("rpg_stats", bool(player_state.get("player", {}).get("stats")), "present" if player_state.get("player", {}).get("stats") else "missing"),
         ("rpg_profile", bool(rpg_profile.get("systems", {}).get("resource_name")), rpg_profile.get("systems", {}).get("resource_name", "missing")),
         ("worldview_labels", bool(player_state.get("player", {}).get("stat_labels", {}).get("mp")), player_state.get("player", {}).get("stat_labels", {}).get("mp", "missing")),
+        ("item_market", len(market.get("items", [])) >= 3, str(len(market.get("items", [])))),
+        ("quest_templates", len(quests.get("quests", [])) >= 1, str(len(quests.get("quests", [])))),
         ("opening", bool(read_json(wdir / "opening.json", {})), "present" if read_json(wdir / "opening.json", {}) else "missing"),
     ]
 

@@ -32,7 +32,7 @@ Preferred one-command build:
 
 `python scripts/build_world.py --world <slug> --input <file_or_dir> --profile auto`
 
-This also creates `opening.json`, `rpg_profile.json`, and a RPG-ready `player_state.json` schema for custom worlds.
+This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 Manual build:
 
@@ -46,13 +46,17 @@ Manual build:
    `python scripts/merge.py --world <slug>`
 5. Generate world-facing RPG profile:
    `python scripts/rpg_profile.py --world <slug> --rebuild`
-6. Generate opening:
+6. Generate item economy:
+   `python scripts/economy.py --world <slug> --rebuild`
+7. Generate quest templates:
+   `python scripts/quest_runtime.py --world <slug> --rebuild`
+8. Generate opening:
    `python scripts/opening.py --world <slug> --rebuild`
-7. Distill merged canon into game-ready rules:
+9. Distill merged canon into game-ready rules:
    `python scripts/distill_playable.py --world <slug>`
-8. Build retrieval index:
+10. Build retrieval index:
    `python scripts/index.py --world <slug>`
-9. Optional deterministic QA:
+11. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -82,7 +86,7 @@ Each turn must use retrieved canon, update `player_state.json`, and return scene
 
 Most important rule: the agent is a game master and rules judge, not a wish fulfiller. Player actions must be checked against canon, current state, resources, risk, time, location, relationships, and power limits before success is granted.
 
-RPG rule: numeric outcomes must come from structured state and scripts. Character stats live in `player_state.json` under `stats`, `equipment`, `skills`, `active_effects`, and `inventory`. World-facing names live in `rpg_profile.json`: do not assume every world has "MP", "法力", or generic equipment. Use the profile's resource name, currency name, equipment slots, skill name, and effect name when narrating. Use `scripts/game_math.py` to inspect computed stats and `scripts/combat.py` for combat/reward settlement; do not invent HP, resource, damage, EXP, currency, equipment, skill, or Buff changes in narration without writing them into state.
+RPG rule: numeric outcomes must come from structured state and scripts. Character stats live in `player_state.json` under `stats`, `equipment`, `skills`, `active_effects`, and `inventory`. World-facing names live in `rpg_profile.json`: do not assume every world has "MP", "法力", or generic equipment. Use `scripts/action_resolver.py` as the first stop for trade, cultivation, combat, quest, and info actions; it routes to `item_market.json`, `quest_templates.json`, `scripts/game_math.py`, and `scripts/combat.py`. Do not invent HP, resource, damage, EXP, currency, equipment, skill, quest, or Buff changes in narration without writing them into state.
 
 ## References
 

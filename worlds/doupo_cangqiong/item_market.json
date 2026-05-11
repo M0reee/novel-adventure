@@ -1,0 +1,186 @@
+{
+  "world": "doupo_cangqiong",
+  "currency": "金币",
+  "pricing_policy": "价格是可玩参数，不等同于原文硬 canon；如果用户指出原文价格，以 canon_patches 或本文件覆盖。",
+  "items": [
+    {
+      "item_id": "item_9d157dbb93",
+      "name": "异火",
+      "aliases": [],
+      "summary": "天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价。",
+      "rarity": "mythic",
+      "currency": "金币",
+      "price_range": [
+        0,
+        0
+      ],
+      "purchase_conditions": [
+        "不可常规购买",
+        "必须有位置情报、护法、丹药、克制手段和退路"
+      ],
+      "alternate_acquisition": [
+        "长期主线探索",
+        "高风险收服",
+        "势力争夺"
+      ],
+      "use_requirements": [
+        "拥有该物品",
+        "满足境界/身份/技能条件",
+        "有安全使用环境"
+      ],
+      "use_effect": {},
+      "canon_summary": "天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价。"
+    },
+    {
+      "item_id": "item_388d248a49",
+      "name": "纳戒",
+      "aliases": [],
+      "summary": "储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险。",
+      "rarity": "rare",
+      "currency": "金币",
+      "price_range": [
+        1200,
+        5000
+      ],
+      "purchase_conditions": [
+        "拍卖场或炼器渠道",
+        "防止被强者盯上"
+      ],
+      "alternate_acquisition": [
+        "任务奖励",
+        "遗迹探索",
+        "长辈赠予"
+      ],
+      "use_requirements": [
+        "拥有该物品",
+        "满足境界/身份/技能条件",
+        "有安全使用环境"
+      ],
+      "use_effect": {},
+      "canon_summary": "储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险。"
+    },
+    {
+      "item_id": "item_6f0c68a49a",
+      "name": "玄重尺",
+      "aliases": [],
+      "summary": "沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑。",
+      "rarity": "epic",
+      "currency": "金币",
+      "price_range": [
+        3000,
+        12000
+      ],
+      "purchase_conditions": [
+        "找到可靠卖家",
+        "支付足够货币",
+        "确认物品真伪与适用条件"
+      ],
+      "alternate_acquisition": [
+        "探索获得",
+        "任务奖励",
+        "与 NPC 交易或交换人情"
+      ],
+      "use_requirements": [
+        "拥有该物品",
+        "满足境界/身份/技能条件",
+        "有安全使用环境"
+      ],
+      "use_effect": {},
+      "canon_summary": "沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑。"
+    },
+    {
+      "item_id": "item_957a6e91f8",
+      "name": "筑基灵液",
+      "aliases": [],
+      "summary": "早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。",
+      "rarity": "rare",
+      "currency": "金币",
+      "price_range": [
+        800,
+        1600
+      ],
+      "purchase_conditions": [
+        "可靠药坊或拍卖场有货",
+        "确认不是赝品",
+        "支付足够金币或拿出等价人情/药材"
+      ],
+      "alternate_acquisition": [
+        "收集药材请炼药师炼制",
+        "替药坊完成低风险委托",
+        "向熟识 NPC 借钱或换取人情债"
+      ],
+      "use_requirements": [
+        "拥有该物品",
+        "满足境界/身份/技能条件",
+        "有安全使用环境"
+      ],
+      "use_effect": {
+        "effect_id": "foundation_elixir_training",
+        "name": "筑基灵液辅助",
+        "duration_turns": 3,
+        "modifiers": {
+          "damage_reduction": 0.02
+        },
+        "notes": "主要用于早期修炼效率，不直接保证突破。"
+      },
+      "canon_summary": "早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。"
+    },
+    {
+      "item_id": "item_afd95e4750",
+      "name": "聚气散",
+      "aliases": [],
+      "summary": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。",
+      "rarity": "epic",
+      "currency": "金币",
+      "price_range": [
+        6000,
+        15000
+      ],
+      "purchase_conditions": [
+        "拍卖或高阶炼药渠道",
+        "有足够金币或势力担保",
+        "确认适合冲击斗者"
+      ],
+      "alternate_acquisition": [
+        "取得药方与材料后请炼药师炼制",
+        "完成势力任务换取",
+        "等待拍卖会机会"
+      ],
+      "use_requirements": [
+        "拥有该物品",
+        "满足境界/身份/技能条件",
+        "有安全使用环境"
+      ],
+      "use_effect": {},
+      "canon_summary": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。"
+    },
+    {
+      "item_id": "item_fbd3e6ede1",
+      "name": "魔核",
+      "aliases": [],
+      "summary": "魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买。",
+      "rarity": "uncommon",
+      "currency": "金币",
+      "price_range": [
+        80,
+        300
+      ],
+      "purchase_conditions": [
+        "坊市或佣兵渠道有货",
+        "确认阶别和属性"
+      ],
+      "alternate_acquisition": [
+        "猎杀低阶魔兽",
+        "雇佣佣兵",
+        "用药材交换"
+      ],
+      "use_requirements": [
+        "拥有该物品",
+        "满足境界/身份/技能条件",
+        "有安全使用环境"
+      ],
+      "use_effect": {},
+      "canon_summary": "魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买。"
+    }
+  ]
+}

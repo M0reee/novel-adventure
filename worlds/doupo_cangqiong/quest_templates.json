@@ -1,0 +1,158 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "任务模板来自冒险钩子；运行时只把玩家明确接受或推进的任务写入 active_quests。",
+  "quests": [
+    {
+      "quest_id": "quest_7a6ddc4c80",
+      "name": "乌坦城开局",
+      "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
+      "status": "available",
+      "objectives": [
+        {
+          "id": "gather_info",
+          "text": "收集地点、人物和风险情报",
+          "done": false
+        },
+        {
+          "id": "choose_path",
+          "text": "选择低风险入口或准备路线",
+          "done": false
+        },
+        {
+          "id": "resolve_first_step",
+          "text": "完成第一个可验证的小目标",
+          "done": false
+        }
+      ],
+      "rewards": {
+        "exp": 20,
+        "coins": [
+          5,
+          20
+        ],
+        "items": [],
+        "relationship": "相关 NPC 或势力态度可能变化"
+      },
+      "failure_consequences": [
+        "时间窗口错过",
+        "竞争者介入",
+        "关系或声望下降"
+      ],
+      "source": "adventure_hooks.json"
+    },
+    {
+      "quest_id": "quest_2b6c39112e",
+      "name": "异火线",
+      "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
+      "status": "available",
+      "objectives": [
+        {
+          "id": "collect_clue",
+          "text": "获得异火位置或传闻的可靠线索",
+          "done": false
+        },
+        {
+          "id": "prepare_protection",
+          "text": "准备护体丹药、撤退路线和护法",
+          "done": false
+        },
+        {
+          "id": "approach_site",
+          "text": "接近目标区域但不贸然收服",
+          "done": false
+        }
+      ],
+      "rewards": {
+        "exp": 20,
+        "coins": [
+          5,
+          20
+        ],
+        "items": [],
+        "relationship": "相关 NPC 或势力态度可能变化"
+      },
+      "failure_consequences": [
+        "时间窗口错过",
+        "竞争者介入",
+        "关系或声望下降"
+      ],
+      "source": "adventure_hooks.json"
+    },
+    {
+      "quest_id": "quest_c50369eb35",
+      "name": "炼药线",
+      "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
+      "status": "available",
+      "objectives": [
+        {
+          "id": "find_materials",
+          "text": "确认所需药材、魔核或药方来源",
+          "done": false
+        },
+        {
+          "id": "find_alchemist",
+          "text": "找到可信炼药师或学习基础炼药",
+          "done": false
+        },
+        {
+          "id": "make_or_trade",
+          "text": "炼制、购买或交换一份可用资源",
+          "done": false
+        }
+      ],
+      "rewards": {
+        "exp": 20,
+        "coins": [
+          5,
+          20
+        ],
+        "items": [],
+        "relationship": "相关 NPC 或势力态度可能变化"
+      },
+      "failure_consequences": [
+        "时间窗口错过",
+        "竞争者介入",
+        "关系或声望下降"
+      ],
+      "source": "adventure_hooks.json"
+    },
+    {
+      "quest_id": "quest_9f764c5292",
+      "name": "势力线",
+      "summary": "玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突。",
+      "status": "available",
+      "objectives": [
+        {
+          "id": "identify_contact",
+          "text": "确认可接触的势力人物",
+          "done": false
+        },
+        {
+          "id": "offer_value",
+          "text": "拿出情报、资源或行动价值",
+          "done": false
+        },
+        {
+          "id": "manage_reputation",
+          "text": "避免触发敌对或人情债失控",
+          "done": false
+        }
+      ],
+      "rewards": {
+        "exp": 20,
+        "coins": [
+          5,
+          20
+        ],
+        "items": [],
+        "relationship": "相关 NPC 或势力态度可能变化"
+      },
+      "failure_consequences": [
+        "时间窗口错过",
+        "竞争者介入",
+        "关系或声望下降"
+      ],
+      "source": "adventure_hooks.json"
+    }
+  ]
+}
