@@ -1,0 +1,21 @@
+{
+  "preset": true,
+  "source_redacted": true,
+  "entity_counts": {
+    "world_law": 3,
+    "style_signal": 0,
+    "power_realm": 12,
+    "cultivation_rule": 7,
+    "faction": 6,
+    "location": 7,
+    "npc": 6,
+    "item": 6,
+    "technique": 5,
+    "event": 0,
+    "playable_hook": 4
+  },
+  "notes": [
+    "Public preset contains only compact structured canon and no source chunks or raw extraction facts.",
+    "Use this preset for immediate gameplay; re-run distillation from a local source if deeper canon coverage is needed."
+  ]
+}

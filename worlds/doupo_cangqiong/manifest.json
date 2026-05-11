@@ -1,0 +1,29 @@
+{
+  "world": "doupo_cangqiong",
+  "display_name": "斗气大陆试玩预设",
+  "profile": "doupo",
+  "preset_world": true,
+  "source_redacted": true,
+  "created_at": "2026-05-11T00:00:00",
+  "updated_at": "2026-05-11T14:10:52",
+  "chunk_count": 0,
+  "fact_count": 0,
+  "curated_fact_count": 56,
+  "description": "A compact no-LLM preset world for immediate text-adventure play. Source chunks and raw extraction facts are intentionally omitted.",
+  "merged_files": [
+    "world_bible.json",
+    "power_system.json",
+    "factions.json",
+    "locations.json",
+    "npcs.json",
+    "items.json",
+    "techniques.json",
+    "timeline.json",
+    "game_rules.json",
+    "adventure_hooks.json",
+    "curated_facts.jsonl",
+    "quality_report.json"
+  ],
+  "playable_canon": "playable_canon.json",
+  "playable_canon_count": 56
+}

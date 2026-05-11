@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "world": "doupo_cangqiong",
+    "current_time": "第一日 清晨",
+    "current_location": "乌坦城",
+    "current_stage": "开局",
+    "turn": 0
+  },
+  "player": {
+    "name": "旅人",
+    "identity": "乌坦城无名少年",
+    "realm_or_level": "斗之气低段",
+    "attributes": {},
+    "resources": {},
+    "equipment": [],
+    "status_effects": []
+  },
+  "relationships": [],
+  "active_quests": [],
+  "world_events": [],
+  "action_log": []
+}

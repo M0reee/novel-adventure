@@ -1,5 +1,14 @@
-# 世界库（含小说原文切块、私有设定、玩家存档），不应提交公共仓库
-worlds/
+# 世界库（含小说原文切块、私有设定、玩家存档），默认不应提交公共仓库
+worlds/*
+
+# 允许提交经过瘦身的公开试玩预设；不得包含 chunks/facts/source_index 原文数据
+!worlds/doupo_cangqiong/
+!worlds/doupo_cangqiong/*.json
+!worlds/doupo_cangqiong/*.jsonl
+!worlds/doupo_cangqiong/retrieval.sqlite
+worlds/doupo_cangqiong/chunks.jsonl
+worlds/doupo_cangqiong/facts.jsonl
+worlds/doupo_cangqiong/source_index.jsonl
 
 # Python
 __pycache__/
@@ -33,3 +42,4 @@ htmlcov/
 *.log
 *.sqlite
 *.sqlite-journal
+!worlds/doupo_cangqiong/retrieval.sqlite

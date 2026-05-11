@@ -1,0 +1,104 @@
+{
+  "techniques": [
+    {
+      "name": "焚诀",
+      "aliases": [],
+      "summary": "可随吞噬异火进化的特殊功法，成长潜力极高但风险极大；每次进化都需要异火线索、护法和失败预案。",
+      "claims": [
+        {
+          "claim": "可随吞噬异火进化的特殊功法，成长潜力极高但风险极大；每次进化都需要异火线索、护法和失败预案。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 780,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "佛怒火莲",
+      "aliases": [],
+      "summary": "融合多种火焰形成的高风险高爆发斗技；威力巨大，但对控制力、火焰条件和自身承受力要求极高。",
+      "claims": [
+        {
+          "claim": "融合多种火焰形成的高风险高爆发斗技；威力巨大，但对控制力、火焰条件和自身承受力要求极高。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 779,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "八极崩",
+      "aliases": [],
+      "summary": "近身爆发型斗技，适合贴身破防；需要判断距离、体魄和敌人防御。",
+      "claims": [
+        {
+          "claim": "近身爆发型斗技，适合贴身破防；需要判断距离、体魄和敌人防御。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 778,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "紫云翼",
+      "aliases": [],
+      "summary": "飞行斗技，可提升移动与逃生能力；使用消耗斗气，低阶玩家不能无限飞行。",
+      "claims": [
+        {
+          "claim": "飞行斗技，可提升移动与逃生能力；使用消耗斗气，低阶玩家不能无限飞行。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 777,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "三千雷动",
+      "aliases": [],
+      "summary": "高阶身法斗技，适合闪避、追击和脱身；修炼门槛与消耗较高。",
+      "claims": [
+        {
+          "claim": "高阶身法斗技，适合闪避、追击和脱身；修炼门槛与消耗较高。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 776,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

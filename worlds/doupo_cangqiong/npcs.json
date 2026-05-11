@@ -1,0 +1,124 @@
+{
+  "npcs": [
+    {
+      "name": "药老",
+      "aliases": [],
+      "summary": "高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关。",
+      "claims": [
+        {
+          "claim": "高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 830,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "萧炎",
+      "aliases": [],
+      "summary": "萧家少年，主线气运与成长压力集中在其身上；与他的关系会影响萧家、药老、异火和三年之约相关事件。",
+      "claims": [
+        {
+          "claim": "萧家少年，主线气运与成长压力集中在其身上；与他的关系会影响萧家、药老、异火和三年之约相关事件。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 829,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "薰儿",
+      "aliases": [],
+      "summary": "萧家中身份特殊的少女，背景深厚；她的信任、保护或疏离会影响早期安全与后续远古种族线索。",
+      "claims": [
+        {
+          "claim": "萧家中身份特殊的少女，背景深厚；她的信任、保护或疏离会影响早期安全与后续远古种族线索。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 828,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "纳兰嫣然",
+      "aliases": [],
+      "summary": "云岚宗弟子，退婚事件核心人物；相关互动会影响萧家名誉、云岚宗态度和三年之约走向。",
+      "claims": [
+        {
+          "claim": "云岚宗弟子，退婚事件核心人物；相关互动会影响萧家名誉、云岚宗态度和三年之约走向。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 827,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "雅妃",
+      "aliases": [],
+      "summary": "米特尔拍卖场人物，擅长交易与人脉经营；玩家可通过她获取资源、情报或商业合作，但需付出利益交换。",
+      "claims": [
+        {
+          "claim": "米特尔拍卖场人物，擅长交易与人脉经营；玩家可通过她获取资源、情报或商业合作，但需付出利益交换。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 826,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "美杜莎",
+      "aliases": [],
+      "summary": "蛇人族女王级强者，危险而强势；低阶玩家不能正面对抗，只能依靠谈判、筹码、时机或外力周旋。",
+      "claims": [
+        {
+          "claim": "蛇人族女王级强者，危险而强势；低阶玩家不能正面对抗，只能依靠谈判、筹码、时机或外力周旋。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 825,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

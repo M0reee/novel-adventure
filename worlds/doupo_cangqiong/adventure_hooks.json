@@ -1,0 +1,84 @@
+{
+  "hooks": [
+    {
+      "name": "乌坦城开局",
+      "aliases": [],
+      "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
+      "claims": [
+        {
+          "claim": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 900,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "异火线",
+      "aliases": [],
+      "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
+      "claims": [
+        {
+          "claim": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 899,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "炼药线",
+      "aliases": [],
+      "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
+      "claims": [
+        {
+          "claim": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 898,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "势力线",
+      "aliases": [],
+      "summary": "玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突。",
+      "claims": [
+        {
+          "claim": "玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 897,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

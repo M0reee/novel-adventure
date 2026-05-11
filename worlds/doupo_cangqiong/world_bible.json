@@ -1,0 +1,66 @@
+{
+  "world": "doupo_cangqiong",
+  "world_laws": [
+    {
+      "name": "斗气大陆",
+      "aliases": [],
+      "summary": "这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序。",
+      "claims": [
+        {
+          "claim": "这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1000,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "资源稀缺",
+      "aliases": [],
+      "summary": "高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险。",
+      "claims": [
+        {
+          "claim": "高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 999,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "势力后果",
+      "aliases": [],
+      "summary": "家族、宗门和帝国势力会对玩家行为作出反应；羞辱、抢夺、杀戮和背叛都会产生长期后果。",
+      "claims": [
+        {
+          "claim": "家族、宗门和帝国势力会对玩家行为作出反应；羞辱、抢夺、杀戮和背叛都会产生长期后果。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 998,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ],
+  "style_signals": []
+}

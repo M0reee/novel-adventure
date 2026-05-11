@@ -1,0 +1,386 @@
+{
+  "realms": [
+    {
+      "name": "斗之气",
+      "aliases": [],
+      "summary": "斗气修炼的基础阶段，通常以段位衡量；达到足够段位后可凝聚斗之气旋，迈入斗者。",
+      "claims": [
+        {
+          "claim": "斗气修炼的基础阶段，通常以段位衡量；达到足够段位后可凝聚斗之气旋，迈入斗者。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1200,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗者",
+      "aliases": [],
+      "summary": "正式踏入斗气修炼门槛，形成斗之气旋，可系统修习功法与斗技。",
+      "claims": [
+        {
+          "claim": "正式踏入斗气修炼门槛，形成斗之气旋，可系统修习功法与斗技。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1199,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗师",
+      "aliases": [],
+      "summary": "斗气掌控力明显增强，可外放斗气并支撑更稳定的战斗消耗。",
+      "claims": [
+        {
+          "claim": "斗气掌控力明显增强，可外放斗气并支撑更稳定的战斗消耗。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1198,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "大斗师",
+      "aliases": [],
+      "summary": "斗气强度和身体承载力进一步提升，低阶修炼者很难正面对抗。",
+      "claims": [
+        {
+          "claim": "斗气强度和身体承载力进一步提升，低阶修炼者很难正面对抗。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1197,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗灵",
+      "aliases": [],
+      "summary": "能够更成熟地调动斗气战斗，是地方势力中的重要战力。",
+      "claims": [
+        {
+          "claim": "能够更成熟地调动斗气战斗，是地方势力中的重要战力。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1196,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗王",
+      "aliases": [],
+      "summary": "可以斗气化翼、短距离飞行，开始具备跨区域行动和压制低阶修炼者的能力。",
+      "claims": [
+        {
+          "claim": "可以斗气化翼、短距离飞行，开始具备跨区域行动和压制低阶修炼者的能力。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1195,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗皇",
+      "aliases": [],
+      "summary": "加玛帝国层面的顶尖强者，能显著影响宗门、家族与帝国格局。",
+      "claims": [
+        {
+          "claim": "加玛帝国层面的顶尖强者，能显著影响宗门、家族与帝国格局。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1194,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗宗",
+      "aliases": [],
+      "summary": "可踏空而行，是大陆强者分水岭，对低阶修炼者具有压倒性威胁。",
+      "claims": [
+        {
+          "claim": "可踏空而行，是大陆强者分水岭，对低阶修炼者具有压倒性威胁。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1193,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗尊",
+      "aliases": [],
+      "summary": "中州高阶强者层次，拥有极强空间与斗气掌控力。",
+      "claims": [
+        {
+          "claim": "中州高阶强者层次，拥有极强空间与斗气掌控力。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1192,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "半圣",
+      "aliases": [],
+      "summary": "斗尊与斗圣之间的过渡层次，已接近圣者领域。",
+      "claims": [
+        {
+          "claim": "斗尊与斗圣之间的过渡层次，已接近圣者领域。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1191,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗圣",
+      "aliases": [],
+      "summary": "远古种族与大陆顶级势力的核心战力，可开辟或影响空间。",
+      "claims": [
+        {
+          "claim": "远古种族与大陆顶级势力的核心战力，可开辟或影响空间。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1190,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗帝",
+      "aliases": [],
+      "summary": "斗气大陆传说中的终极境界，长期绝迹；成帝需要极稀缺的源气。",
+      "claims": [
+        {
+          "claim": "斗气大陆传说中的终极境界，长期绝迹；成帝需要极稀缺的源气。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1189,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ],
+  "cultivation_rules": [
+    {
+      "name": "斗气体系",
+      "aliases": [],
+      "summary": "斗气大陆没有花俏魔法，主流力量是斗气；修炼依赖功法、斗技、资源、体质和机缘。",
+      "claims": [
+        {
+          "claim": "斗气大陆没有花俏魔法，主流力量是斗气；修炼依赖功法、斗技、资源、体质和机缘。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1100,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "境界压制",
+      "aliases": [],
+      "summary": "高境界通常对低境界形成压制；越级战斗需要异火、强斗技、特殊体质、经验或外力支撑。",
+      "claims": [
+        {
+          "claim": "高境界通常对低境界形成压制；越级战斗需要异火、强斗技、特殊体质、经验或外力支撑。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1099,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "功法等级",
+      "aliases": [],
+      "summary": "功法通常分为天、地、玄、黄四阶，每阶又有低中高等层次；高阶功法决定修炼速度和斗气质量。",
+      "claims": [
+        {
+          "claim": "功法通常分为天、地、玄、黄四阶，每阶又有低中高等层次；高阶功法决定修炼速度和斗气质量。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1098,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "斗技等级",
+      "aliases": [],
+      "summary": "斗技同样有品阶差异，高阶斗技威力强但消耗和修习门槛更高。",
+      "claims": [
+        {
+          "claim": "斗技同样有品阶差异，高阶斗技威力强但消耗和修习门槛更高。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1097,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "炼药师",
+      "aliases": [],
+      "summary": "炼药师能炼制提升实力、疗伤或辅助突破的丹药，因此地位高且容易被势力拉拢。",
+      "claims": [
+        {
+          "claim": "炼药师能炼制提升实力、疗伤或辅助突破的丹药，因此地位高且容易被势力拉拢。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1096,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "异火",
+      "aliases": [],
+      "summary": "异火是天地奇火，威力狂暴，可增强战斗和炼药，但收服失败会造成重伤甚至死亡。",
+      "claims": [
+        {
+          "claim": "异火是天地奇火，威力狂暴，可增强战斗和炼药，但收服失败会造成重伤甚至死亡。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1095,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "药老指导",
+      "aliases": [],
+      "summary": "药老拥有高阶炼药与修炼经验，可提供指导，但不能让玩家无视资源、境界和风险直接成功。",
+      "claims": [
+        {
+          "claim": "药老拥有高阶炼药与修炼经验，可提供指导，但不能让玩家无视资源、境界和风险直接成功。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 1094,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

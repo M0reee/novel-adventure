@@ -9,10 +9,22 @@ from typing import Any
 from common import read_json, read_jsonl, world_dir
 
 
-REQUIRED_FILES = [
+FULL_REQUIRED_FILES = [
     "manifest.json",
     "chunks.jsonl",
     "facts.jsonl",
+    "world_bible.json",
+    "power_system.json",
+    "factions.json",
+    "locations.json",
+    "npcs.json",
+    "game_rules.json",
+    "playable_canon.json",
+    "retrieval.sqlite",
+]
+
+PRESET_REQUIRED_FILES = [
+    "manifest.json",
     "world_bible.json",
     "power_system.json",
     "factions.json",
@@ -49,14 +61,16 @@ def qa(world: str) -> None:
     playable = read_json(wdir / "playable_canon.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
     index_rows = count_index_rows(wdir / "retrieval.sqlite")
-    missing = [filename for filename in REQUIRED_FILES if not (wdir / filename).exists()]
+    is_preset = bool(manifest.get("preset_world"))
+    required_files = PRESET_REQUIRED_FILES if is_preset else FULL_REQUIRED_FILES
+    missing = [filename for filename in required_files if not (wdir / filename).exists()]
     entity_counts = quality.get("entity_counts", {})
     playable_entries = playable.get("entries", [])
 
     checks = [
         ("required_files", not missing, f"missing={missing}" if missing else "all present"),
-        ("chunks", int(manifest.get("chunk_count", 0)) > 0, str(manifest.get("chunk_count", 0))),
-        ("facts", int(manifest.get("fact_count", 0)) > 0, str(manifest.get("fact_count", 0))),
+        ("chunks", is_preset or int(manifest.get("chunk_count", 0)) > 0, "redacted preset" if is_preset else str(manifest.get("chunk_count", 0))),
+        ("facts", is_preset or int(manifest.get("fact_count", 0)) > 0, "redacted preset" if is_preset else str(manifest.get("fact_count", 0))),
         ("curated_facts", len(curated) >= 30, str(len(curated))),
         ("playable_canon", len(playable_entries) >= 30, str(len(playable_entries))),
         ("retrieval_index", index_rows >= len(curated), str(index_rows)),
@@ -66,7 +80,7 @@ def qa(world: str) -> None:
     ]
 
     print(f"World QA: {world}")
-    print(f"profile={manifest.get('profile')} genre={manifest.get('genre', 'unknown')}")
+    print(f"profile={manifest.get('profile')} genre={manifest.get('genre', 'unknown')} preset={is_preset}")
     for name, ok, detail in checks:
         print(f"[{status(ok)}] {name}: {detail}")
 

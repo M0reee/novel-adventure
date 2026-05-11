@@ -1,0 +1,124 @@
+{
+  "factions": [
+    {
+      "name": "萧家",
+      "aliases": [],
+      "summary": "乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系。",
+      "claims": [
+        {
+          "claim": "乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 820,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "云岚宗",
+      "aliases": [],
+      "summary": "加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。",
+      "claims": [
+        {
+          "claim": "加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 819,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "米特尔家族",
+      "aliases": [],
+      "summary": "加玛帝国商业与拍卖势力，可提供交易、情报和资源渠道；关系建立依赖信誉与利益。",
+      "claims": [
+        {
+          "claim": "加玛帝国商业与拍卖势力，可提供交易、情报和资源渠道；关系建立依赖信誉与利益。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 818,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "迦南学院",
+      "aliases": [],
+      "summary": "以培养修炼者为核心的学院势力，适合试炼、晋升和结交同辈；规则竞争多于直接江湖厮杀。",
+      "claims": [
+        {
+          "claim": "以培养修炼者为核心的学院势力，适合试炼、晋升和结交同辈；规则竞争多于直接江湖厮杀。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 817,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "魂殿",
+      "aliases": [],
+      "summary": "暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险。",
+      "claims": [
+        {
+          "claim": "暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 816,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "丹塔",
+      "aliases": [],
+      "summary": "炼药师体系的重要高阶势力，和丹药、药方、炼药师身份认证相关。",
+      "claims": [
+        {
+          "claim": "炼药师体系的重要高阶势力，和丹药、药方、炼药师身份认证相关。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 815,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

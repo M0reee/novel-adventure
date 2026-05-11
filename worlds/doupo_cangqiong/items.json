@@ -1,0 +1,124 @@
+{
+  "items": [
+    {
+      "name": "异火",
+      "aliases": [],
+      "summary": "天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价。",
+      "claims": [
+        {
+          "claim": "天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 800,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "纳戒",
+      "aliases": [],
+      "summary": "储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险。",
+      "claims": [
+        {
+          "claim": "储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 799,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "玄重尺",
+      "aliases": [],
+      "summary": "沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑。",
+      "claims": [
+        {
+          "claim": "沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 798,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "筑基灵液",
+      "aliases": [],
+      "summary": "早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。",
+      "claims": [
+        {
+          "claim": "早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 797,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "聚气散",
+      "aliases": [],
+      "summary": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。",
+      "claims": [
+        {
+          "claim": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 796,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "魔核",
+      "aliases": [],
+      "summary": "魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买。",
+      "claims": [
+        {
+          "claim": "魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 795,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

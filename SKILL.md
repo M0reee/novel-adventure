@@ -62,6 +62,10 @@ Run:
 
 `python scripts/run_turn.py --world <slug> --input "<player action>"`
 
+For immediate testing, use the included redacted preset:
+
+`python scripts/run_turn.py --world doupo_cangqiong --input "我在乌坦城找药老打听异火和修炼斗气的方法"`
+
 Each turn must use retrieved canon, update `player_state.json`, and return scene narration, action result, state changes, world dynamics, 3-5 action options, and a custom action prompt.
 
 Most important rule: the agent is a game master and rules judge, not a wish fulfiller. Player actions must be checked against canon, current state, resources, risk, time, location, relationships, and power limits before success is granted.

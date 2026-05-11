@@ -1,0 +1,144 @@
+{
+  "locations": [
+    {
+      "name": "乌坦城",
+      "aliases": [],
+      "summary": "加玛帝国东北部城市，萧家早期根基所在；适合低阶玩家打听情报、购买基础资源、接触家族与拍卖场事件。",
+      "claims": [
+        {
+          "claim": "加玛帝国东北部城市，萧家早期根基所在；适合低阶玩家打听情报、购买基础资源、接触家族与拍卖场事件。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 850,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "萧家",
+      "aliases": [],
+      "summary": "乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务。",
+      "claims": [
+        {
+          "claim": "乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 849,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "魔兽山脉",
+      "aliases": [],
+      "summary": "乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线。",
+      "claims": [
+        {
+          "claim": "乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 848,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "云岚宗",
+      "aliases": [],
+      "summary": "加玛帝国强大宗门，和退婚、三年之约等主线冲突有关；贸然挑衅会引来宗门级后果。",
+      "claims": [
+        {
+          "claim": "加玛帝国强大宗门，和退婚、三年之约等主线冲突有关；贸然挑衅会引来宗门级后果。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 847,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "迦南学院",
+      "aliases": [],
+      "summary": "大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口。",
+      "claims": [
+        {
+          "claim": "大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 846,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "黑角域",
+      "aliases": [],
+      "summary": "秩序混乱、强者和交易并存的区域；适合高风险交易、争夺功法斗技和卷入势力冲突。",
+      "claims": [
+        {
+          "claim": "秩序混乱、强者和交易并存的区域；适合高风险交易、争夺功法斗技和卷入势力冲突。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 845,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    },
+    {
+      "name": "中州",
+      "aliases": [],
+      "summary": "斗气大陆强者和顶级势力集中的核心舞台；玩家低阶时只能通过传闻和远期目标接触。",
+      "claims": [
+        {
+          "claim": "斗气大陆强者和顶级势力集中的核心舞台；玩家低阶时只能通过传闻和远期目标接触。",
+          "confidence": 1.0,
+          "quality": 1.0,
+          "evidence_chunk_ids": []
+        }
+      ],
+      "evidence_chunk_ids": [],
+      "confidence": 1.0,
+      "quality": 1.0,
+      "mentions": 0,
+      "score": 844,
+      "conflict_status": "clear",
+      "source": "profile_seed"
+    }
+  ]
+}

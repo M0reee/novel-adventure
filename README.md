@@ -30,12 +30,17 @@ Novel Adventure 把"读小说"和"玩小说"分开 ——
 git clone https://github.com/M0reee/novel-adventure.git
 cd novel-adventure
 
-# 1. 把小说切块入库（输入可以是单文件，也可以是目录）
+# 方式 A：直接玩内置试玩预设
+python scripts/run_turn.py --world doupo_cangqiong --input "我在乌坦城找药老打听异火和修炼斗气的方法"
+
+# 方式 B：把自己的小说切块入库（输入可以是单文件，也可以是目录）
 python scripts/build_world.py --world fanren --input /path/to/novel.txt --profile auto
 
-# 2. 开始玩
+# 然后开始玩
 python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹的消息"
 ```
+
+仓库内置的 `doupo_cangqiong` 是瘦身试玩预设，只包含结构化 canon、可玩规则、初始存档和检索索引；不包含原文切块、原始抽取 facts 或来源索引。
 
 `--profile auto` 会先从样本章节生成 `world_profile.json`，再用它指导全书抽取。已有专门 profile 时也可以指定，例如 `--profile doupo`。
 
@@ -103,7 +108,7 @@ novel-adventure/
 │   ├── install.py           # 安装为 Skill
 │   └── common.py
 ├── references/              # 抽取 schema、判罚规则、风格指南
-└── worlds/                  # 每个 world_slug 一个目录（私有，不入库）
+└── worlds/                  # 私有世界默认不入库；doupo_cangqiong 是公开瘦身试玩预设
 ```
 
 `worlds/<slug>/` 会保存：
@@ -127,7 +132,7 @@ canon_patches.jsonl     # 用户校正的设定补丁
 retrieval.sqlite        # 检索索引
 ```
 
-由于可能含**版权文本**和**私设**，`worlds/` 在 `.gitignore` 里，不会被提交。
+由于可能含**版权文本**和**私设**，`worlds/` 默认在 `.gitignore` 里，不会被提交。唯一例外是公开瘦身预设 `worlds/doupo_cangqiong/`，它不包含 `chunks.jsonl`、`facts.jsonl` 或 `source_index.jsonl`。
 
 ## 规则裁定原则
 
@@ -182,7 +187,7 @@ python scripts/index.py --world fanren
 - V1 只支持 TXT / MD，**不支持** EPUB / PDF（可以先转 TXT）
 - V1 的 extractor 是**启发式 + 自动 profile**，质量不如深度 LLM 蒸馏；可在 `extract.py` 或新增 provider 里接 LLM 提升
 - 中文检索使用 SQLite FTS + LIKE 兜底，适合本地轻量使用
-- `worlds/` 可能含版权文本，**不要**公开发布
+- `worlds/` 可能含版权文本，**不要**公开发布未瘦身的私有世界目录
 
 ## 路线图
 
