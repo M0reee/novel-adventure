@@ -278,7 +278,7 @@ worlds/<slug>/quality_report.md
 worlds/<slug>/world_events.json
 ```
 
-事件来自 `adventure_hooks.json`，包含开始回合、过期回合、忽略后果和介入收益。每次 `play` 会推进事件：
+事件来自 `adventure_hooks.json`，包含开始回合、过期回合、忽略后果、介入收益和联动 effects。每次 `play` 会推进事件：
 
 ```text
 世界事件出现：乌坦城开局
@@ -287,6 +287,29 @@ worlds/<slug>/world_events.json
 ```
 
 这让世界具备时间压力：玩家不处理事件，事件也会改变局势。
+
+事件 effects 可以影响：
+
+- `item_market.json`：物品缺货、涨价、开放交易窗口。
+- `relationship_rules/player_state`：NPC 或势力关系变化。
+- `location_runtime.json`：地点风险、可执行行动变化。
+- `world_events.json`：生成后续事件。
+- `player_state.json`：写入世界标记，供后续裁定使用。
+
+## 题材化战斗
+
+基础伤害公式保持统一，但 `combat_profiles.py` 会按题材补充额外风险和后果：
+
+```text
+玄幻/仙侠：境界压制、灵力反噬、宗门关注
+武侠：伤势、名声、仇家、点到为止
+赛博朋克/科幻：警报等级、公司追踪、义体过载、弹药/能源
+诡秘：理智损耗、污染、禁忌知识反噬
+末日：噪音、感染、弹药、士气
+奇幻：魔力枯竭、诅咒、阵营敌意
+```
+
+这些后果会写入结构化状态或世界标记，而不是只停留在叙事里。
 
 ## 宿主模型蒸馏向导
 
@@ -405,6 +428,8 @@ novel-adventure/
 │   ├── inventory_runtime.py # 物品使用、装备、Buff
 │   ├── encounter_runtime.py # 连续战斗遭遇状态
 │   ├── action_resolver.py   # 自然语言行动 → 规则结算
+│   ├── combat_profiles.py   # 按题材补充战斗风险和后果
+│   ├── runtime_effects.py   # 事件/战斗 effects 写入市场、地点、关系、状态
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
 │   ├── run_turn.py          # 跑一回合

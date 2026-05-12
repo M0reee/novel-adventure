@@ -144,7 +144,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
     before_turn = int(meta.get("turn", 0))
     turn = before_turn + 1
     meta["turn"] = turn
-    event_messages, event_options, event_data = advance_world_events(world, state, player_input)
+    event_messages, event_options, event_data = advance_world_events(world, state, player_input, dry_run)
 
     state_changes = [
         f"回合数：{before_turn} -> {turn}",

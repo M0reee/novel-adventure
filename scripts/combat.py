@@ -8,8 +8,10 @@ from copy import deepcopy
 from typing import Any
 
 from common import migrate_player_state, read_json, write_json, world_dir
+from combat_profiles import combat_profile_for, combat_risk_note
 from game_math import computed_stats, damage_roll, skill_by_id, tick_effects
 from rpg_profile import apply_rpg_profile_to_state, load_rpg_profile
+from runtime_effects import apply_effects
 
 
 ENEMY_TEMPLATES: dict[str, dict[str, Any]] = {
@@ -113,6 +115,7 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
     state = migrate_player_state(state, state.get("meta", {}).get("world", "unknown"))
     rpg_profile = load_rpg_profile(state.get("meta", {}).get("world", "unknown"))
     state = apply_rpg_profile_to_state(state, rpg_profile)
+    genre_profile = combat_profile_for(rpg_profile)
     rng = random.Random(seed)
     player = state["player"]
     skill = skill_by_id(player, skill_id)
@@ -129,11 +132,15 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
     messages = [
         f"你使用 {skill.get('name')}。",
         "攻击未命中。" if not player_attack["hit"] else f"造成 {player_attack['damage']} 点伤害" + ("（暴击）。" if player_attack["critical"] else "。"),
+        combat_risk_note(genre_profile),
     ]
+    effect_messages = apply_effects(state.get("meta", {}).get("world", "unknown"), state, genre_profile.get("effects_on_attack", []), "题材化战斗后果")
 
     rewards: list[str] = []
     if int(enemy["stats"].get("hp", 0)) <= 0:
         messages.append(f"{enemy.get('name')} 被击败。")
+        if genre_profile.get("victory_note"):
+            messages.append(str(genre_profile["victory_note"]))
         rewards = apply_rewards(state, enemy.get("rewards", {}), rng, rpg_profile)
     elif float(e_stats.get("attack", 0)) > 0:
         enemy_attack = damage_roll(e_stats, computed_stats(state), {"name": "反击", "power": 1.0}, rng)
@@ -143,7 +150,7 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
     tick_effects(player)
     return {
         "status": "resolved",
-        "messages": messages + rewards,
+        "messages": messages + effect_messages + rewards,
         "player_stats": computed_stats(state),
         "enemy": enemy,
         "skill": skill,

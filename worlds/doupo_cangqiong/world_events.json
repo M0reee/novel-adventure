@@ -23,6 +23,54 @@
         "获得交易资格或折扣",
         "触发资源收集任务"
       ],
+      "effects": {
+        "ignored": [
+          {
+            "type": "market",
+            "item": "筑基灵液",
+            "availability": "scarce",
+            "price_multiplier": 1.25
+          },
+          {
+            "type": "state",
+            "key": "missed_auction_window",
+            "value": true
+          }
+        ],
+        "intervened": [
+          {
+            "type": "state",
+            "key": "auction_contact_open",
+            "value": true
+          },
+          {
+            "type": "location",
+            "location": "乌坦城",
+            "add_actions": [
+              "追踪低阶资源交易"
+            ]
+          }
+        ]
+      },
+      "triggers": [
+        {
+          "when": "intervened",
+          "create_event": {
+            "title": "乌坦城开局后续：资源筹措",
+            "summary": "玩家获得交易入口后，需要在窗口期内筹措货币、材料或人情。",
+            "type": "opportunity",
+            "starts_after": 1,
+            "duration": 4,
+            "if_ignored": [
+              "交易窗口关闭",
+              "资源被竞争者拿走"
+            ],
+            "if_intervened": [
+              "获得折扣、替代材料或人情债入口"
+            ]
+          }
+        }
+      ],
       "source": "adventure_hooks.json"
     },
     {
@@ -46,6 +94,23 @@
         "获得地点入口",
         "发现资源、敌人或新路线"
       ],
+      "effects": {
+        "ignored": [
+          {
+            "type": "state",
+            "key": "ignored_event_2b6c39112e",
+            "value": true
+          }
+        ],
+        "intervened": [
+          {
+            "type": "state",
+            "key": "intervened_event_2b6c39112e",
+            "value": true
+          }
+        ]
+      },
+      "triggers": [],
       "source": "adventure_hooks.json"
     },
     {
@@ -69,6 +134,23 @@
         "获得历练或能力指导",
         "解锁下一阶段目标"
       ],
+      "effects": {
+        "ignored": [
+          {
+            "type": "state",
+            "key": "ignored_event_c50369eb35",
+            "value": true
+          }
+        ],
+        "intervened": [
+          {
+            "type": "state",
+            "key": "intervened_event_c50369eb35",
+            "value": true
+          }
+        ]
+      },
+      "triggers": [],
       "source": "adventure_hooks.json"
     },
     {
@@ -92,6 +174,23 @@
         "建立关系入口",
         "获得势力任务或庇护条件"
       ],
+      "effects": {
+        "ignored": [
+          {
+            "type": "relationship",
+            "target": "相关势力",
+            "delta": -5
+          }
+        ],
+        "intervened": [
+          {
+            "type": "relationship",
+            "target": "相关势力",
+            "delta": 5
+          }
+        ]
+      },
+      "triggers": [],
       "source": "adventure_hooks.json"
     }
   ],

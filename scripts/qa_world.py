@@ -135,6 +135,8 @@ def build_readable_report(
     if "world_events" in failed:
         risks.append("长期世界事件不足，世界会显得静止，缺少时间窗口和忽略后果。")
         recommendations.append("重跑 world_events，或补充 adventure_hooks 生成会过期的事件压力。")
+    elif any((event.get("effects") or event.get("triggers")) for event in read_json(world_dir(world) / "world_events.json", {}).get("events", [])):
+        strengths.append("长期事件具备联动 effects/triggers，可影响市场、关系、地点或生成后续事件。")
     if "relationship_rules" in failed:
         risks.append("关系规则不足，NPC 好感、敌意、人情债和势力后果会偏弱。")
         recommendations.append("补充 NPC/势力关系规则，让社交行动能改变世界状态。")
