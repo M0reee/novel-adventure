@@ -55,41 +55,41 @@ python novel.py play fanren "我去坊市打听筑基丹的消息"
 
 在你装了 Novel Adventure 的宿主里启动它：
 
-- 如果宿主支持 slash command，可以尝试输入 `/novel-adventure`。
-- 如果不支持 slash command，直接和 Agent 说：`启动 novel-adventure` 或 `使用 Novel Adventure 帮我玩小说文字冒险`。
+- Claude Code / 常见 Agent 宿主：输入 `/novel-adventure`。
+- Codex 如果显示自定义 prompts 命名空间：输入 `/prompts:novel-adventure`。
+- 如果宿主没有开放自定义 slash command，直接说：`启动 novel-adventure` 或 `使用 Novel Adventure 帮我玩小说文字冒险`。
 
 第一次启动建议先玩内置预设：
 
 ```bash
-python novel.py start doupo_cangqiong --reset
+/novel-start doupo_cangqiong --reset
 ```
 
 启动后会显示主角身份、开场处境、当前困难和可选行动。然后复制任意行动继续：
 
 ```bash
-python novel.py play doupo_cangqiong "去乌坦城拍卖场打听筑基灵液价格"
+/novel-play doupo_cangqiong 去乌坦城拍卖场打听筑基灵液价格
 ```
 
 如果你要导入自己的小说：
 
 ```bash
-python novel.py build my_novel /path/to/novel.txt
-python novel.py start my_novel --reset
-python novel.py play my_novel "观察当前环境，确认我能做什么"
+/novel-build my_novel /path/to/novel.txt
+/novel-start my_novel --reset
+/novel-play my_novel 观察当前环境，确认我能做什么
 ```
 
 想要更强蒸馏质量，可以启用 LLM-assisted distillation：
 
 ```bash
 export NOVEL_ADVENTURE_LLM_API_KEY="..."
-python novel.py build my_novel_llm /path/to/novel.txt \
-  --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120
+/novel-build my_novel_llm /path/to/novel.txt --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120
 ```
 
 如果你希望由宿主平台模型来蒸馏，而不是配置 API：
 
 ```bash
-python novel.py llm-pack my_novel --llm-max-chunks 80
+/novel-llm-pack my_novel --llm-max-chunks 80
 ```
 
 这会生成 `worlds/my_novel/llm_requests.jsonl`，让宿主模型按里面的提示返回 JSONL，再用 `--llm-responses` 导入。
@@ -105,23 +105,35 @@ python novel.py llm-pack my_novel --llm-max-chunks 80
 
 ## 🎛️ 管理命令
 
+下表以 Claude Code / 通用 commands 目录的写法展示。Codex 如果采用 prompt 命名空间，把 `/novel-start` 改成 `/prompts:novel-start` 即可。
+
 | 命令 | 说明 |
 |---|---|
 | `启动 novel-adventure` | 在宿主 Agent 里触发这个 Skill |
-| `/novel-adventure` | 宿主支持 slash command 时的入口 |
-| `python novel.py install --target codex --force` | 安装到 Codex Skills 目录 |
-| `python novel.py install --target claude --force` | 安装到 Claude Skills 目录 |
+| `/novel-adventure` | 统一主入口；无参数时列出世界并提示开局 |
+| `/novel-worlds` | 列出可游玩世界 |
+| `/novel-start <slug> --reset` | 初始化或重置某个世界的存档 |
+| `/novel-play <slug> <行动>` | 运行一回合文字冒险 |
+| `/novel-build <slug> <txt_or_dir>` | 从 TXT/MD 小说构建世界 |
+| `/novel-build <slug> <txt_or_dir> --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
+| `/novel-llm-pack <slug> --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
+| `/novel-llm-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型返回的蒸馏结果 |
+| `/novel-qa <slug>` | 检查世界库质量和运行时文件 |
+| `/novel-search <slug> <关键词>` | 检索当前世界 canon |
+
+CLI fallback：
+
+| 命令 | 说明 |
+|---|---|
+| `python novel.py install --target codex --force` | 安装到 Codex Skills 目录，并同步安装 slash/prompt commands |
+| `python novel.py install --target claude --force` | 安装到 Claude Skills 目录，并同步安装 slash commands |
+| `python novel.py install --target hermes --force` | 安装到 Hermes 风格目录，并同步安装 commands |
+| `python novel.py install --target openclaw --force` | 安装到 OpenClaw 风格目录，并同步安装 commands |
 | `python novel.py worlds` | 列出可游玩世界 |
 | `python novel.py start <slug> --reset` | 初始化或重置某个世界的存档 |
 | `python novel.py play <slug> "<行动>"` | 运行一回合文字冒险 |
 | `python novel.py build <slug> <txt_or_dir>` | 从 TXT/MD 小说构建世界 |
-| `python novel.py build <slug> <txt_or_dir> --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
-| `python novel.py llm-pack <slug> --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
-| `python novel.py llm-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型返回的蒸馏结果 |
 | `python novel.py qa <slug>` | 检查世界库质量和运行时文件 |
-| `python novel.py search <slug> "<关键词>"` | 检索当前世界 canon |
-| `python novel.py clear-encounter <slug>` | 清理当前战斗遭遇 |
-| `python novel.py rebuild-rpg <slug>` | 重建世界观 RPG 术语映射 |
 
 如果要手动分步执行：
 
@@ -247,11 +259,15 @@ python novel.py install --target codex --force
 # 通用 Agent Skills
 python novel.py install --target agents --force
 
-# 自定义目录（Hermes / OpenClaw 等）
-python novel.py install --destination /path/to/skills --force
+# Hermes / OpenClaw 风格目录
+python novel.py install --target hermes --force
+python novel.py install --target openclaw --force
+
+# 自定义目录
+python novel.py install --destination /path/to/skills --command-destination /path/to/commands --force
 ```
 
-安装脚本只复制公开瘦身预设 `worlds/doupo_cangqiong/`，不会复制其他私有世界，也会排除 `chunks.jsonl`、`facts.jsonl`、`source_index.jsonl` 等原文/原始抽取文件。
+安装脚本会复制 Skill，并把 `commands/*.md` 安装到宿主命令目录。Claude Code 使用 `~/.claude/commands`，Codex 兼容 prompt-command 目录 `~/.codex/prompts`，通用 Agent/Hermes/OpenClaw 使用各自 `commands` 目录。它只复制公开瘦身预设 `worlds/doupo_cangqiong/`，不会复制其他私有世界，也会排除 `chunks.jsonl`、`facts.jsonl`、`source_index.jsonl` 等原文/原始抽取文件。
 
 ## 目录结构
 
@@ -259,6 +275,12 @@ python novel.py install --destination /path/to/skills --force
 novel-adventure/
 ├── SKILL.md                 # Agent Skill 入口
 ├── README.md
+├── novel.py                 # 统一 CLI fallback
+├── commands/                # 可安装为 slash command / prompt command 的入口
+│   ├── novel-adventure.md
+│   ├── novel-start.md
+│   ├── novel-play.md
+│   └── ...
 ├── scripts/
 │   ├── ingest.py            # TXT/MD → 切块
 │   ├── bootstrap_profile.py # 样本章节 → 自动 profile

@@ -27,7 +27,7 @@ from scripts.start_game import initialize_state
 
 
 def cmd_install(args: argparse.Namespace) -> None:
-    install(args.target, args.destination, args.force)
+    install(args.target, args.destination, args.force, args.no_commands, args.command_destination)
 
 
 def cmd_worlds(args: argparse.Namespace) -> None:
@@ -123,8 +123,25 @@ def parser() -> argparse.ArgumentParser:
     sub = root.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("install", help="Install this skill into a host skill directory.")
-    p.add_argument("--target", default="agents", choices=["agents", "claude", "codex", "project-agents", "project-claude", "project-codex"])
+    p.add_argument(
+        "--target",
+        default="agents",
+        choices=[
+            "agents",
+            "claude",
+            "codex",
+            "hermes",
+            "openclaw",
+            "project-agents",
+            "project-claude",
+            "project-codex",
+            "project-hermes",
+            "project-openclaw",
+        ],
+    )
     p.add_argument("--destination", type=Path)
+    p.add_argument("--command-destination", type=Path)
+    p.add_argument("--no-commands", action="store_true")
     p.add_argument("--force", action="store_true")
     p.set_defaults(func=cmd_install)
 

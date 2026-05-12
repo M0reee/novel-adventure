@@ -17,14 +17,26 @@ This skill follows the Agent Skills folder format. Copy this directory into the 
 
 `python novel.py install --target codex --force`
 
+The installer also copies portable slash-command prompt files from `commands/*.md` into the host command directory unless `--no-commands` is passed.
+
 Supported install targets:
 
 - `codex`: `~/.codex/skills/novel-adventure`
 - `claude`: `~/.claude/skills/novel-adventure`
 - `agents`: `~/.agents/skills/novel-adventure`
+- `hermes`: `~/.hermes/skills/novel-adventure`
+- `openclaw`: `~/.openclaw/skills/novel-adventure`
 - `project-claude`: `.claude/skills/novel-adventure`
 - `project-codex`: `.codex/skills/novel-adventure`
 - `project-agents`: `.agents/skills/novel-adventure`
+- `project-hermes`: `.hermes/skills/novel-adventure`
+- `project-openclaw`: `.openclaw/skills/novel-adventure`
+
+Command prompt destinations:
+
+- Claude Code: `~/.claude/commands`, invoked as `/novel-adventure`, `/novel-start`, `/novel-play`, etc.
+- Codex: `~/.codex/prompts`, invoked as `/novel-adventure` or `/prompts:novel-adventure` depending on Codex version.
+- Generic Agents, Hermes, OpenClaw: `~/.agents/commands`, `~/.hermes/commands`, `~/.openclaw/commands` respectively.
 
 ### Build World
 
@@ -44,13 +56,13 @@ This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest
 
 If the user asks how to start after installation:
 
-1. Tell them to say `启动 novel-adventure` in the host Agent, or use `/novel-adventure` only if that host supports slash commands.
-2. For immediate play, run `python novel.py start doupo_cangqiong --reset`.
-3. Continue with `python novel.py play doupo_cangqiong "<player action>"`.
-4. For a custom novel, run `python novel.py build <slug> <txt_or_dir>`.
-5. For deeper extraction, add `--llm-provider openai-compatible --llm-max-chunks 120`, or use `--llm-provider prompt-pack` and import `--llm-responses`.
+1. Tell them to use `/novel-adventure`; in Codex versions that namespace prompts, use `/prompts:novel-adventure`.
+2. For immediate play, use `/novel-start doupo_cangqiong --reset`.
+3. Continue with `/novel-play doupo_cangqiong <player action>`.
+4. For a custom novel, use `/novel-build <slug> <txt_or_dir>`.
+5. For deeper extraction, add `--llm-provider openai-compatible --llm-max-chunks 120`, or use `/novel-llm-pack` and `/novel-llm-import`.
 
-Prefer friendly commands through `novel.py` when explaining usage. Keep `scripts/*.py` commands for advanced/manual pipeline work.
+Prefer slash commands when explaining usage. Use `python novel.py ...` as the CLI fallback. Keep `scripts/*.py` commands for advanced/manual pipeline work.
 
 Manual build:
 
@@ -96,17 +108,17 @@ Manual build:
 
 List or choose a world:
 
-`python novel.py worlds`
+`/novel-worlds`
 
-`python novel.py start <slug> --reset`
+`/novel-start <slug> --reset`
 
 Run:
 
-`python novel.py play <slug> "<player action>"`
+`/novel-play <slug> <player action>`
 
 For immediate testing, use the included redacted preset:
 
-`python novel.py play doupo_cangqiong "我在乌坦城找药老打听异火和修炼斗气的方法"`
+`/novel-play doupo_cangqiong 我在乌坦城找药老打听异火和修炼斗气的方法`
 
 Each turn must use retrieved canon, update `player_state.json`, and return scene narration, action result, state changes, world dynamics, 3-5 action options, and a custom action prompt.
 
