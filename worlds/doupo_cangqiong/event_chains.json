@@ -1,0 +1,126 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Event chains describe cause-and-effect pressure. They guide world_events generation and host narration, but do not force outcomes without player-state checks.",
+  "chains": [
+    {
+      "chain_id": "chain_4b521adbd6",
+      "name": "乌坦城开局",
+      "type": "auction",
+      "source": "adventure_hooks.json",
+      "nodes": [
+        {
+          "node_id": "signal",
+          "event": "乌坦城开局",
+          "deadline_turns": 4,
+          "if_player_intervenes": [
+            "获得交易资格、折扣、联系人或资源筹措入口。"
+          ],
+          "if_ignored": [
+            "关键资源被竞争者拿走，价格上涨或交易资格降低。"
+          ]
+        },
+        {
+          "node_id": "followup",
+          "event": "乌坦城开局后续",
+          "trigger": "previous_intervened_or_ignored",
+          "effects": [
+            "根据玩家是否介入，更新市场、关系、地点风险、任务或世界标记。",
+            "后续节点必须继续遵守 canon 和当前 player_state。"
+          ]
+        }
+      ],
+      "evidence": "乌坦城开局 玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。 玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
+      "confidence": 1.0
+    },
+    {
+      "chain_id": "chain_ba486a8ee3",
+      "name": "异火线",
+      "type": "exploration",
+      "source": "adventure_hooks.json",
+      "nodes": [
+        {
+          "node_id": "signal",
+          "event": "异火线",
+          "deadline_turns": 6,
+          "if_player_intervenes": [
+            "获得地点入口、路线情报、资源线索或撤退方案。"
+          ],
+          "if_ignored": [
+            "入口线索过期，其他探索者提前进入并改变现场。"
+          ]
+        },
+        {
+          "node_id": "followup",
+          "event": "异火线后续",
+          "trigger": "previous_intervened_or_ignored",
+          "effects": [
+            "根据玩家是否介入，更新市场、关系、地点风险、任务或世界标记。",
+            "后续节点必须继续遵守 canon 和当前 player_state。"
+          ]
+        }
+      ],
+      "evidence": "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。 玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
+      "confidence": 1.0
+    },
+    {
+      "chain_id": "chain_271fdc28cb",
+      "name": "炼药线",
+      "type": "training",
+      "source": "adventure_hooks.json",
+      "nodes": [
+        {
+          "node_id": "signal",
+          "event": "炼药线",
+          "deadline_turns": 6,
+          "if_player_intervenes": [
+            "获得历练、能力指导、资源准备路线或下一阶段目标。"
+          ],
+          "if_ignored": [
+            "试炼窗口关闭，玩家错过低风险成长机会。"
+          ]
+        },
+        {
+          "node_id": "followup",
+          "event": "炼药线后续",
+          "trigger": "previous_intervened_or_ignored",
+          "effects": [
+            "根据玩家是否介入，更新市场、关系、地点风险、任务或世界标记。",
+            "后续节点必须继续遵守 canon 和当前 player_state。"
+          ]
+        }
+      ],
+      "evidence": "炼药线 玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。 玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
+      "confidence": 1.0
+    },
+    {
+      "chain_id": "chain_bbf8ecb7e7",
+      "name": "势力线",
+      "type": "faction",
+      "source": "adventure_hooks.json",
+      "nodes": [
+        {
+          "node_id": "signal",
+          "event": "势力线",
+          "deadline_turns": 6,
+          "if_player_intervenes": [
+            "建立势力接触入口，获得任务、庇护条件或人情债。"
+          ],
+          "if_ignored": [
+            "目标势力关注度下降，竞争者获得先机或敌意上升。"
+          ]
+        },
+        {
+          "node_id": "followup",
+          "event": "势力线后续",
+          "trigger": "previous_intervened_or_ignored",
+          "effects": [
+            "根据玩家是否介入，更新市场、关系、地点风险、任务或世界标记。",
+            "后续节点必须继续遵守 canon 和当前 player_state。"
+          ]
+        }
+      ],
+      "evidence": "势力线 玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突。 玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突。",
+      "confidence": 1.0
+    }
+  ]
+}

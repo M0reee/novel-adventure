@@ -11,6 +11,7 @@ from gameplay_profile import build_gameplay_profile
 from index import build_index
 from ingest import ingest
 from merge import merge
+from narrative_intelligence import build_narrative_intelligence
 from opening import build_opening
 from qa_world import qa
 from world_events import build_world_events
@@ -38,6 +39,7 @@ def build(
     merge(world)
     build_opening(world)
     distill(world)
+    build_narrative_intelligence(world)
     build_gameplay_profile(world)
     build_world_events(world)
     build_index(world)

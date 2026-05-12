@@ -16,12 +16,10 @@
       "related_factions": [],
       "progress": 0,
       "if_ignored": [
-        "关键资源被其他势力买走",
-        "价格上涨或交易资格降低"
+        "关键资源被竞争者拿走，价格上涨或交易资格降低。"
       ],
       "if_intervened": [
-        "获得交易资格或折扣",
-        "触发资源收集任务"
+        "获得交易资格、折扣、联系人或资源筹措入口。"
       ],
       "effects": {
         "ignored": [
@@ -75,7 +73,8 @@
           }
         }
       ],
-      "source": "adventure_hooks.json"
+      "source": "adventure_hooks.json",
+      "event_chain_id": "chain_4b521adbd6"
     },
     {
       "event_id": "event_2b6c39112e",
@@ -91,12 +90,10 @@
       "related_factions": [],
       "progress": 0,
       "if_ignored": [
-        "入口线索过期",
-        "其他探索者提前进入并改变现场"
+        "入口线索过期，其他探索者提前进入并改变现场。"
       ],
       "if_intervened": [
-        "获得地点入口",
-        "发现资源、敌人或新路线"
+        "获得地点入口、路线情报、资源线索或撤退方案。"
       ],
       "effects": {
         "ignored": [
@@ -115,7 +112,8 @@
         ]
       },
       "triggers": [],
-      "source": "adventure_hooks.json"
+      "source": "adventure_hooks.json",
+      "event_chain_id": "chain_ba486a8ee3"
     },
     {
       "event_id": "event_c50369eb35",
@@ -131,12 +129,10 @@
       "related_factions": [],
       "progress": 0,
       "if_ignored": [
-        "试炼窗口关闭",
-        "玩家错过低风险成长机会"
+        "试炼窗口关闭，玩家错过低风险成长机会。"
       ],
       "if_intervened": [
-        "获得历练或能力指导",
-        "解锁下一阶段目标"
+        "获得历练、能力指导、资源准备路线或下一阶段目标。"
       ],
       "effects": {
         "ignored": [
@@ -155,7 +151,8 @@
         ]
       },
       "triggers": [],
-      "source": "adventure_hooks.json"
+      "source": "adventure_hooks.json",
+      "event_chain_id": "chain_271fdc28cb"
     },
     {
       "event_id": "event_9f764c5292",
@@ -171,12 +168,10 @@
       "related_factions": [],
       "progress": 0,
       "if_ignored": [
-        "目标势力对玩家关注度下降",
-        "竞争者获得先机"
+        "目标势力关注度下降，竞争者获得先机或敌意上升。"
       ],
       "if_intervened": [
-        "建立关系入口",
-        "获得势力任务或庇护条件"
+        "建立势力接触入口，获得任务、庇护条件或人情债。"
       ],
       "effects": {
         "ignored": [
@@ -197,7 +192,8 @@
         ]
       },
       "triggers": [],
-      "source": "adventure_hooks.json"
+      "source": "adventure_hooks.json",
+      "event_chain_id": "chain_bbf8ecb7e7"
     }
   ],
   "history": []

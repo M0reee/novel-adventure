@@ -5,6 +5,7 @@ from copy import deepcopy
 from typing import Any
 
 from combat import resolve_combat_round
+from common import read_json, world_dir
 from encounter_runtime import load_encounters, record_combat_result, start_or_get_encounter
 from economy import can_afford, find_market_item, load_market, price_text
 from gameplay_profile import load_gameplay_profile
@@ -35,12 +36,12 @@ def classify_action(player_input: str) -> str:
         return "inventory"
     if any(word in player_input for word in TRADE_WORDS):
         return "trade"
+    if any(word in player_input for word in SOCIAL_WORDS):
+        return "social"
     if any(word in player_input for word in CULTIVATION_WORDS):
         return "cultivation"
     if any(word in player_input for word in QUEST_WORDS):
         return "quest"
-    if any(word in player_input for word in SOCIAL_WORDS):
-        return "social"
     if any(word in player_input for word in LOCATION_WORDS):
         return "location"
     if any(word in player_input for word in INFO_WORDS):
@@ -243,13 +244,29 @@ def resolve_social(world: str, player_input: str, state: dict[str, Any], canon_r
     elif any(word in player_input for word in ("送礼", "求助", "拜师", "结交")):
         delta = 5
     change = adjust_relationship(state, target, delta, f"行动：{player_input[:60]}")
+    motives = read_json(world_dir(world) / "npc_motives.json", {}).get("npcs", [])
+    motive = next((row for row in motives if row.get("npc") == target), {})
+    motive_note = ""
+    motive_options: list[str] = []
+    if motive:
+        leverage = "；".join(motive.get("leverage", [])[:2])
+        boundaries = "；".join(motive.get("boundaries", [])[:2])
+        motive_note = f" 对方可被打动的筹码：{leverage or '合理利益或可信关系'}；底线：{boundaries or '不会无条件满足要求'}。"
+        motive_options = []
+        for option in motive.get("player_hooks", [])[:3]:
+            option = str(option).strip()
+            if option and not any(verb in option for verb in ("请求", "提出", "交换", "询问", "完成", "帮助", "打听", "合作", "确认")):
+                option = f"围绕「{option}」提出具体请求"
+            if option:
+                motive_options.append(option if option.endswith(("。", "！", "？")) else f"{option}。")
+        motive_options.extend(["提出具体交换条件。", "询问对方不能接受的底线。"])
     return {
         "kind": "social",
         "status": "resolved",
         "verdict": "关系已更新",
-        "consequence": f"你与「{target}」产生一次明确互动。关系变化会影响后续情报、交易、任务和敌意。",
+        "consequence": f"你与「{target}」产生一次明确互动。关系变化会影响后续情报、交易、任务和敌意。{motive_note}",
         "state_changes": [change] if change else [],
-        "options": ["继续沟通。", "提出交易或任务请求。", "暂时退开避免关系恶化。"],
+        "options": (motive_options or ["继续沟通。", "提出交易或任务请求。", "暂时退开避免关系恶化。"])[:4],
     }
 
 

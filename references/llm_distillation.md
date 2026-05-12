@@ -58,6 +58,26 @@ Then import:
 python scripts/extract.py --world <slug> --profile auto --llm-responses worlds/<slug>/llm_responses.jsonl
 ```
 
+## What LLM Assistance Should Improve
+
+The LLM extractor should prioritize facts that improve the narrative intelligence layer:
+
+- NPC motives: public goal, private goal, fear, leverage, loyalty, secret, refusal boundary.
+- Ability boundaries: can-do, cannot-do, cost, risk, requirement, failure mode, scaling limit.
+- Foreshadowing: player-visible clue, hidden truth if explicit, reveal condition, payoff.
+- Event chains: cause, deadline, intervention outcome, ignored consequence, follow-up hook.
+
+These are still returned as normal `facts`; `scripts/narrative_intelligence.py` turns them into:
+
+```text
+npc_motives.json
+ability_boundaries.json
+foreshadowing.json
+event_chains.json
+```
+
+Do not invent hidden truth or future payoffs that are not in the chunk. If a clue is only suggestive, record the surface clue and keep hidden truth host-only/unknown.
+
 ## Cache
 
 `openai-compatible` writes `llm_facts_cache.jsonl`. Re-running extraction reuses cached chunk results by `chunk_id:text_hash`.

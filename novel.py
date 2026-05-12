@@ -20,6 +20,7 @@ from scripts.install import install
 from scripts.host_distill import export_prompt_pack, import_prompt_pack, status as host_status
 from scripts.list_worlds import discover_worlds, format_worlds
 from scripts.merge import merge
+from scripts.narrative_intelligence import build_narrative_intelligence
 from scripts.opening import build_opening, ensure_opening, format_opening
 from scripts.qa_world import qa
 from scripts.retrieve import retrieve
@@ -218,6 +219,10 @@ def cmd_rebuild_gameplay(args: argparse.Namespace) -> None:
     build_gameplay_profile(args.world)
 
 
+def cmd_rebuild_narrative(args: argparse.Namespace) -> None:
+    build_narrative_intelligence(args.world)
+
+
 def cmd_pipeline(args: argparse.Namespace) -> None:
     if args.step == "ingest":
         if args.input is None:
@@ -237,6 +242,8 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
         merge(args.world)
     elif args.step == "opening":
         build_opening(args.world)
+    elif args.step == "narrative":
+        build_narrative_intelligence(args.world)
     elif args.step == "gameplay":
         build_gameplay_profile(args.world)
     elif args.step == "index":
@@ -374,8 +381,12 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_gameplay)
 
+    p = sub.add_parser("rebuild-narrative", help="Rebuild NPC motives, ability boundaries, foreshadowing, and event chains.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_rebuild_narrative)
+
     p = sub.add_parser("pipeline", help="Advanced single pipeline step.")
-    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "gameplay", "index"])
+    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "gameplay", "index"])
     p.add_argument("world")
     p.add_argument("input", nargs="?", type=Path)
     p.add_argument("--profile", default="auto")

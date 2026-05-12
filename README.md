@@ -176,6 +176,7 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `/novel-host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `/novel-qa <slug>` | 检查世界库质量和运行时文件 |
 | `/novel-search <slug> <关键词>` | 检索当前世界 canon |
+| `/novel-rebuild-narrative <slug>` | 重建 NPC 动机、能力边界、伏笔和事件链 |
 | `/novel-rebuild-gameplay <slug>` | 从 canon 重建战斗/事件玩法机制，避免题材模板硬套 |
 
 CLI fallback：
@@ -196,6 +197,7 @@ CLI fallback：
 | `python novel.py host-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型蒸馏结果并重建 |
 | `python novel.py host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `python novel.py qa <slug>` | 检查世界库质量，生成 `quality_report.md/json` |
+| `python novel.py rebuild-narrative <slug>` | 重建 `npc_motives/ability_boundaries/foreshadowing/event_chains` |
 | `python novel.py rebuild-gameplay <slug>` | 从 canon 重建 `gameplay_profile.json` |
 
 如果要手动分步执行：
@@ -329,6 +331,24 @@ worlds/<slug>/gameplay_profile.json
 
 这条规则保证通用性：一本没有“法力”的小说不会被强行套法力；一本没有“义体”的赛博题材也不会凭标签生成义体过载；一本普通历史小说只会使用它 canon 中存在的军纪、声望、补给、地理和关系后果。
 
+## 叙事智能层
+
+LLM-assisted distillation 不只应该抽“有什么”，还要抽“为什么、不能做什么、什么时候揭示、忽略后会怎样”。构建世界时会生成四个叙事智能文件：
+
+```text
+worlds/<slug>/npc_motives.json
+worlds/<slug>/ability_boundaries.json
+worlds/<slug>/foreshadowing.json
+worlds/<slug>/event_chains.json
+```
+
+- `npc_motives.json`：记录 NPC 的公开目标、隐藏目标、恐惧、筹码、底线和可互动钩子，社交裁定会读取它。
+- `ability_boundaries.json`：记录能力、物品、技法、境界能做什么、不能做什么、消耗、风险、前置和成长边界，防止特殊能力变成万能钥匙。
+- `foreshadowing.json`：区分玩家可见线索和主持人隐藏真相，只有满足揭示条件才逐步公开，避免开局剧透。
+- `event_chains.json`：把冒险钩子和重大事件转成因果链，世界事件会引用它生成更具体的介入收益和忽略后果。
+
+这些文件同样是 canon-first：纯启发式会给出保守版本；LLM-assisted 或 host prompt-pack 能显著提高人物动机、伏笔、能力边界和复杂事件链质量。
+
 ## 宿主模型蒸馏向导
 
 如果不想配置 API，但希望当前宿主模型帮忙做高质量抽取，使用：
@@ -446,6 +466,7 @@ novel-adventure/
 │   ├── inventory_runtime.py # 物品使用、装备、Buff
 │   ├── encounter_runtime.py # 连续战斗遭遇状态
 │   ├── action_resolver.py   # 自然语言行动 → 规则结算
+│   ├── narrative_intelligence.py # NPC 动机、能力边界、伏笔、事件链
 │   ├── gameplay_profile.py  # 从原著 canon 推导战斗/事件玩法机制
 │   ├── combat_profiles.py   # 读取 gameplay_profile，题材只做低置信兜底
 │   ├── runtime_effects.py   # 事件/战斗 effects 写入市场、地点、关系、状态
@@ -468,6 +489,10 @@ novel-adventure/
 chunks.jsonl            # 切块文本
 world_profile.json      # 自动生成的小说题材/profile
 rpg_profile.json        # 世界观 RPG 术语、资源、装备槽、技能名和战斗公式映射
+npc_motives.json        # NPC 目标、恐惧、筹码、底线和互动钩子
+ability_boundaries.json # 能力/物品/技法/境界的可用范围、代价和限制
+foreshadowing.json      # 伏笔、揭示条件和主持人隐藏信息
+event_chains.json       # 事件因果链、介入收益和忽略后果
 gameplay_profile.json   # 原著 canon 证据驱动的战斗/事件玩法机制
 item_market.json        # 物品价格、稀有度、购买条件、替代获取路径
 quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
@@ -561,8 +586,9 @@ python scripts/index.py --world fanren
 - [x] 一键构建与 QA 脚本
 - [x] 把 `extract.py` 接入可插拔的 LLM provider
 - [x] 用 `gameplay_profile.json` 从原著 canon 推导玩法机制
+- [x] 增加 NPC 动机、能力边界、伏笔和事件链叙事智能层
 - [ ] EPUB / PDF 导入
-- [ ] 更强的 LLM-assisted 人物动机、伏笔和冲突抽取
+- [ ] 更强的 LLM-assisted 人物动机、伏笔和冲突抽取质量评估
 - [ ] 更完整的敌人 AI、技能树、装备套装和长期经济系统
 - [ ] 多人合作模式（一桌跑团）
 - [ ] Web UI（可选）

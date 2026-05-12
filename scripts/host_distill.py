@@ -11,6 +11,7 @@ from gameplay_profile import build_gameplay_profile
 from index import build_index
 from ingest import ingest
 from merge import merge
+from narrative_intelligence import build_narrative_intelligence
 from qa_world import qa
 from common import read_jsonl, world_dir
 from world_events import build_world_events
@@ -60,6 +61,7 @@ def import_prompt_pack(world: str, responses: Path, profile: str) -> None:
     extract(world, profile, llm_responses=responses)
     merge(world)
     distill(world)
+    build_narrative_intelligence(world)
     build_gameplay_profile(world)
     build_world_events(world)
     build_index(world)

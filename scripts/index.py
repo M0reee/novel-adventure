@@ -21,12 +21,24 @@ CANON_FILES = [
     "game_rules.json",
     "adventure_hooks.json",
     "playable_canon.json",
+    "npc_motives.json",
+    "ability_boundaries.json",
+    "foreshadowing.json",
+    "event_chains.json",
 ]
 
 
 def infer_type(source: str, path: str) -> str:
     if source == "playable_canon.json":
         return "playable_canon"
+    if source == "npc_motives.json":
+        return "npc_motive"
+    if source == "ability_boundaries.json":
+        return "ability_boundary"
+    if source == "foreshadowing.json":
+        return "foreshadowing"
+    if source == "event_chains.json":
+        return "event_chain"
     checks = [
         ("world_laws", "world_law"),
         ("style_signals", "style_signal"),
@@ -76,6 +88,104 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
                         "source_json": source,
                         "quality": float(node.get("source_quality", 0.8)),
                         "score": float(node.get("source_score", 0.0)),
+                    }
+                )
+            elif source == "npc_motives.json" and "npc" in node:
+                claim = " ".join(
+                    str(part)
+                    for part in [
+                        node.get("public_goal", ""),
+                        node.get("private_goal", ""),
+                        " ".join(node.get("fears", [])),
+                        " ".join(node.get("leverage", [])),
+                        " ".join(node.get("boundaries", [])),
+                        " ".join(node.get("player_hooks", [])),
+                    ]
+                    if part
+                )[:800]
+                rows.append(
+                    {
+                        "id": f"{source}:{path}:{node.get('npc')}",
+                        "type": "npc_motive",
+                        "name": node.get("npc", ""),
+                        "claim": claim,
+                        "aliases": "",
+                        "evidence": node.get("evidence", ""),
+                        "source_json": source,
+                        "quality": float(node.get("confidence", 0.7)),
+                        "score": 300.0,
+                    }
+                )
+            elif source == "ability_boundaries.json" and "ability_id" in node:
+                claim = " ".join(
+                    str(part)
+                    for part in [
+                        " ".join(node.get("can_do", [])),
+                        " ".join(node.get("cannot_do", [])),
+                        " ".join(node.get("costs", [])),
+                        " ".join(node.get("risks", [])),
+                        " ".join(node.get("requirements", [])),
+                        node.get("scaling", ""),
+                    ]
+                    if part
+                )[:900]
+                rows.append(
+                    {
+                        "id": node.get("ability_id"),
+                        "type": "ability_boundary",
+                        "name": node.get("name", ""),
+                        "claim": claim,
+                        "aliases": node.get("type", ""),
+                        "evidence": node.get("evidence", ""),
+                        "source_json": source,
+                        "quality": float(node.get("confidence", 0.7)),
+                        "score": 320.0,
+                    }
+                )
+            elif source == "foreshadowing.json" and "foreshadow_id" in node:
+                claim = " ".join(
+                    str(part)
+                    for part in [
+                        node.get("surface_clue", ""),
+                        " ".join(node.get("reveal_conditions", [])),
+                        " ".join(node.get("payoff", [])),
+                        node.get("spoiler_level", ""),
+                    ]
+                    if part
+                )[:700]
+                rows.append(
+                    {
+                        "id": node.get("foreshadow_id"),
+                        "type": "foreshadowing",
+                        "name": " ".join(node.get("related_entities", [])) or node.get("surface_clue", ""),
+                        "claim": claim,
+                        "aliases": "",
+                        "evidence": node.get("evidence", ""),
+                        "source_json": source,
+                        "quality": float(node.get("confidence", 0.65)),
+                        "score": 260.0,
+                    }
+                )
+            elif source == "event_chains.json" and "chain_id" in node:
+                node_text = []
+                for chain_node in node.get("nodes", []):
+                    if isinstance(chain_node, dict):
+                        node_text.append(" ".join(str(value) for value in chain_node.values() if not isinstance(value, (list, dict))))
+                        for key in ("if_player_intervenes", "if_ignored", "effects"):
+                            value = chain_node.get(key)
+                            if isinstance(value, list):
+                                node_text.extend(str(item) for item in value)
+                rows.append(
+                    {
+                        "id": node.get("chain_id"),
+                        "type": "event_chain",
+                        "name": node.get("name", ""),
+                        "claim": " ".join(node_text)[:900],
+                        "aliases": node.get("type", ""),
+                        "evidence": node.get("evidence", ""),
+                        "source_json": source,
+                        "quality": float(node.get("confidence", 0.68)),
+                        "score": 280.0,
                     }
                 )
             elif "name" in node and ("summary" in node or "claims" in node):

@@ -29,8 +29,12 @@ PREFERRED_TYPES = {
     "playable_technique": 15,
     "playable_power_realm": 16,
     "playable_cultivation_rule": 17,
-    "game_rule": 18,
-    "style_signal": 19,
+    "npc_motive": 18,
+    "ability_boundary": 19,
+    "event_chain": 20,
+    "foreshadowing": 21,
+    "game_rule": 22,
+    "style_signal": 23,
 }
 
 

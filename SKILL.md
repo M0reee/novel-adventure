@@ -88,15 +88,19 @@ Manual build:
    `python scripts/relationship_runtime.py --world <slug> --rebuild`
 10. Initialize encounter state:
    `python scripts/encounter_runtime.py --world <slug>`
-11. Generate long-running world events:
+11. Generate narrative intelligence:
+   `python scripts/narrative_intelligence.py --world <slug> --rebuild`
+12. Generate canon-first gameplay profile:
+   `python scripts/gameplay_profile.py --world <slug> --rebuild`
+13. Generate long-running world events:
    `python scripts/world_events.py --world <slug> --rebuild`
-12. Generate opening:
+14. Generate opening:
    `python scripts/opening.py --world <slug> --rebuild`
-13. Distill merged canon into game-ready rules:
+15. Distill merged canon into game-ready rules:
    `python scripts/distill_playable.py --world <slug>`
-14. Build retrieval index:
+16. Build retrieval index:
    `python scripts/index.py --world <slug>`
-15. Optional deterministic QA:
+17. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -136,6 +140,8 @@ Most important rule: the agent is a game master and rules judge, not a wish fulf
 RPG rule: numeric outcomes must come from structured state and scripts. Character stats live in `player_state.json` under `stats`, `equipment`, `skills`, `active_effects`, and `inventory`. World-facing names live in `rpg_profile.json`: do not assume every world has "MP", "法力", or generic equipment. Use `scripts/action_resolver.py` as the first stop for trade, cultivation, combat, quest, location, social, inventory, and info actions; it routes to `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, `scripts/game_math.py`, and `scripts/combat.py`. Do not invent HP, resource, damage, EXP, currency, equipment, skill, quest, relationship, location, encounter, or Buff changes in narration without writing them into state.
 
 World-event rule: long-running events live in `world_events.json` and are advanced by `run_turn.py`. Mention active or expired events when relevant; ignored events may expire and change the world, while intervened events may create quests, access, resources, relationships, or risk reduction. Event effects must be applied through `runtime_effects.py` so market, location, relationship, state flags, and follow-up events are structured.
+
+Narrative intelligence rule: `npc_motives.json`, `ability_boundaries.json`, `foreshadowing.json`, and `event_chains.json` are host-facing canon-derived guidance. Use NPC motives for social offers/refusals, ability boundaries for special powers and item/technique use, foreshadowing to avoid premature spoilers, and event chains for cause-and-effect pressure. These files guide rulings but cannot override canon patches, retrieved canon, or player state.
 
 Canon-first gameplay rule: base math remains in `game_math.py`, but `combat.py` and `world_events.py` must load `gameplay_profile.json` through `gameplay_profile.py` before applying any special combat or event logic. `gameplay_profile.json` may enable realm pressure, ammo/charge, contamination, alert tracking, market windows, faction reaction, location access, crafting, or backlash only when distilled canon contains supporting evidence. Broad genre labels are low-confidence fallback only; they must never override canon or introduce unsupported mechanics.
 

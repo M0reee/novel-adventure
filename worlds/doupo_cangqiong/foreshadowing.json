@@ -1,0 +1,108 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Foreshadowing separates player-visible clues from host-only truths. Do not reveal hidden_truth unless reveal_conditions are met.",
+  "foreshadows": [
+    {
+      "foreshadow_id": "foreshadow_7d9ee36fe7",
+      "surface_clue": "薰儿 萧家中身份特殊的少女",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "她的信任、保护或疏离会影响早期安全与后续远古种族线索"
+      ],
+      "payoff": [
+        "解锁新任务、关系、能力边界或地点入口。"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "薰儿"
+      ],
+      "evidence": "薰儿 萧家中身份特殊的少女，背景深厚；她的信任、保护或疏离会影响早期安全与后续远古种族线索。 萧家中身份特殊的少女，背景深厚；她的信任、保护或疏离会影响早期安全与后续远古种族线索。",
+      "confidence": 1.0
+    },
+    {
+      "foreshadow_id": "foreshadow_d48d40d6d2",
+      "surface_clue": "常用于隐藏物品、灵魂寄居或携带资源",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "玩家持续调查、建立关系或推进相关任务。"
+      ],
+      "payoff": [
+        "常用于隐藏物品、灵魂寄居或携带资源"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "纳戒"
+      ],
+      "evidence": "纳戒 储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险。 储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险。",
+      "confidence": 1.0
+    },
+    {
+      "foreshadow_id": "foreshadow_2368249776",
+      "surface_clue": "每次进化都需要异火线索、护法和失败预案",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "每次进化都需要异火线索、护法和失败预案"
+      ],
+      "payoff": [
+        "解锁新任务、关系、能力边界或地点入口。"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "焚诀"
+      ],
+      "evidence": "焚诀 可随吞噬异火进化的特殊功法，成长潜力极高但风险极大；每次进化都需要异火线索、护法和失败预案。 可随吞噬异火进化的特殊功法，成长潜力极高但风险极大；每次进化都需要异火线索、护法和失败预案。",
+      "confidence": 1.0
+    },
+    {
+      "foreshadow_id": "foreshadow_226603b53f",
+      "surface_clue": "早期提供身份、庇护和限制",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "玩家持续调查、建立关系或推进相关任务。"
+      ],
+      "payoff": [
+        "玩家行为会改变家族声望、资源支持和敌对关系"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "萧家"
+      ],
+      "evidence": "萧家 乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系。 乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系。",
+      "confidence": 1.0
+    },
+    {
+      "foreshadow_id": "foreshadow_dda581a3c7",
+      "surface_clue": "魂殿 暗中猎取灵魂、布局大陆的危险势力",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "过早暴露会带来远超玩家等级的追踪风险"
+      ],
+      "payoff": [
+        "解锁新任务、关系、能力边界或地点入口。"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "魂殿"
+      ],
+      "evidence": "魂殿 暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险。 暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险。",
+      "confidence": 1.0
+    },
+    {
+      "foreshadow_id": "foreshadow_512d5d8685",
+      "surface_clue": "和丹药、药方、炼药师身份认证相关",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "玩家持续调查、建立关系或推进相关任务。"
+      ],
+      "payoff": [
+        "解锁新任务、关系、能力边界或地点入口。"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "丹塔"
+      ],
+      "evidence": "丹塔 炼药师体系的重要高阶势力，和丹药、药方、炼药师身份认证相关。 炼药师体系的重要高阶势力，和丹药、药方、炼药师身份认证相关。",
+      "confidence": 1.0
+    }
+  ]
+}

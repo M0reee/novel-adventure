@@ -3,7 +3,7 @@
 - Score: 100/100
 - Genre: unknown
 - Profile: doupo
-- Retrieval rows: 112
+- Retrieval rows: 158
 - Playable canon: 56
 
 ## Strengths
@@ -12,6 +12,9 @@
 - 检索索引可用，运行时无需加载整本小说。
 - RPG 术语已映射到世界观，资源/装备/技能名称不会固定成通用法力模板。
 - 长期事件具备联动 effects/triggers，可影响市场、关系、地点或生成后续事件。
+- NPC 动机层可用，社交、交易和求助裁定不再只看好感分。
+- 特殊能力边界层可用，能力使用有 can/cannot/cost/risk/requirement 约束。
+- 事件链层可用，冒险钩子可以转成因果推进和忽略后果。
 - 玩法机制已从 canon 证据中启用 9 项，战斗和事件不再只依赖题材标签。
 
 ## Risks

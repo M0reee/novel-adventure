@@ -25,6 +25,10 @@ FULL_REQUIRED_FILES = [
     "location_runtime.json",
     "relationship_rules.json",
     "encounter_state.json",
+    "npc_motives.json",
+    "ability_boundaries.json",
+    "foreshadowing.json",
+    "event_chains.json",
     "gameplay_profile.json",
     "world_events.json",
     "opening.json",
@@ -46,6 +50,10 @@ PRESET_REQUIRED_FILES = [
     "location_runtime.json",
     "relationship_rules.json",
     "encounter_state.json",
+    "npc_motives.json",
+    "ability_boundaries.json",
+    "foreshadowing.json",
+    "event_chains.json",
     "gameplay_profile.json",
     "world_events.json",
     "opening.json",
@@ -143,6 +151,21 @@ def build_readable_report(
     if "relationship_rules" in failed:
         risks.append("关系规则不足，NPC 好感、敌意、人情债和势力后果会偏弱。")
         recommendations.append("补充 NPC/势力关系规则，让社交行动能改变世界状态。")
+    if "npc_motives" not in failed:
+        strengths.append("NPC 动机层可用，社交、交易和求助裁定不再只看好感分。")
+    else:
+        risks.append("NPC 动机层缺失，人物容易像任务板，缺少欲望、底线和筹码。")
+        recommendations.append("重跑 narrative_intelligence；LLM-assisted 时重点抽 public/private goal、fear、leverage、boundary。")
+    if "ability_boundaries" not in failed:
+        strengths.append("特殊能力边界层可用，能力使用有 can/cannot/cost/risk/requirement 约束。")
+    else:
+        risks.append("特殊能力边界不足，玩家能力容易变成万能钥匙。")
+        recommendations.append("补充 ability_boundaries：能做什么、不能做什么、消耗、风险、前置、成长。")
+    if "event_chains" not in failed:
+        strengths.append("事件链层可用，冒险钩子可以转成因果推进和忽略后果。")
+    else:
+        risks.append("事件链不足，世界事件容易是孤立事件，缺少后续因果。")
+        recommendations.append("补充 event_chains：节点、触发条件、介入收益、忽略后果、后续 effects。")
 
     enabled_mechanics = [
         name for name, value in gameplay_profile.get("mechanisms", {}).items() if isinstance(value, dict) and value.get("enabled")
@@ -212,6 +235,10 @@ def qa(world: str) -> None:
     location_runtime = read_json(wdir / "location_runtime.json", {})
     relationship_rules = read_json(wdir / "relationship_rules.json", {})
     encounter_state = read_json(wdir / "encounter_state.json", {})
+    npc_motives = read_json(wdir / "npc_motives.json", {})
+    ability_boundaries = read_json(wdir / "ability_boundaries.json", {})
+    foreshadowing = read_json(wdir / "foreshadowing.json", {})
+    event_chains = read_json(wdir / "event_chains.json", {})
     gameplay_profile = read_json(wdir / "gameplay_profile.json", {})
     world_events = read_json(wdir / "world_events.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
@@ -240,6 +267,10 @@ def qa(world: str) -> None:
         ("location_runtime", len(location_runtime.get("locations", [])) >= 3, str(len(location_runtime.get("locations", [])))),
         ("relationship_rules", len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])) >= 3, str(len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])))),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
+        ("npc_motives", len(npc_motives.get("npcs", [])) >= min(3, max(1, int(entity_counts.get("npc", 0)))), str(len(npc_motives.get("npcs", [])))),
+        ("ability_boundaries", len(ability_boundaries.get("abilities", [])) >= 5, str(len(ability_boundaries.get("abilities", [])))),
+        ("foreshadowing", "foreshadows" in foreshadowing, str(len(foreshadowing.get("foreshadows", [])))),
+        ("event_chains", len(event_chains.get("chains", [])) >= 1, str(len(event_chains.get("chains", [])))),
         (
             "gameplay_profile",
             bool(gameplay_profile.get("source_priority")) and bool(gameplay_profile.get("mechanisms")),

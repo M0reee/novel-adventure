@@ -32,12 +32,15 @@ def classify_event(name: str, summary: str) -> str:
     return "opportunity"
 
 
-def event_from_hook(hook: dict[str, Any], index: int, gameplay_profile: dict[str, Any]) -> dict[str, Any]:
+def event_from_hook(hook: dict[str, Any], index: int, gameplay_profile: dict[str, Any], event_chain: dict[str, Any] | None = None) -> dict[str, Any]:
     name = str(hook.get("name") or f"世界事件{index + 1}")
     summary = str(hook.get("summary") or hook.get("claim") or "")
     kind = classify_event(name, summary)
     start = 1 + index * 2
     expires = start + (4 if kind in {"auction", "threat"} else 6)
+    signal = {}
+    if event_chain:
+        signal = next((node for node in event_chain.get("nodes", []) if node.get("node_id") == "signal"), {})
     return {
         "event_id": event_id(name),
         "title": name,
@@ -51,11 +54,12 @@ def event_from_hook(hook: dict[str, Any], index: int, gameplay_profile: dict[str
         "related_npcs": [],
         "related_factions": [],
         "progress": 0,
-        "if_ignored": ignored_consequences(kind),
-        "if_intervened": intervened_outcomes(kind),
+        "if_ignored": signal.get("if_ignored") or ignored_consequences(kind),
+        "if_intervened": signal.get("if_player_intervenes") or intervened_outcomes(kind),
         "effects": default_effects(kind, name, summary, gameplay_profile),
         "triggers": default_triggers(kind, name, summary, gameplay_profile),
         "source": "adventure_hooks.json",
+        "event_chain_id": event_chain.get("chain_id") if event_chain else "",
     }
 
 
@@ -166,7 +170,9 @@ def build_world_events(world: str) -> dict[str, Any]:
     wdir = world_dir(world)
     hooks = read_json(wdir / "adventure_hooks.json", {}).get("hooks", [])
     gameplay_profile = load_gameplay_profile(world)
-    events = [event_from_hook(hook, idx, gameplay_profile) for idx, hook in enumerate(hooks[:12]) if hook.get("name")]
+    chains = read_json(wdir / "event_chains.json", {}).get("chains", [])
+    chain_by_name = {chain.get("name"): chain for chain in chains if chain.get("name")}
+    events = [event_from_hook(hook, idx, gameplay_profile, chain_by_name.get(hook.get("name"))) for idx, hook in enumerate(hooks[:12]) if hook.get("name")]
     output = {
         "world": world,
         "policy": "World events create time pressure. Effects and triggers are derived from gameplay_profile.json when canon evidence supports them; otherwise events only set generic state flags.",
