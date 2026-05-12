@@ -10,6 +10,7 @@ from game_math import computed_stats
 from retrieve import retrieve
 from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
 from save_manager import load_save, save_path, write_save
+from world_events import advance_world_events
 
 
 HIGH_RISK_WORDS = ("硬闯", "强闯", "击杀", "挑战", "突破", "偷袭", "抢夺", "潜入", "威胁", "追杀")
@@ -140,14 +141,17 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
     canon_rows = retrieve(world, query, limit)
     resolution = resolve_action(world, player_input, state, canon_rows)
     result = resolution["consequence"]
-    turn = int(meta.get("turn", 0)) + 1
+    before_turn = int(meta.get("turn", 0))
+    turn = before_turn + 1
+    meta["turn"] = turn
+    event_messages, event_options, event_data = advance_world_events(world, state, player_input)
 
     state_changes = [
-        f"回合数：{meta.get('turn', 0)} -> {turn}",
+        f"回合数：{before_turn} -> {turn}",
         *resolution.get("state_changes", []),
+        *event_messages,
         "行动记录已追加。" if not dry_run else "dry-run 未写入行动记录。",
     ]
-    meta["turn"] = turn
     meta["current_stage"] = "自由冒险推进中"
     state.setdefault("action_log", []).append(
         {
@@ -167,11 +171,16 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
         write_save(world, slot, state)
         for filename, data in resolution.get("runtime_files", {}).items():
             write_json(wdir / filename, data)
+        write_json(wdir / "world_events.json", event_data)
 
     canon_lines = summarize_canon(canon_rows)
     playable_lines = summarize_playable(canon_rows)
     stats = computed_stats(state)
     options = build_options(player_input, state, canon_rows, resolution)
+    for option in event_options:
+        if option not in options:
+            options.append(option)
+    options = options[:5]
     output = [
         "## 场景叙事",
         f"你选择：{player_input}",
@@ -194,6 +203,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
         "",
         "## 世界动态",
         *(canon_lines or ["- 暂未检索到强相关 canon；本回合只做低影响推进。"]),
+        *[f"- {message}" for message in event_messages[:3]],
         "",
         "## 主持约束",
         *(playable_lines or ["- 未检索到额外可玩规则；按基础 canon、状态和风险裁定。"]),

@@ -25,6 +25,7 @@ FULL_REQUIRED_FILES = [
     "location_runtime.json",
     "relationship_rules.json",
     "encounter_state.json",
+    "world_events.json",
     "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
@@ -44,6 +45,7 @@ PRESET_REQUIRED_FILES = [
     "location_runtime.json",
     "relationship_rules.json",
     "encounter_state.json",
+    "world_events.json",
     "opening.json",
     "playable_canon.json",
     "retrieval.sqlite",
@@ -130,6 +132,9 @@ def build_readable_report(
     if "quest_templates" in failed:
         risks.append("任务模板不足，玩家可能缺少明确的短中期目标。")
         recommendations.append("补充 adventure_hooks 或重跑 quest_runtime。")
+    if "world_events" in failed:
+        risks.append("长期世界事件不足，世界会显得静止，缺少时间窗口和忽略后果。")
+        recommendations.append("重跑 world_events，或补充 adventure_hooks 生成会过期的事件压力。")
     if "relationship_rules" in failed:
         risks.append("关系规则不足，NPC 好感、敌意、人情债和势力后果会偏弱。")
         recommendations.append("补充 NPC/势力关系规则，让社交行动能改变世界状态。")
@@ -190,6 +195,7 @@ def qa(world: str) -> None:
     location_runtime = read_json(wdir / "location_runtime.json", {})
     relationship_rules = read_json(wdir / "relationship_rules.json", {})
     encounter_state = read_json(wdir / "encounter_state.json", {})
+    world_events = read_json(wdir / "world_events.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
     index_rows = count_index_rows(wdir / "retrieval.sqlite")
     is_preset = bool(manifest.get("preset_world"))
@@ -216,6 +222,7 @@ def qa(world: str) -> None:
         ("location_runtime", len(location_runtime.get("locations", [])) >= 3, str(len(location_runtime.get("locations", [])))),
         ("relationship_rules", len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])) >= 3, str(len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])))),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
+        ("world_events", len(world_events.get("events", [])) >= 1, str(len(world_events.get("events", [])))),
         ("opening", bool(read_json(wdir / "opening.json", {})), "present" if read_json(wdir / "opening.json", {}) else "missing"),
     ]
 

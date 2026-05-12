@@ -16,6 +16,7 @@ from scripts.extract import extract
 from scripts.index import build_index
 from scripts.ingest import ingest
 from scripts.install import install
+from scripts.host_distill import export_prompt_pack, import_prompt_pack, status as host_status
 from scripts.list_worlds import discover_worlds, format_worlds
 from scripts.merge import merge
 from scripts.opening import build_opening, ensure_opening, format_opening
@@ -160,6 +161,27 @@ def cmd_llm_import(args: argparse.Namespace) -> None:
     extract(args.world, args.profile, llm_responses=args.responses)
 
 
+def cmd_host_export(args: argparse.Namespace) -> None:
+    export_prompt_pack(
+        args.world,
+        args.input,
+        args.profile,
+        args.target_chars,
+        args.max_chars,
+        args.sample_chunks,
+        args.llm_max_chunks,
+        args.llm_model,
+    )
+
+
+def cmd_host_import(args: argparse.Namespace) -> None:
+    import_prompt_pack(args.world, args.responses, args.profile)
+
+
+def cmd_host_status(args: argparse.Namespace) -> None:
+    host_status(args.world)
+
+
 def cmd_qa(args: argparse.Namespace) -> None:
     qa(args.world)
 
@@ -286,6 +308,27 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("responses", type=Path)
     p.add_argument("--profile", default="auto")
     p.set_defaults(func=cmd_llm_import)
+
+    p = sub.add_parser("host-export", help="Export host-model prompt-pack requests.")
+    p.add_argument("world")
+    p.add_argument("--input", type=Path)
+    p.add_argument("--profile", default="auto")
+    p.add_argument("--target-chars", type=int, default=4000)
+    p.add_argument("--max-chars", type=int, default=6000)
+    p.add_argument("--sample-chunks", type=int, default=80)
+    p.add_argument("--llm-max-chunks", type=int, default=80)
+    p.add_argument("--llm-model", default="gpt-4.1-mini")
+    p.set_defaults(func=cmd_host_export)
+
+    p = sub.add_parser("host-import", help="Import host-model prompt-pack responses and rebuild world.")
+    p.add_argument("world")
+    p.add_argument("responses", type=Path)
+    p.add_argument("--profile", default="auto")
+    p.set_defaults(func=cmd_host_import)
+
+    p = sub.add_parser("host-status", help="Show host-model distillation status.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_host_status)
 
     p = sub.add_parser("qa", help="Check world quality.")
     p.add_argument("world")

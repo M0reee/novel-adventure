@@ -66,8 +66,10 @@ Then run the matching command:
 ```bash
 python novel.py build <world> <txt_or_dir>
 python novel.py build <world> <txt_or_dir> --llm-provider openai-compatible --llm-max-chunks 120
-python novel.py build <world> <txt_or_dir> --llm-provider prompt-pack --llm-max-chunks 80
+python novel.py host-export <world> --input <txt_or_dir> --llm-max-chunks 80
 ```
+
+For host-model prompt-pack mode, after responses are written, run `python novel.py host-import <world> worlds/<world>/llm_responses.jsonl`.
 
 If arguments are supplied:
 

@@ -22,6 +22,7 @@ from location_runtime import build_locations
 from quest_runtime import build_quests
 from relationship_runtime import build_relationship_rules
 from rpg_profile import apply_rpg_profile_to_state, build_rpg_profile, load_rpg_profile
+from world_events import build_world_events
 
 
 ENTITY_LIMITS = {
@@ -369,6 +370,7 @@ def merge(world: str) -> None:
     build_locations(world)
     build_relationship_rules(world)
     build_encounter_state(world)
+    build_world_events(world)
     manifest["rpg_profile"] = "rpg_profile.json"
     manifest["item_market"] = "item_market.json"
     manifest["quest_templates"] = "quest_templates.json"

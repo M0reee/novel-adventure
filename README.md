@@ -14,6 +14,7 @@
 - **裁判而非许愿机**：玩家行动会按原著 canon、当前境界、资源、风险与时机来判罚，不接受声明式成功
 - **跨题材适配**：自动识别玄幻、仙侠、武侠、科幻、赛博朋克、奇幻、游戏、历史、军事、诡秘、末日、都市等题材，并映射资源、装备、技能和风险模型
 - **多存档**：同一世界可使用多个 slot，方便分支路线、回档试玩和测试
+- **长期事件**：世界事件会随回合推进、过期或被玩家介入，不再静止等待玩家
 - **质量报告**：`qa` 会生成 `quality_report.md/json`，告诉你世界库缺少什么、为什么玩起来可能不稳、下一步怎么补
 - **一键安装为 Skill**：支持 Claude Code、Codex、通用 Agent Skills 目录及自定义路径
 
@@ -151,6 +152,9 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `/novel-build <slug> <txt_or_dir> --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
 | `/novel-llm-pack <slug> --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
 | `/novel-llm-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型返回的蒸馏结果 |
+| `/novel-host-export <slug> --input <txt_or_dir> --llm-max-chunks 80` | 宿主模型蒸馏向导：导出请求 |
+| `/novel-host-import <slug> worlds/<slug>/llm_responses.jsonl` | 宿主模型蒸馏向导：导入并重建 |
+| `/novel-host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `/novel-qa <slug>` | 检查世界库质量和运行时文件 |
 | `/novel-search <slug> <关键词>` | 检索当前世界 canon |
 
@@ -168,6 +172,9 @@ CLI fallback：
 | `python novel.py play <slug> "<行动>" --slot <slot>` | 在指定存档运行一回合文字冒险 |
 | `python novel.py saves <slug>` | 列出某个世界的所有存档 |
 | `python novel.py build <slug> <txt_or_dir>` | 从 TXT/MD 小说构建世界 |
+| `python novel.py host-export <slug> --input <txt_or_dir> --llm-max-chunks 80` | 导出宿主模型蒸馏请求 |
+| `python novel.py host-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型蒸馏结果并重建 |
+| `python novel.py host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `python novel.py qa <slug>` | 检查世界库质量，生成 `quality_report.md/json` |
 
 如果要手动分步执行：
@@ -262,6 +269,36 @@ worlds/<slug>/quality_report.md
 ```
 
 报告会给出 `score`、强项、风险和建议，例如地点不足、NPC 不足、成长体系缺失、物品市场不完整、任务模板不足、检索索引缺失等。这个报告用于判断一个新小说世界为什么“能跑但不好玩”，以及下一步该补哪一层。
+
+## 长期世界事件
+
+构建世界时会生成：
+
+```text
+worlds/<slug>/world_events.json
+```
+
+事件来自 `adventure_hooks.json`，包含开始回合、过期回合、忽略后果和介入收益。每次 `play` 会推进事件：
+
+```text
+世界事件出现：乌坦城开局
+世界事件过期：拍卖会。后果：关键资源被其他势力买走
+你介入了世界事件「异火线」：获得地点入口；发现资源、敌人或新路线
+```
+
+这让世界具备时间压力：玩家不处理事件，事件也会改变局势。
+
+## 宿主模型蒸馏向导
+
+如果不想配置 API，但希望当前宿主模型帮忙做高质量抽取，使用：
+
+```bash
+python novel.py host-export fanren --input /path/to/novel.txt --llm-max-chunks 80
+python novel.py host-status fanren
+python novel.py host-import fanren worlds/fanren/llm_responses.jsonl
+```
+
+`host-export` 会完成切块、profile、基础抽取，并导出 `llm_requests.jsonl`。让宿主模型按 JSONL 请求生成 `llm_responses.jsonl` 后，`host-import` 会自动导入、merge、distill、index、qa。
 
 ## RPG 数值核心
 
@@ -362,6 +399,7 @@ novel-adventure/
 │   ├── economy.py           # 物品价格、购买条件和替代获取路径
 │   ├── quest_runtime.py     # 冒险钩子 → 任务模板
 │   ├── quest_progress.py    # 推进任务目标与奖励
+│   ├── world_events.py      # 长期世界事件、过期后果和介入收益
 │   ├── location_runtime.py  # 地点入口、风险、资源、行动
 │   ├── relationship_runtime.py # NPC/势力关系规则
 │   ├── inventory_runtime.py # 物品使用、装备、Buff
@@ -373,6 +411,7 @@ novel-adventure/
 │   ├── save_manager.py      # 多存档 slot 管理
 │   ├── build_world.py       # 一键完整构建
 │   ├── qa_world.py          # 蒸馏质量检查
+│   ├── host_distill.py      # 宿主模型 prompt-pack 蒸馏向导
 │   ├── install.py           # 安装为 Skill
 │   └── common.py
 ├── references/              # 抽取 schema、判罚规则、风格指南
@@ -390,6 +429,7 @@ quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
 location_runtime.json   # 地点风险、入口条件、资源和默认行动
 relationship_rules.json # NPC/势力关系分数和影响规则
 encounter_state.json    # 当前遭遇和历史战斗记录
+world_events.json       # 长期世界事件和时间压力
 opening.json            # 开场身份、场景、动机和开局选项
 facts.jsonl             # 抽取出的设定事实
 world_bible.json        # 世界观
