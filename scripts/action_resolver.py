@@ -7,6 +7,7 @@ from typing import Any
 from combat import resolve_combat_round
 from encounter_runtime import load_encounters, record_combat_result, start_or_get_encounter
 from economy import can_afford, find_market_item, load_market, price_text
+from gameplay_profile import load_gameplay_profile
 from inventory_runtime import resolve_inventory_action
 from location_runtime import find_location, load_locations, move_to_location
 from quest_progress import progress_quests
@@ -102,19 +103,39 @@ def resolve_trade(world: str, player_input: str, state: dict[str, Any], canon_ro
     }
 
 
-def resolve_cultivation(player_input: str, state: dict[str, Any], canon_rows: list[dict[str, Any]]) -> dict[str, Any]:
+def breakthrough_resource_names(world: str, canon_rows: list[dict[str, Any]]) -> list[str]:
+    gameplay = load_gameplay_profile(world)
+    entities = gameplay.get("canon_entities", {})
+    names = [str(name) for name in entities.get("market_items", []) if str(name)]
+    if not names:
+        names = [str(name) for name in entities.get("items", []) if str(name)]
+    for row in canon_rows[:12]:
+        if row.get("type") in {"item", "playable_item"} and row.get("name"):
+            name = str(row["name"])
+            if name not in names:
+                names.append(name)
+    return names[:6]
+
+
+def resolve_cultivation(world: str, player_input: str, state: dict[str, Any], canon_rows: list[dict[str, Any]]) -> dict[str, Any]:
     player = state.setdefault("player", {})
     stats = player.setdefault("stats", {})
     inventory_names = {item.get("name") for item in player.get("inventory", []) if isinstance(item, dict)}
     is_breakthrough = any(word in player_input for word in ("突破", "冲关", "晋升"))
-    if is_breakthrough and not inventory_names.intersection({"筑基灵液", "聚气散"}):
+    gameplay = load_gameplay_profile(world)
+    mechanisms = gameplay.get("mechanisms", {})
+    needs_consumable = bool(mechanisms.get("consumable_crafting", {}).get("enabled"))
+    resource_names = breakthrough_resource_names(world, canon_rows)
+    has_support = bool(inventory_names.intersection(resource_names)) if resource_names else False
+    if is_breakthrough and needs_consumable and not has_support:
+        resource_hint = "、".join(resource_names[:3]) if resource_names else "该世界 canon 支持的辅助资源"
         return {
             "kind": "cultivation",
             "status": "partial_or_blocked",
             "verdict": "突破缺少资源和护持",
-            "consequence": "你可以开始调整状态，但不能直接突破。当前缺少明确的辅助资源、护法或安全闭关环境；强行冲关会带来反噬风险。",
+            "consequence": f"你可以开始调整状态，但不能直接突破。当前缺少明确的辅助资源、护法或安全闭关环境；可优先寻找：{resource_hint}。强行冲关会带来 canon 已支持的反噬或失败代价。",
             "state_changes": [],
-            "options": ["先购买或炼制辅助资源。", "寻找安全修炼地点。", "请可信 NPC 护法或指导。"],
+            "options": [f"先获取「{name}」。" for name in resource_names[:3]] + ["寻找安全修炼地点。", "请可信 NPC 护法或指导。"],
         }
     gain = 5 if not is_breakthrough else 15
     before = int(stats.get("exp", 0))
@@ -264,7 +285,7 @@ def resolve_action(world: str, player_input: str, state: dict[str, Any], canon_r
     if kind == "trade":
         return attach_quest_progress(state, player_input, resolve_trade(world, player_input, state, canon_rows))
     if kind == "cultivation":
-        return attach_quest_progress(state, player_input, resolve_cultivation(player_input, state, canon_rows))
+        return attach_quest_progress(state, player_input, resolve_cultivation(world, player_input, state, canon_rows))
     if kind == "combat":
         return attach_quest_progress(state, player_input, resolve_combat(world, player_input, state))
     if kind == "quest":

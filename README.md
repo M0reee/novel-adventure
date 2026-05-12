@@ -12,7 +12,7 @@
 - **本地检索**：用 SQLite FTS 建索引，运行时只取与当前场景相关的设定，不把原文塞给模型
 - **玩文字冒险**：每回合输出场景叙事 / 规则裁定 / 行动结果 / 状态变化 / 世界动态 / 可选行动
 - **裁判而非许愿机**：玩家行动会按原著 canon、当前境界、资源、风险与时机来判罚，不接受声明式成功
-- **跨题材适配**：自动识别玄幻、仙侠、武侠、科幻、赛博朋克、奇幻、游戏、历史、军事、诡秘、末日、都市等题材，并映射资源、装备、技能和风险模型
+- **原著证据驱动**：自动识别题材只用于导航；资源、装备、技能、风险、事件联动必须优先从小说 canon 中提取，不能靠题材刻板印象硬套
 - **多存档**：同一世界可使用多个 slot，方便分支路线、回档试玩和测试
 - **长期事件**：世界事件会随回合推进、过期或被玩家介入，不再静止等待玩家
 - **质量报告**：`qa` 会生成 `quality_report.md/json`，告诉你世界库缺少什么、为什么玩起来可能不稳、下一步怎么补
@@ -157,6 +157,7 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `/novel-host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `/novel-qa <slug>` | 检查世界库质量和运行时文件 |
 | `/novel-search <slug> <关键词>` | 检索当前世界 canon |
+| `/novel-rebuild-gameplay <slug>` | 从 canon 重建战斗/事件玩法机制，避免题材模板硬套 |
 
 CLI fallback：
 
@@ -176,6 +177,7 @@ CLI fallback：
 | `python novel.py host-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型蒸馏结果并重建 |
 | `python novel.py host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `python novel.py qa <slug>` | 检查世界库质量，生成 `quality_report.md/json` |
+| `python novel.py rebuild-gameplay <slug>` | 从 canon 重建 `gameplay_profile.json` |
 
 如果要手动分步执行：
 
@@ -296,20 +298,17 @@ worlds/<slug>/world_events.json
 - `world_events.json`：生成后续事件。
 - `player_state.json`：写入世界标记，供后续裁定使用。
 
-## 题材化战斗
+## 原著证据驱动的战斗与事件
 
-基础伤害公式保持统一，但 `combat_profiles.py` 会按题材补充额外风险和后果：
+基础伤害公式保持统一，但特殊风险和事件联动不再直接按“玄幻/武侠/赛博朋克”等标签套模板。构建世界时会生成：
 
 ```text
-玄幻/仙侠：境界压制、灵力反噬、宗门关注
-武侠：伤势、名声、仇家、点到为止
-赛博朋克/科幻：警报等级、公司追踪、义体过载、弹药/能源
-诡秘：理智损耗、污染、禁忌知识反噬
-末日：噪音、感染、弹药、士气
-奇幻：魔力枯竭、诅咒、阵营敌意
+worlds/<slug>/gameplay_profile.json
 ```
 
-这些后果会写入结构化状态或世界标记，而不是只停留在叙事里。
+`gameplay_profile.json` 会优先从 `world_bible.json`、`power_system.json`、`items.json`、`techniques.json`、`locations.json`、`factions.json`、`npcs.json`、`timeline.json`、`adventure_hooks.json` 等直接蒸馏 canon 文件里找证据。`game_rules.json`、`playable_canon.json`、`item_market.json`、`rpg_profile.json` 只能辅助展示和选择具体对象，不能反过来证明某种机制存在，避免“模板自证”。只有小说里真的出现或可从设定明确推导时，才启用境界压制、反噬、副作用、弹药/充能、污染、警报追踪、市场窗口、势力反应、地点准入等机制。
+
+这条规则保证通用性：一本没有“法力”的小说不会被强行套法力；一本没有“义体”的赛博题材也不会凭标签生成义体过载；一本普通历史小说只会使用它 canon 中存在的军纪、声望、补给、地理和关系后果。
 
 ## 宿主模型蒸馏向导
 
@@ -428,7 +427,8 @@ novel-adventure/
 │   ├── inventory_runtime.py # 物品使用、装备、Buff
 │   ├── encounter_runtime.py # 连续战斗遭遇状态
 │   ├── action_resolver.py   # 自然语言行动 → 规则结算
-│   ├── combat_profiles.py   # 按题材补充战斗风险和后果
+│   ├── gameplay_profile.py  # 从原著 canon 推导战斗/事件玩法机制
+│   ├── combat_profiles.py   # 读取 gameplay_profile，题材只做低置信兜底
 │   ├── runtime_effects.py   # 事件/战斗 effects 写入市场、地点、关系、状态
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
@@ -449,6 +449,7 @@ novel-adventure/
 chunks.jsonl            # 切块文本
 world_profile.json      # 自动生成的小说题材/profile
 rpg_profile.json        # 世界观 RPG 术语、资源、装备槽、技能名和战斗公式映射
+gameplay_profile.json   # 原著 canon 证据驱动的战斗/事件玩法机制
 item_market.json        # 物品价格、稀有度、购买条件、替代获取路径
 quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
 location_runtime.json   # 地点风险、入口条件、资源和默认行动

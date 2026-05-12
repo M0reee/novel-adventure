@@ -1,0 +1,494 @@
+{
+  "version": 1,
+  "world": "doupo_cangqiong",
+  "policy": "Canon-first gameplay profile. Mechanics are enabled only when distilled canon contains supporting evidence; broad genre labels are low-confidence fallback and must not override canon.",
+  "source_priority": [
+    "canon_patches",
+    "distilled_canon",
+    "gameplay_profile",
+    "genre_fallback_low_confidence",
+    "generic_fallback"
+  ],
+  "canon_confidence": "high",
+  "canon_entities": {
+    "items": [
+      "异火",
+      "纳戒",
+      "筑基灵液"
+    ],
+    "market_items": [
+      "筑基灵液",
+      "聚气散",
+      "魔核"
+    ],
+    "locations": [
+      "乌坦城",
+      "萧家",
+      "魔兽山脉"
+    ],
+    "factions": [
+      "萧家",
+      "云岚宗",
+      "米特尔家族"
+    ]
+  },
+  "mechanisms": {
+    "power_tier_pressure": {
+      "enabled": true,
+      "evidence_count": 8,
+      "evidence": [
+        {
+          "source": "power_system.json",
+          "name": "斗王",
+          "matched": "压制",
+          "claim": "斗王 可以斗气化翼、短距离飞行，开始具备跨区域行动和压制低阶修炼者的能力。 可以斗气化翼、短距离飞行，开始具备跨区域行动和压制低阶修炼者的能力。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "斗帝",
+          "matched": "境界",
+          "claim": "斗帝 斗气大陆传说中的终极境界，长期绝迹；成帝需要极稀缺的源气。 斗气大陆传说中的终极境界，长期绝迹；成帝需要极稀缺的源气。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "境界压制",
+          "matched": "境界",
+          "claim": "境界压制 高境界通常对低境界形成压制；越级战斗需要异火、强斗技、特殊体质、经验或外力支撑。 高境界通常对低境界形成压制；越级战斗需要异火、强斗技、特殊体质、经验或外力支撑。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "功法等级",
+          "matched": "等级",
+          "claim": "功法等级 功法通常分为天、地、玄、黄四阶，每阶又有低中高等层次；高阶功法决定修炼速度和斗气质量。 功法通常分为天、地、玄、黄四阶，每阶又有低中高等层次；高阶功法决定修炼速度和斗气质量。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "斗技等级",
+          "matched": "等级",
+          "claim": "斗技等级 斗技同样有品阶差异，高阶斗技威力强但消耗和修习门槛更高。 斗技同样有品阶差异，高阶斗技威力强但消耗和修习门槛更高。"
+        }
+      ]
+    },
+    "resource_backlash": {
+      "enabled": true,
+      "evidence_count": 4,
+      "evidence": [
+        {
+          "source": "items.json",
+          "name": "异火",
+          "matched": "代价",
+          "claim": "异火 天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价。 天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价。"
+        },
+        {
+          "source": "techniques.json",
+          "name": "佛怒火莲",
+          "matched": "承受力",
+          "claim": "佛怒火莲 融合多种火焰形成的高风险高爆发斗技；威力巨大，但对控制力、火焰条件和自身承受力要求极高。 融合多种火焰形成的高风险高爆发斗技；威力巨大，但对控制力、火焰条件和自身承受力要求极高。"
+        },
+        {
+          "source": "factions.json",
+          "name": "云岚宗",
+          "matched": "代价",
+          "claim": "云岚宗 加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。 加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。"
+        },
+        {
+          "source": "npcs.json",
+          "name": "药老",
+          "matched": "代价",
+          "claim": "药老 高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关。 高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关。"
+        }
+      ]
+    },
+    "consumable_crafting": {
+      "enabled": true,
+      "evidence_count": 15,
+      "evidence": [
+        {
+          "source": "world_bible.json",
+          "name": "斗气大陆",
+          "matched": "炼药",
+          "claim": "斗气大陆 这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序。 这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序。"
+        },
+        {
+          "source": "world_bible.json",
+          "name": "资源稀缺",
+          "matched": "丹药",
+          "claim": "资源稀缺 高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险。 高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "炼药师",
+          "matched": "丹药",
+          "claim": "炼药师 炼药师能炼制提升实力、疗伤或辅助突破的丹药，因此地位高且容易被势力拉拢。 炼药师能炼制提升实力、疗伤或辅助突破的丹药，因此地位高且容易被势力拉拢。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "异火",
+          "matched": "炼药",
+          "claim": "异火 异火是天地奇火，威力狂暴，可增强战斗和炼药，但收服失败会造成重伤甚至死亡。 异火是天地奇火，威力狂暴，可增强战斗和炼药，但收服失败会造成重伤甚至死亡。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "药老指导",
+          "matched": "炼药",
+          "claim": "药老指导 药老拥有高阶炼药与修炼经验，可提供指导，但不能让玩家无视资源、境界和风险直接成功。 药老拥有高阶炼药与修炼经验，可提供指导，但不能让玩家无视资源、境界和风险直接成功。"
+        }
+      ]
+    },
+    "equipment_dependency": {
+      "enabled": true,
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "source": "items.json",
+          "name": "玄重尺",
+          "matched": "武器",
+          "claim": "玄重尺 沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑。 沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑。"
+        }
+      ]
+    },
+    "ammo_or_charge": {
+      "enabled": false,
+      "evidence_count": 0,
+      "evidence": []
+    },
+    "alert_tracking": {
+      "enabled": true,
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "source": "factions.json",
+          "name": "魂殿",
+          "matched": "追踪",
+          "claim": "魂殿 暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险。 暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险。"
+        }
+      ]
+    },
+    "sanity_contamination": {
+      "enabled": false,
+      "evidence_count": 0,
+      "evidence": []
+    },
+    "infection_noise": {
+      "enabled": false,
+      "evidence_count": 0,
+      "evidence": []
+    },
+    "reputation_law": {
+      "enabled": true,
+      "evidence_count": 3,
+      "evidence": [
+        {
+          "source": "factions.json",
+          "name": "萧家",
+          "matched": "声望",
+          "claim": "萧家 乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系。 乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系。"
+        },
+        {
+          "source": "factions.json",
+          "name": "云岚宗",
+          "matched": "声望",
+          "claim": "云岚宗 加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。 加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。"
+        },
+        {
+          "source": "locations.json",
+          "name": "萧家",
+          "matched": "声望",
+          "claim": "萧家 乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务。 乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务。"
+        }
+      ]
+    },
+    "market_window": {
+      "enabled": true,
+      "evidence_count": 9,
+      "evidence": [
+        {
+          "source": "world_bible.json",
+          "name": "资源稀缺",
+          "matched": "交易",
+          "claim": "资源稀缺 高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险。 高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险。"
+        },
+        {
+          "source": "items.json",
+          "name": "筑基灵液",
+          "matched": "购买",
+          "claim": "筑基灵液 早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。 早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。"
+        },
+        {
+          "source": "items.json",
+          "name": "聚气散",
+          "matched": "交易",
+          "claim": "聚气散 辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。 辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。"
+        },
+        {
+          "source": "items.json",
+          "name": "魔核",
+          "matched": "交易",
+          "claim": "魔核 魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买。 魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买。"
+        },
+        {
+          "source": "factions.json",
+          "name": "米特尔家族",
+          "matched": "拍卖",
+          "claim": "米特尔家族 加玛帝国商业与拍卖势力，可提供交易、情报和资源渠道；关系建立依赖信誉与利益。 加玛帝国商业与拍卖势力，可提供交易、情报和资源渠道；关系建立依赖信誉与利益。"
+        }
+      ]
+    },
+    "faction_reaction": {
+      "enabled": true,
+      "evidence_count": 19,
+      "evidence": [
+        {
+          "source": "world_bible.json",
+          "name": "斗气大陆",
+          "matched": "家族",
+          "claim": "斗气大陆 这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序。 这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序。"
+        },
+        {
+          "source": "world_bible.json",
+          "name": "势力后果",
+          "matched": "势力",
+          "claim": "势力后果 家族、宗门和帝国势力会对玩家行为作出反应；羞辱、抢夺、杀戮和背叛都会产生长期后果。 家族、宗门和帝国势力会对玩家行为作出反应；羞辱、抢夺、杀戮和背叛都会产生长期后果。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "斗灵",
+          "matched": "势力",
+          "claim": "斗灵 能够更成熟地调动斗气战斗，是地方势力中的重要战力。 能够更成熟地调动斗气战斗，是地方势力中的重要战力。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "斗皇",
+          "matched": "宗门",
+          "claim": "斗皇 加玛帝国层面的顶尖强者，能显著影响宗门、家族与帝国格局。 加玛帝国层面的顶尖强者，能显著影响宗门、家族与帝国格局。"
+        },
+        {
+          "source": "power_system.json",
+          "name": "斗圣",
+          "matched": "势力",
+          "claim": "斗圣 远古种族与大陆顶级势力的核心战力，可开辟或影响空间。 远古种族与大陆顶级势力的核心战力，可开辟或影响空间。"
+        }
+      ]
+    },
+    "location_access": {
+      "enabled": true,
+      "evidence_count": 4,
+      "evidence": [
+        {
+          "source": "factions.json",
+          "name": "云岚宗",
+          "matched": "封锁",
+          "claim": "云岚宗 加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。 加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价。"
+        },
+        {
+          "source": "locations.json",
+          "name": "魔兽山脉",
+          "matched": "路线",
+          "claim": "魔兽山脉 乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线。 乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线。"
+        },
+        {
+          "source": "locations.json",
+          "name": "迦南学院",
+          "matched": "入口",
+          "claim": "迦南学院 大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口。 大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口。"
+        },
+        {
+          "source": "adventure_hooks.json",
+          "name": "异火线",
+          "matched": "探索",
+          "claim": "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。 玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。"
+        }
+      ]
+    }
+  },
+  "combat": {
+    "derived_from_canon": true,
+    "canon_confidence": "high",
+    "enabled_mechanics": [
+      "power_tier_pressure",
+      "resource_backlash",
+      "consumable_crafting",
+      "equipment_dependency",
+      "alert_tracking",
+      "reputation_law",
+      "market_window",
+      "faction_reaction",
+      "location_access"
+    ],
+    "disabled_mechanics": [
+      "ammo_or_charge",
+      "sanity_contamination",
+      "infection_noise"
+    ],
+    "secondary_risks": [
+      "能力层级差会限制正面对抗，越级行动必须有资源、战术或外力依据。",
+      "强行突破、过载使用能力或失败施法会带来反噬/副作用。",
+      "关键消耗品、材料和制作能力会决定恢复、突破或交易空间。",
+      "装备、器物或外置能力会影响战斗边界，损坏和适配性需要裁定。",
+      "战斗和高调行动可能留下可追踪痕迹，触发警报、通缉或追杀。",
+      "公开行为会改变名声、规矩评价或执法/宗门反应。",
+      "交易窗口、价格、资格和竞争者会影响资源获取。",
+      "势力会记住玩家行为，庇护、敌意和人情债会随行动变化。"
+    ],
+    "resource_pressure": "战斗必须检查斗气、生命、位置、装备/能力条件和 canon 边界；不能只按玩家声明成功。",
+    "effects_on_attack": [
+      {
+        "type": "state",
+        "key": "power_gap_checked",
+        "value": true,
+        "source": "gameplay_profile"
+      },
+      {
+        "type": "state",
+        "key": "backlash_risk_active",
+        "value": true,
+        "source": "gameplay_profile"
+      },
+      {
+        "type": "state",
+        "key": "consumable_pressure_active",
+        "value": true,
+        "source": "gameplay_profile"
+      },
+      {
+        "type": "state",
+        "key": "equipment_dependency_checked",
+        "value": true,
+        "source": "gameplay_profile"
+      },
+      {
+        "type": "state",
+        "key": "alert_level",
+        "value": "raised",
+        "source": "gameplay_profile"
+      },
+      {
+        "type": "state",
+        "key": "reputation_consequence_pending",
+        "value": true,
+        "source": "gameplay_profile"
+      }
+    ],
+    "victory_note": "胜利仍需结算资源消耗、关系/声望、追踪痕迹和地点后果；只结算有 canon 证据支持的后果。",
+    "fallback_used": false,
+    "evidence_count": 64
+  },
+  "events": {
+    "enabled_mechanisms": [
+      "alert_tracking",
+      "consumable_crafting",
+      "faction_reaction",
+      "location_access",
+      "market_window",
+      "power_tier_pressure",
+      "reputation_law",
+      "resource_backlash"
+    ],
+    "default_effects": {
+      "auction": {
+        "ignored": [
+          {
+            "type": "market",
+            "item": "筑基灵液",
+            "availability": "scarce",
+            "price_multiplier": 1.2,
+            "source": "gameplay_profile"
+          },
+          {
+            "type": "state",
+            "key": "missed_market_window",
+            "value": true,
+            "source": "gameplay_profile"
+          }
+        ],
+        "intervened": [
+          {
+            "type": "state",
+            "key": "market_contact_open",
+            "value": true,
+            "source": "gameplay_profile"
+          },
+          {
+            "type": "location",
+            "location": "乌坦城",
+            "add_actions": [
+              "追踪筑基灵液相关交易"
+            ],
+            "source": "gameplay_profile"
+          }
+        ]
+      },
+      "faction": {
+        "ignored": [
+          {
+            "type": "relationship",
+            "target": "萧家",
+            "delta": -5,
+            "source": "gameplay_profile"
+          }
+        ],
+        "intervened": [
+          {
+            "type": "relationship",
+            "target": "萧家",
+            "delta": 5,
+            "source": "gameplay_profile"
+          }
+        ]
+      },
+      "threat": {
+        "ignored": [
+          {
+            "type": "location",
+            "location": "乌坦城",
+            "risk_level": "high",
+            "source": "gameplay_profile"
+          }
+        ],
+        "intervened": [
+          {
+            "type": "state",
+            "key": "threat_contained",
+            "value": true,
+            "source": "gameplay_profile"
+          }
+        ]
+      }
+    },
+    "default_triggers": {
+      "auction": [
+        {
+          "when": "intervened",
+          "create_event": {
+            "title_suffix": "后续：筹措筑基灵液",
+            "summary": "玩家获得筑基灵液相关入口后，需要在窗口期内筹措货币、材料、人情或替代资源。",
+            "type": "opportunity",
+            "starts_after": 1,
+            "duration": 4,
+            "if_ignored": [
+              "筑基灵液获取窗口关闭",
+              "竞争者获得先机"
+            ],
+            "if_intervened": [
+              "获得筑基灵液、替代资源或折扣入口"
+            ]
+          }
+        }
+      ]
+    },
+    "fallback_used": false
+  },
+  "evidence_summary": {
+    "total_evidence_rows": 122,
+    "sources": {
+      "adventure_hooks.json": 1,
+      "factions.json": 6,
+      "items.json": 5,
+      "locations.json": 3,
+      "npcs.json": 1,
+      "power_system.json": 11,
+      "techniques.json": 1,
+      "world_bible.json": 5
+    }
+  }
+}

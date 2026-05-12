@@ -1,6 +1,6 @@
 {
   "world": "doupo_cangqiong",
-  "policy": "World events create time pressure. Ignored active events can expire and change state; intervened events can become quests, relationships, resources, or location access.",
+  "policy": "World events create time pressure. Effects and triggers are derived from gameplay_profile.json when canon evidence supports them; otherwise events only set generic state flags.",
   "events": [
     {
       "event_id": "event_7a6ddc4c80",
@@ -29,26 +29,30 @@
             "type": "market",
             "item": "筑基灵液",
             "availability": "scarce",
-            "price_multiplier": 1.25
+            "price_multiplier": 1.2,
+            "source": "gameplay_profile"
           },
           {
             "type": "state",
-            "key": "missed_auction_window",
-            "value": true
+            "key": "missed_market_window",
+            "value": true,
+            "source": "gameplay_profile"
           }
         ],
         "intervened": [
           {
             "type": "state",
-            "key": "auction_contact_open",
-            "value": true
+            "key": "market_contact_open",
+            "value": true,
+            "source": "gameplay_profile"
           },
           {
             "type": "location",
             "location": "乌坦城",
             "add_actions": [
-              "追踪低阶资源交易"
-            ]
+              "追踪筑基灵液相关交易"
+            ],
+            "source": "gameplay_profile"
           }
         ]
       },
@@ -56,18 +60,18 @@
         {
           "when": "intervened",
           "create_event": {
-            "title": "乌坦城开局后续：资源筹措",
-            "summary": "玩家获得交易入口后，需要在窗口期内筹措货币、材料或人情。",
+            "summary": "玩家获得筑基灵液相关入口后，需要在窗口期内筹措货币、材料、人情或替代资源。",
             "type": "opportunity",
             "starts_after": 1,
             "duration": 4,
             "if_ignored": [
-              "交易窗口关闭",
-              "资源被竞争者拿走"
+              "筑基灵液获取窗口关闭",
+              "竞争者获得先机"
             ],
             "if_intervened": [
-              "获得折扣、替代材料或人情债入口"
-            ]
+              "获得筑基灵液、替代资源或折扣入口"
+            ],
+            "title": "乌坦城开局后续：筹措筑基灵液"
           }
         }
       ],
@@ -178,15 +182,17 @@
         "ignored": [
           {
             "type": "relationship",
-            "target": "相关势力",
-            "delta": -5
+            "target": "萧家",
+            "delta": -5,
+            "source": "gameplay_profile"
           }
         ],
         "intervened": [
           {
             "type": "relationship",
-            "target": "相关势力",
-            "delta": 5
+            "target": "萧家",
+            "delta": 5,
+            "source": "gameplay_profile"
           }
         ]
       },

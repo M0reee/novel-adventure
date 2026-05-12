@@ -13,6 +13,7 @@ if str(SCRIPTS) not in sys.path:
 from scripts.build_world import build
 from scripts.encounter_runtime import clear_encounter
 from scripts.extract import extract
+from scripts.gameplay_profile import build_gameplay_profile
 from scripts.index import build_index
 from scripts.ingest import ingest
 from scripts.install import install
@@ -213,6 +214,10 @@ def cmd_rebuild_rpg(args: argparse.Namespace) -> None:
     build_rpg_profile(args.world)
 
 
+def cmd_rebuild_gameplay(args: argparse.Namespace) -> None:
+    build_gameplay_profile(args.world)
+
+
 def cmd_pipeline(args: argparse.Namespace) -> None:
     if args.step == "ingest":
         if args.input is None:
@@ -232,6 +237,8 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
         merge(args.world)
     elif args.step == "opening":
         build_opening(args.world)
+    elif args.step == "gameplay":
+        build_gameplay_profile(args.world)
     elif args.step == "index":
         build_index(args.world)
 
@@ -363,8 +370,12 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_rpg)
 
+    p = sub.add_parser("rebuild-gameplay", help="Rebuild canon-derived gameplay profile.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_rebuild_gameplay)
+
     p = sub.add_parser("pipeline", help="Advanced single pipeline step.")
-    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "index"])
+    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "gameplay", "index"])
     p.add_argument("world")
     p.add_argument("input", nargs="?", type=Path)
     p.add_argument("--profile", default="auto")

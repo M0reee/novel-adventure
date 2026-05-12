@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from common import load_manifest, read_json, save_manifest, world_dir, write_json
+from gameplay_profile import load_gameplay_profile
 from runtime_effects import apply_effects
 
 
@@ -31,7 +32,7 @@ def classify_event(name: str, summary: str) -> str:
     return "opportunity"
 
 
-def event_from_hook(hook: dict[str, Any], index: int) -> dict[str, Any]:
+def event_from_hook(hook: dict[str, Any], index: int, gameplay_profile: dict[str, Any]) -> dict[str, Any]:
     name = str(hook.get("name") or f"世界事件{index + 1}")
     summary = str(hook.get("summary") or hook.get("claim") or "")
     kind = classify_event(name, summary)
@@ -52,8 +53,8 @@ def event_from_hook(hook: dict[str, Any], index: int) -> dict[str, Any]:
         "progress": 0,
         "if_ignored": ignored_consequences(kind),
         "if_intervened": intervened_outcomes(kind),
-        "effects": default_effects(kind, name),
-        "triggers": default_triggers(kind, name),
+        "effects": default_effects(kind, name, summary, gameplay_profile),
+        "triggers": default_triggers(kind, name, summary, gameplay_profile),
         "source": "adventure_hooks.json",
     }
 
@@ -78,51 +79,59 @@ def intervened_outcomes(kind: str) -> list[str]:
     }.get(kind, ["获得情报、关系或资源入口"])
 
 
-def default_effects(kind: str, name: str) -> dict[str, list[dict[str, Any]]]:
-    if kind == "auction":
-        return {
-            "ignored": [
-                {"type": "market", "item": "筑基灵液", "availability": "scarce", "price_multiplier": 1.25},
-                {"type": "state", "key": "missed_auction_window", "value": True},
-            ],
-            "intervened": [
-                {"type": "state", "key": "auction_contact_open", "value": True},
-                {"type": "location", "location": "乌坦城", "add_actions": ["追踪低阶资源交易"]},
-            ],
-        }
-    if kind == "faction":
-        return {
-            "ignored": [{"type": "relationship", "target": "相关势力", "delta": -5}],
-            "intervened": [{"type": "relationship", "target": "相关势力", "delta": 5}],
-        }
-    if kind == "threat":
-        return {
-            "ignored": [{"type": "location", "location": "当前地区", "risk_level": "high"}],
-            "intervened": [{"type": "state", "key": "threat_contained", "value": True}],
-        }
+def mentioned_canon_item(text: str, gameplay_profile: dict[str, Any]) -> str | None:
+    entities = gameplay_profile.get("canon_entities", {})
+    for key in ("market_items", "items"):
+        for item in entities.get(key, []):
+            item_name = str(item)
+            if item_name and item_name in text:
+                return item_name
+    return None
+
+
+def replace_item_mentions(value: Any, old: str, new: str) -> Any:
+    if isinstance(value, str):
+        return value.replace(old, new)
+    if isinstance(value, list):
+        return [replace_item_mentions(item, old, new) for item in value]
+    if isinstance(value, dict):
+        return {key: replace_item_mentions(child, old, new) for key, child in value.items()}
+    return value
+
+
+def default_effects(kind: str, name: str, summary: str, gameplay_profile: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    templates = gameplay_profile.get("events", {}).get("default_effects", {})
+    if isinstance(templates, dict) and isinstance(templates.get(kind), dict):
+        effects = json.loads(json.dumps(templates[kind], ensure_ascii=False))
+        mentioned = mentioned_canon_item(f"{name} {summary}", gameplay_profile)
+        first_item = next((effect.get("item") for rows in effects.values() for effect in rows if isinstance(effect, dict) and effect.get("item")), None)
+        if mentioned and first_item and mentioned != first_item:
+            effects = replace_item_mentions(effects, str(first_item), mentioned)
+        return effects
     return {
         "ignored": [{"type": "state", "key": f"ignored_{event_id(name)}", "value": True}],
         "intervened": [{"type": "state", "key": f"intervened_{event_id(name)}", "value": True}],
     }
 
 
-def default_triggers(kind: str, name: str) -> list[dict[str, Any]]:
-    if kind == "auction":
-        return [
-            {
-                "when": "intervened",
-                "create_event": {
-                    "title": f"{name}后续：资源筹措",
-                    "summary": "玩家获得交易入口后，需要在窗口期内筹措货币、材料或人情。",
-                    "type": "opportunity",
-                    "starts_after": 1,
-                    "duration": 4,
-                    "if_ignored": ["交易窗口关闭", "资源被竞争者拿走"],
-                    "if_intervened": ["获得折扣、替代材料或人情债入口"],
-                },
-            }
-        ]
-    return []
+def default_triggers(kind: str, name: str, summary: str, gameplay_profile: dict[str, Any]) -> list[dict[str, Any]]:
+    templates = gameplay_profile.get("events", {}).get("default_triggers", {})
+    triggers = templates.get(kind, []) if isinstance(templates, dict) else []
+    normalized: list[dict[str, Any]] = []
+    mentioned = mentioned_canon_item(f"{name} {summary}", gameplay_profile)
+    fallback_item = next(iter(gameplay_profile.get("canon_entities", {}).get("market_items", [])), None)
+    for trigger in triggers:
+        if not isinstance(trigger, dict):
+            continue
+        copied = json.loads(json.dumps(trigger, ensure_ascii=False))
+        if mentioned and fallback_item and mentioned != fallback_item:
+            copied = replace_item_mentions(copied, str(fallback_item), mentioned)
+        event_template = copied.get("create_event")
+        if isinstance(event_template, dict) and not event_template.get("title"):
+            suffix = str(event_template.pop("title_suffix", "后续"))
+            event_template["title"] = f"{name}{suffix}"
+        normalized.append(copied)
+    return normalized
 
 
 def instantiate_trigger_event(parent: dict[str, Any], trigger: dict[str, Any], current_turn: int) -> dict[str, Any] | None:
@@ -156,10 +165,11 @@ def instantiate_trigger_event(parent: dict[str, Any], trigger: dict[str, Any], c
 def build_world_events(world: str) -> dict[str, Any]:
     wdir = world_dir(world)
     hooks = read_json(wdir / "adventure_hooks.json", {}).get("hooks", [])
-    events = [event_from_hook(hook, idx) for idx, hook in enumerate(hooks[:12]) if hook.get("name")]
+    gameplay_profile = load_gameplay_profile(world)
+    events = [event_from_hook(hook, idx, gameplay_profile) for idx, hook in enumerate(hooks[:12]) if hook.get("name")]
     output = {
         "world": world,
-        "policy": "World events create time pressure. Ignored active events can expire and change state; intervened events can become quests, relationships, resources, or location access.",
+        "policy": "World events create time pressure. Effects and triggers are derived from gameplay_profile.json when canon evidence supports them; otherwise events only set generic state flags.",
         "events": events,
         "history": [],
     }

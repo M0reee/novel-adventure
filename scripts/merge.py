@@ -18,6 +18,7 @@ from common import (
 )
 from economy import build_economy
 from encounter_runtime import build_encounter_state
+from gameplay_profile import build_gameplay_profile
 from location_runtime import build_locations
 from quest_runtime import build_quests
 from relationship_runtime import build_relationship_rules
@@ -370,6 +371,7 @@ def merge(world: str) -> None:
     build_locations(world)
     build_relationship_rules(world)
     build_encounter_state(world)
+    build_gameplay_profile(world)
     build_world_events(world)
     manifest["rpg_profile"] = "rpg_profile.json"
     manifest["item_market"] = "item_market.json"
@@ -408,6 +410,7 @@ def merge(world: str) -> None:
         "location_runtime.json",
         "relationship_rules.json",
         "encounter_state.json",
+        "gameplay_profile.json",
         "curated_facts.jsonl",
         "quality_report.json",
     ]

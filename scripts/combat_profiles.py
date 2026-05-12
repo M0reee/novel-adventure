@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from gameplay_profile import load_gameplay_profile
+
 
 COMBAT_PROFILES: dict[str, dict[str, Any]] = {
     "xuanhuan": {
@@ -62,12 +64,28 @@ COMBAT_PROFILES: dict[str, dict[str, Any]] = {
 }
 
 
-def combat_profile_for(rpg_profile: dict[str, Any]) -> dict[str, Any]:
+def combat_profile_for(rpg_profile: dict[str, Any], world: str | None = None) -> dict[str, Any]:
+    if world:
+        gameplay = load_gameplay_profile(world)
+        combat = gameplay.get("combat", {})
+        if isinstance(combat, dict) and combat:
+            return {
+                **combat,
+                "source": "gameplay_profile",
+                "source_policy": gameplay.get("policy", "canon-first gameplay profile"),
+            }
     genre = str(rpg_profile.get("genre") or "generic")
-    return COMBAT_PROFILES.get(genre, COMBAT_PROFILES["generic"])
+    fallback = COMBAT_PROFILES.get(genre, COMBAT_PROFILES["generic"])
+    return {
+        **fallback,
+        "derived_from_canon": False,
+        "fallback_used": True,
+        "source": "genre_fallback_low_confidence",
+    }
 
 
 def combat_risk_note(profile: dict[str, Any]) -> str:
-    risks = "、".join(profile.get("secondary_risks", [])[:4])
+    risks = "；".join(str(risk).rstrip("。；;") for risk in profile.get("secondary_risks", [])[:4])
     pressure = profile.get("resource_pressure", "")
-    return f"题材化战斗风险：{risks}。{pressure}"
+    prefix = "原著证据战斗风险" if profile.get("derived_from_canon") else "低置信通用战斗风险"
+    return f"{prefix}：{risks}。{pressure}"

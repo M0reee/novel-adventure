@@ -115,7 +115,8 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
     state = migrate_player_state(state, state.get("meta", {}).get("world", "unknown"))
     rpg_profile = load_rpg_profile(state.get("meta", {}).get("world", "unknown"))
     state = apply_rpg_profile_to_state(state, rpg_profile)
-    genre_profile = combat_profile_for(rpg_profile)
+    world = state.get("meta", {}).get("world", "unknown")
+    genre_profile = combat_profile_for(rpg_profile, world)
     rng = random.Random(seed)
     player = state["player"]
     skill = skill_by_id(player, skill_id)
@@ -134,7 +135,7 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
         "攻击未命中。" if not player_attack["hit"] else f"造成 {player_attack['damage']} 点伤害" + ("（暴击）。" if player_attack["critical"] else "。"),
         combat_risk_note(genre_profile),
     ]
-    effect_messages = apply_effects(state.get("meta", {}).get("world", "unknown"), state, genre_profile.get("effects_on_attack", []), "题材化战斗后果")
+    effect_messages = apply_effects(world, state, genre_profile.get("effects_on_attack", []), "原著证据战斗后果")
 
     rewards: list[str] = []
     if int(enemy["stats"].get("hp", 0)) <= 0:

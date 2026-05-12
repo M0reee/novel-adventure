@@ -7,11 +7,13 @@ from pathlib import Path
 from bootstrap_profile import build_profile
 from distill_playable import distill
 from extract import extract
+from gameplay_profile import build_gameplay_profile
 from index import build_index
 from ingest import ingest
 from merge import merge
 from opening import build_opening
 from qa_world import qa
+from world_events import build_world_events
 
 
 def build(
@@ -36,6 +38,8 @@ def build(
     merge(world)
     build_opening(world)
     distill(world)
+    build_gameplay_profile(world)
+    build_world_events(world)
     build_index(world)
     qa(world)
     print(f"Build complete for world={world} profile={profile}")

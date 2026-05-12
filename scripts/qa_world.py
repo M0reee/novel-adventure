@@ -25,6 +25,7 @@ FULL_REQUIRED_FILES = [
     "location_runtime.json",
     "relationship_rules.json",
     "encounter_state.json",
+    "gameplay_profile.json",
     "world_events.json",
     "opening.json",
     "playable_canon.json",
@@ -45,6 +46,7 @@ PRESET_REQUIRED_FILES = [
     "location_runtime.json",
     "relationship_rules.json",
     "encounter_state.json",
+    "gameplay_profile.json",
     "world_events.json",
     "opening.json",
     "playable_canon.json",
@@ -84,6 +86,7 @@ def build_readable_report(
     entity_counts: dict[str, Any],
     index_rows: int,
     playable_count: int,
+    gameplay_profile: dict[str, Any],
 ) -> dict[str, Any]:
     failed = [name for name, ok, _ in checks if not ok]
     strengths: list[str] = []
@@ -141,6 +144,18 @@ def build_readable_report(
         risks.append("关系规则不足，NPC 好感、敌意、人情债和势力后果会偏弱。")
         recommendations.append("补充 NPC/势力关系规则，让社交行动能改变世界状态。")
 
+    enabled_mechanics = [
+        name for name, value in gameplay_profile.get("mechanisms", {}).items() if isinstance(value, dict) and value.get("enabled")
+    ]
+    if enabled_mechanics:
+        strengths.append(f"玩法机制已从 canon 证据中启用 {len(enabled_mechanics)} 项，战斗和事件不再只依赖题材标签。")
+    else:
+        risks.append("玩法机制缺少 canon 证据，系统会退回低置信通用裁定，题材特色会偏弱。")
+        recommendations.append("增加 LLM-assisted 蒸馏或补 canon_patches，重点补能力边界、资源、地点准入、势力后果。")
+    if gameplay_profile.get("combat", {}).get("fallback_used"):
+        risks.append("战斗 profile 当前仍使用低置信兜底，可能无法充分体现原著特殊规则。")
+        recommendations.append("补充 power_system/game_rules/items/techniques 中的明确战斗代价和能力边界。")
+
     if not recommendations:
         recommendations.append("世界已达到基础可玩状态；下一步可增加长期世界事件和更多高质量 NPC 动机。")
 
@@ -197,6 +212,7 @@ def qa(world: str) -> None:
     location_runtime = read_json(wdir / "location_runtime.json", {})
     relationship_rules = read_json(wdir / "relationship_rules.json", {})
     encounter_state = read_json(wdir / "encounter_state.json", {})
+    gameplay_profile = read_json(wdir / "gameplay_profile.json", {})
     world_events = read_json(wdir / "world_events.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
     index_rows = count_index_rows(wdir / "retrieval.sqlite")
@@ -224,6 +240,11 @@ def qa(world: str) -> None:
         ("location_runtime", len(location_runtime.get("locations", [])) >= 3, str(len(location_runtime.get("locations", [])))),
         ("relationship_rules", len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])) >= 3, str(len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])))),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
+        (
+            "gameplay_profile",
+            bool(gameplay_profile.get("source_priority")) and bool(gameplay_profile.get("mechanisms")),
+            gameplay_profile.get("canon_confidence", "missing"),
+        ),
         ("world_events", len(world_events.get("events", [])) >= 1, str(len(world_events.get("events", [])))),
         ("opening", bool(read_json(wdir / "opening.json", {})), "present" if read_json(wdir / "opening.json", {}) else "missing"),
     ]
@@ -232,7 +253,7 @@ def qa(world: str) -> None:
     print(f"profile={manifest.get('profile')} genre={manifest.get('genre', 'unknown')} preset={is_preset}")
     for name, ok, detail in checks:
         print(f"[{status(ok)}] {name}: {detail}")
-    report = build_readable_report(world, manifest, checks, entity_counts, index_rows, len(playable_entries))
+    report = build_readable_report(world, manifest, checks, entity_counts, index_rows, len(playable_entries), gameplay_profile)
     write_json(wdir / "quality_report.json", {**quality, "readable_report": report})
     write_markdown_report(wdir, report)
     print(f"Quality score: {report['score']}/100")
