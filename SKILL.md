@@ -50,7 +50,7 @@ Optional LLM-assisted offline distillation:
 
 Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
 
-This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, `world_events.json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
+This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, `world_events.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 ### First-Run Use
 
@@ -100,7 +100,9 @@ Manual build:
    `python scripts/distill_playable.py --world <slug>`
 16. Build retrieval index:
    `python scripts/index.py --world <slug>`
-17. Optional deterministic QA:
+17. Score narrative distillation quality:
+   `python scripts/distillation_qa.py --world <slug>`
+18. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -142,6 +144,12 @@ RPG rule: numeric outcomes must come from structured state and scripts. Characte
 World-event rule: long-running events live in `world_events.json` and are advanced by `run_turn.py`. Mention active or expired events when relevant; ignored events may expire and change the world, while intervened events may create quests, access, resources, relationships, or risk reduction. Event effects must be applied through `runtime_effects.py` so market, location, relationship, state flags, and follow-up events are structured.
 
 Narrative intelligence rule: `npc_motives.json`, `ability_boundaries.json`, `foreshadowing.json`, and `event_chains.json` are host-facing canon-derived guidance. Use NPC motives for social offers/refusals, ability boundaries for special powers and item/technique use, foreshadowing to avoid premature spoilers, and event chains for cause-and-effect pressure. These files guide rulings but cannot override canon patches, retrieved canon, or player state.
+
+Ability-boundary rule: when the player uses, attacks with, consumes, equips, activates, breaks through with, or overstates a special ability/item/technique, check `ability_boundaries.json` through `scripts/action_resolver.py` or `scripts/inventory_runtime.py`. Overreach such as automatic victory, no-cost use, forced breakthrough, or realm-defying "I just win" claims must be blocked or downgraded into preparation, probing, retreat, or prerequisite gathering.
+
+Foreshadowing rule: investigation, questioning, secret, or truth-seeking actions may reveal surface clues from `foreshadowing.json`, but hidden truth cannot be disclosed until trust, evidence, location, or event conditions are met. Track discovered clues in `player_state.json` under `discovered_foreshadows`.
+
+Distillation-quality rule: after building, importing host responses, or rebuilding narrative intelligence, run `/novel-score <slug>` or `python novel.py score <slug>`. Treat low scores as a build problem, not a runtime narration problem; improve extraction, LLM-assisted chunks, or canon patches before expecting stable long-form play.
 
 Canon-first gameplay rule: base math remains in `game_math.py`, but `combat.py` and `world_events.py` must load `gameplay_profile.json` through `gameplay_profile.py` before applying any special combat or event logic. `gameplay_profile.json` may enable realm pressure, ammo/charge, contamination, alert tracking, market windows, faction reaction, location access, crafting, or backlash only when distilled canon contains supporting evidence. Broad genre labels are low-confidence fallback only; they must never override canon or introduce unsupported mechanics.
 

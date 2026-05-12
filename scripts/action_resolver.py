@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
+from ability_runtime import evaluate_ability_use
 from combat import resolve_combat_round
 from common import read_json, world_dir
 from encounter_runtime import load_encounters, record_combat_result, start_or_get_encounter
@@ -152,17 +153,20 @@ def resolve_cultivation(world: str, player_input: str, state: dict[str, Any], ca
 
 
 def resolve_combat(world: str, player_input: str, state: dict[str, Any]) -> dict[str, Any]:
+    boundary_result = evaluate_ability_use(world, player_input, state)
     encounters = load_encounters(world)
     enemy, started = start_or_get_encounter(encounters, player_input)
     result = resolve_combat_round(state, deepcopy(enemy), None)
     encounter_changes = record_combat_result(encounters, result.get("enemy", enemy), result.get("messages", []))
+    boundary_text = f"{boundary_result.get('consequence')} " if boundary_result else ""
+    boundary_changes = boundary_result.get("state_changes", []) if boundary_result else []
     return {
         "kind": "combat",
         "status": result.get("status", "resolved"),
         "verdict": "战斗回合已结算" if not started else "遭遇开始并完成首轮结算",
-        "consequence": " ".join(result.get("messages", [])),
-        "state_changes": ["生命、资源、经验、货币或掉落已按 combat.py 结算。", *encounter_changes],
-        "options": ["继续战斗。", "撤退并休整。", "检查战利品和状态。"],
+        "consequence": boundary_text + " ".join(result.get("messages", [])),
+        "state_changes": [*boundary_changes, "生命、资源、经验、货币或掉落已按 combat.py 结算。", *encounter_changes],
+        "options": (boundary_result.get("options", []) if boundary_result else []) + ["继续战斗。", "撤退并休整。", "检查战利品和状态。"],
         "runtime_files": {"encounter_state.json": encounters},
     }
 
@@ -281,6 +285,7 @@ def attach_quest_progress(state: dict[str, Any], player_input: str, result: dict
 def resolve_action(world: str, player_input: str, state: dict[str, Any], canon_rows: list[dict[str, Any]]) -> dict[str, Any]:
     kind = classify_action(player_input)
     all_claims = canon_text(canon_rows)
+    ability_result = evaluate_ability_use(world, player_input, state)
     if kind == "declared_success":
         return {
             "kind": kind,
@@ -290,6 +295,8 @@ def resolve_action(world: str, player_input: str, state: dict[str, Any], canon_r
             "state_changes": [],
             "options": ["改为尝试行动。", "说明准备和资源。", "寻找可行前置条件。"],
         }
+    if ability_result and ability_result.get("status") in {"blocked", "partial_or_blocked"}:
+        return attach_quest_progress(state, player_input, ability_result)
     if kind == "high_risk" and any(word in all_claims for word in BLOCKING_MARKERS):
         return {
             "kind": kind,
@@ -299,6 +306,8 @@ def resolve_action(world: str, player_input: str, state: dict[str, Any], canon_r
             "state_changes": [],
             "options": ["收集更多情报。", "寻找协助者。", "准备撤退路线或消耗品。"],
         }
+    if ability_result and kind == "general":
+        return attach_quest_progress(state, player_input, ability_result)
     if kind == "trade":
         return attach_quest_progress(state, player_input, resolve_trade(world, player_input, state, canon_rows))
     if kind == "cultivation":

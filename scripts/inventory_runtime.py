@@ -5,6 +5,7 @@ import argparse
 import json
 from typing import Any
 
+from ability_runtime import evaluate_ability_use
 from common import read_json, write_json, world_dir
 from economy import load_market
 
@@ -28,6 +29,9 @@ def market_details(world: str, item_name: str) -> dict[str, Any]:
 def use_item(world: str, state: dict[str, Any], player_input: str) -> dict[str, Any] | None:
     if not any(word in player_input for word in USE_WORDS):
         return None
+    boundary_result = evaluate_ability_use(world, player_input, state)
+    if boundary_result and boundary_result.get("status") in {"blocked", "partial_or_blocked"}:
+        return boundary_result
     player = state.setdefault("player", {})
     found = find_inventory_item(player, player_input)
     if not found:
@@ -43,6 +47,8 @@ def use_item(world: str, state: dict[str, Any], player_input: str) -> dict[str, 
     details = market_details(world, item.get("name", ""))
     effect = details.get("use_effect") or item.get("use_effect")
     if not effect:
+        if boundary_result:
+            return boundary_result
         return {
             "kind": "inventory",
             "status": "conditional",
@@ -58,7 +64,7 @@ def use_item(world: str, state: dict[str, Any], player_input: str) -> dict[str, 
         "status": "resolved",
         "verdict": "物品已使用",
         "consequence": f"你使用「{item.get('name')}」，获得状态「{effect.get('name', effect.get('effect_id', '效果'))}」。",
-        "state_changes": [f"行囊移除：{item.get('name')}", f"状态新增：{effect.get('name', effect.get('effect_id', '效果'))}"],
+        "state_changes": [*(boundary_result or {}).get("state_changes", []), f"行囊移除：{item.get('name')}", f"状态新增：{effect.get('name', effect.get('effect_id', '效果'))}"],
         "options": ["查看当前状态效果。", "继续修炼。", "寻找更多同类资源。"],
     }
 

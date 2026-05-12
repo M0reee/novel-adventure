@@ -11,6 +11,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from scripts.build_world import build
+from scripts.distillation_qa import distillation_qa
 from scripts.encounter_runtime import clear_encounter
 from scripts.extract import extract
 from scripts.gameplay_profile import build_gameplay_profile
@@ -188,6 +189,10 @@ def cmd_qa(args: argparse.Namespace) -> None:
     qa(args.world)
 
 
+def cmd_score(args: argparse.Namespace) -> None:
+    distillation_qa(args.world)
+
+
 def cmd_saves(args: argparse.Namespace) -> None:
     print(format_saves(args.world))
 
@@ -347,6 +352,10 @@ def parser() -> argparse.ArgumentParser:
     p = sub.add_parser("qa", help="Check world quality.")
     p.add_argument("world")
     p.set_defaults(func=cmd_qa)
+
+    p = sub.add_parser("score", help="Score narrative distillation quality.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_score)
 
     p = sub.add_parser("saves", help="List save slots for a world.")
     p.add_argument("world")

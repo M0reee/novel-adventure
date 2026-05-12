@@ -3,6 +3,23 @@
   "policy": "Foreshadowing separates player-visible clues from host-only truths. Do not reveal hidden_truth unless reveal_conditions are met.",
   "foreshadows": [
     {
+      "foreshadow_id": "foreshadow_12a89a3a44",
+      "surface_clue": "药老 高阶炼药师灵魂体",
+      "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",
+      "reveal_conditions": [
+        "玩家持续调查、建立关系或推进相关任务。"
+      ],
+      "payoff": [
+        "他的建议是情报和指导"
+      ],
+      "spoiler_level": "host_only",
+      "related_entities": [
+        "药老"
+      ],
+      "evidence": "药老 高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关。 高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关。",
+      "confidence": 1.0
+    },
+    {
       "foreshadow_id": "foreshadow_7d9ee36fe7",
       "surface_clue": "薰儿 萧家中身份特殊的少女",
       "hidden_truth": "主持人隐藏信息：只在玩家满足揭示条件后逐步公开，不要开局剧透。",

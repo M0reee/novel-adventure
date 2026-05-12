@@ -6,6 +6,7 @@ from pathlib import Path
 
 from bootstrap_profile import build_profile
 from distill_playable import distill
+from distillation_qa import distillation_qa
 from extract import extract
 from gameplay_profile import build_gameplay_profile
 from index import build_index
@@ -65,6 +66,7 @@ def import_prompt_pack(world: str, responses: Path, profile: str) -> None:
     build_gameplay_profile(world)
     build_world_events(world)
     build_index(world)
+    distillation_qa(world)
     qa(world)
     print("")
     print("Host-model distillation import complete.")

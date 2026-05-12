@@ -29,6 +29,7 @@ FULL_REQUIRED_FILES = [
     "ability_boundaries.json",
     "foreshadowing.json",
     "event_chains.json",
+    "distillation_score.json",
     "gameplay_profile.json",
     "world_events.json",
     "opening.json",
@@ -54,6 +55,7 @@ PRESET_REQUIRED_FILES = [
     "ability_boundaries.json",
     "foreshadowing.json",
     "event_chains.json",
+    "distillation_score.json",
     "gameplay_profile.json",
     "world_events.json",
     "opening.json",
@@ -166,6 +168,13 @@ def build_readable_report(
     else:
         risks.append("事件链不足，世界事件容易是孤立事件，缺少后续因果。")
         recommendations.append("补充 event_chains：节点、触发条件、介入收益、忽略后果、后续 effects。")
+    distillation_score = read_json(world_dir(world) / "distillation_score.json", {})
+    score_value = int(distillation_score.get("overall_score", 0) or 0)
+    if score_value >= 85:
+        strengths.append(f"蒸馏质量评分 {score_value}/100，叙事智能层完整度较好。")
+    else:
+        risks.append(f"蒸馏质量评分偏低（{score_value}/100），文件存在但内容质量可能不足。")
+        recommendations.append("运行 python novel.py score <world> 查看 distillation_score.md，并按建议补 LLM-assisted 或 canon_patches。")
 
     enabled_mechanics = [
         name for name, value in gameplay_profile.get("mechanisms", {}).items() if isinstance(value, dict) and value.get("enabled")
@@ -239,6 +248,7 @@ def qa(world: str) -> None:
     ability_boundaries = read_json(wdir / "ability_boundaries.json", {})
     foreshadowing = read_json(wdir / "foreshadowing.json", {})
     event_chains = read_json(wdir / "event_chains.json", {})
+    distillation_score = read_json(wdir / "distillation_score.json", {})
     gameplay_profile = read_json(wdir / "gameplay_profile.json", {})
     world_events = read_json(wdir / "world_events.json", {})
     curated = read_jsonl(wdir / "curated_facts.jsonl")
@@ -271,6 +281,7 @@ def qa(world: str) -> None:
         ("ability_boundaries", len(ability_boundaries.get("abilities", [])) >= 5, str(len(ability_boundaries.get("abilities", [])))),
         ("foreshadowing", "foreshadows" in foreshadowing, str(len(foreshadowing.get("foreshadows", [])))),
         ("event_chains", len(event_chains.get("chains", [])) >= 1, str(len(event_chains.get("chains", [])))),
+        ("distillation_score", int(distillation_score.get("overall_score", 0) or 0) >= 75, str(distillation_score.get("overall_score", "missing"))),
         (
             "gameplay_profile",
             bool(gameplay_profile.get("source_priority")) and bool(gameplay_profile.get("mechanisms")),

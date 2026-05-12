@@ -1,0 +1,16 @@
+{
+  "world": "doupo_cangqiong",
+  "overall_score": 100,
+  "scores": {
+    "npc_motives_quality": 100,
+    "ability_boundaries_quality": 100,
+    "foreshadowing_quality": 100,
+    "event_chains_quality": 100,
+    "canon_evidence_quality": 100,
+    "template_pollution_risk": 100
+  },
+  "notes": [],
+  "recommendations": [
+    "叙事智能层质量良好；下一步可以增加真实试玩用例。"
+  ]
+}

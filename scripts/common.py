@@ -472,6 +472,7 @@ def default_player_state(world_name: str) -> dict[str, Any]:
         "relationships": [],
         "active_quests": [],
         "world_events": [],
+        "discovered_foreshadows": [],
         "action_log": [],
     }
 
@@ -502,6 +503,7 @@ def migrate_player_state(state: dict[str, Any], world_name: str) -> dict[str, An
     state.setdefault("relationships", [])
     state.setdefault("active_quests", [])
     state.setdefault("world_events", [])
+    state.setdefault("discovered_foreshadows", [])
     state.setdefault("action_log", [])
     return state
 

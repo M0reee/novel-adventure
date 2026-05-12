@@ -15,7 +15,8 @@
 - **原著证据驱动**：自动识别题材只用于导航；资源、装备、技能、风险、事件联动必须优先从小说 canon 中提取，不能靠题材刻板印象硬套
 - **多存档**：同一世界可使用多个 slot，方便分支路线、回档试玩和测试
 - **长期事件**：世界事件会随回合推进、过期或被玩家介入，不再静止等待玩家
-- **质量报告**：`qa` 会生成 `quality_report.md/json`，告诉你世界库缺少什么、为什么玩起来可能不稳、下一步怎么补
+- **质量报告**：`qa` 会生成 `quality_report.md/json`，`score` 会生成 `distillation_score.md/json`，同时检查文件完整度和叙事蒸馏质量
+- **叙事边界**：NPC 动机、能力边界、伏笔揭示和事件链会进入运行时裁定，防止社交、特殊能力和隐藏信息被随意改写
 - **一键安装为 Skill**：支持 Claude Code、Codex、通用 Agent Skills 目录及自定义路径
 
 ## 为什么这样设计
@@ -30,7 +31,9 @@ Novel Adventure 把"读小说"和"玩小说"分开 ——
 
 ## 当前系统评价
 
-当前版本已经从“能把小说摘要成设定集”进入到“能把设定转成可运行规则”的阶段。它不是完整商业 RPG 引擎，但已经具备一个通用小说文字冒险 Skill 的核心骨架：离线蒸馏、结构化世界库、本地检索、数值状态、行动裁定、长期事件、多存档、QA 报告和原著证据驱动的玩法机制。
+当前版本已经从“能把小说摘要成设定集”进入到“能把设定转成可运行规则”的阶段。它不是完整商业 RPG 引擎，但已经具备一个通用小说文字冒险 Skill 的核心骨架：离线蒸馏、结构化世界库、本地检索、数值状态、行动裁定、长期事件、多存档、QA 报告、叙事蒸馏评分和原著证据驱动的玩法机制。
+
+按当前能力，我会给它约 **90/100**：核心链路已经完整，通用性和主持稳定性明显提高；剩下主要差距在更多真实小说样本验证、复杂敌人 AI、长期经济系统和更精细的剧情任务编排。
 
 我对当前版本的判断：
 
@@ -39,8 +42,8 @@ Novel Adventure 把"读小说"和"玩小说"分开 ——
 | 长篇承载 | 较好 | 百万字级小说不会整体进入上下文，而是先切块、蒸馏、索引，运行时按需检索 |
 | 通用性 | 较好 | `gameplay_profile.json` 会从每本小说自己的 canon 推导战斗、资源、事件和风险机制，题材标签只做低置信兜底 |
 | 可玩性 | 中上 | 已有属性、装备、技能、Buff、物品市场、任务、关系、地点、长期事件和战斗奖励，但还不是复杂 CRPG |
-| 原著一致性 | 中上 | 已有 canon-first、retrieval、QA、canon patch；质量高度依赖抽取质量，LLM-assisted 会明显优于纯启发式 |
-| 主持稳定性 | 中上 | 系统会拒绝声明式成功，并按状态、资源、地点、关系和事件裁定，但复杂剧情推理仍依赖宿主模型能力 |
+| 原著一致性 | 较好 | 已有 canon-first、retrieval、QA、canon patch、能力边界和伏笔揭示机制；质量仍依赖抽取质量，LLM-assisted 会明显优于纯启发式 |
+| 主持稳定性 | 较好 | 系统会拒绝声明式成功，并按状态、资源、地点、关系、事件、能力边界和隐藏信息揭示条件裁定 |
 | 新手体验 | 可用 | 有启动向导、slash commands、内置预设和 README；后续可以继续做更强的交互式安装/构建向导 |
 
 最适合的使用方式是：先用内置预设试玩；自己的小说优先用 LLM-assisted 或 host prompt-pack 蒸馏；蒸馏后先跑 `python novel.py qa <slug>`，根据报告补关键地点、NPC、能力边界和资源规则，再开始长线游玩。
@@ -175,6 +178,7 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `/novel-host-import <slug> worlds/<slug>/llm_responses.jsonl` | 宿主模型蒸馏向导：导入并重建 |
 | `/novel-host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `/novel-qa <slug>` | 检查世界库质量和运行时文件 |
+| `/novel-score <slug>` | 检查 NPC 动机、能力边界、伏笔、事件链和模板污染风险 |
 | `/novel-search <slug> <关键词>` | 检索当前世界 canon |
 | `/novel-rebuild-narrative <slug>` | 重建 NPC 动机、能力边界、伏笔和事件链 |
 | `/novel-rebuild-gameplay <slug>` | 从 canon 重建战斗/事件玩法机制，避免题材模板硬套 |
@@ -197,6 +201,7 @@ CLI fallback：
 | `python novel.py host-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型蒸馏结果并重建 |
 | `python novel.py host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `python novel.py qa <slug>` | 检查世界库质量，生成 `quality_report.md/json` |
+| `python novel.py score <slug>` | 检查叙事蒸馏质量，生成 `distillation_score.md/json` |
 | `python novel.py rebuild-narrative <slug>` | 重建 `npc_motives/ability_boundaries/foreshadowing/event_chains` |
 | `python novel.py rebuild-gameplay <slug>` | 从 canon 重建 `gameplay_profile.json` |
 
@@ -210,6 +215,7 @@ python scripts/merge.py --world fanren
 python scripts/opening.py --world fanren --rebuild
 python scripts/distill_playable.py --world fanren
 python scripts/index.py --world fanren
+python scripts/distillation_qa.py --world fanren
 python scripts/qa_world.py --world fanren
 ```
 
@@ -293,6 +299,15 @@ worlds/<slug>/quality_report.md
 
 报告会给出 `score`、强项、风险和建议，例如地点不足、NPC 不足、成长体系缺失、物品市场不完整、任务模板不足、检索索引缺失等。这个报告用于判断一个新小说世界为什么“能跑但不好玩”，以及下一步该补哪一层。
 
+`python novel.py score <slug>` 会额外检查叙事蒸馏质量，并生成：
+
+```text
+worlds/<slug>/distillation_score.json
+worlds/<slug>/distillation_score.md
+```
+
+它关注的不是“文件有没有”，而是“能不能稳定主持”：NPC 动机是否有目标/底线/筹码，特殊能力是否有 can_do/cannot_do/cost/risk/requirement，伏笔是否区分表层线索和揭示条件，事件链是否有触发、阶段和忽略后果，以及是否出现无证据的题材模板污染。`qa` 会读取这个评分，低于阈值时会提示优先补 LLM-assisted 或 canon patches。
+
 ## 长期世界事件
 
 构建世界时会生成：
@@ -348,6 +363,12 @@ worlds/<slug>/event_chains.json
 - `event_chains.json`：把冒险钩子和重大事件转成因果链，世界事件会引用它生成更具体的介入收益和忽略后果。
 
 这些文件同样是 canon-first：纯启发式会给出保守版本；LLM-assisted 或 host prompt-pack 能显著提高人物动机、伏笔、能力边界和复杂事件链质量。
+
+运行时已经接入三条硬规则：
+
+- 社交行动读取 `npc_motives.json`，不会因为玩家一句话就让 NPC 违背目标、恐惧、筹码或底线。
+- 能力、物品、功法和特殊设定读取 `ability_boundaries.json`，越级秒杀、无代价使用、强行突破会被阻止或降级成试探/准备行动。
+- 调查和追问读取 `foreshadowing.json`，只先暴露表层线索；隐藏真相必须满足信任、证据、地点或事件推进条件。
 
 ## 宿主模型蒸馏向导
 
@@ -467,6 +488,9 @@ novel-adventure/
 │   ├── encounter_runtime.py # 连续战斗遭遇状态
 │   ├── action_resolver.py   # 自然语言行动 → 规则结算
 │   ├── narrative_intelligence.py # NPC 动机、能力边界、伏笔、事件链
+│   ├── ability_runtime.py   # 特殊能力、物品、技法边界运行时裁定
+│   ├── foreshadow_runtime.py # 伏笔发现、追查和揭示条件运行时
+│   ├── distillation_qa.py   # 叙事蒸馏质量评分
 │   ├── gameplay_profile.py  # 从原著 canon 推导战斗/事件玩法机制
 │   ├── combat_profiles.py   # 读取 gameplay_profile，题材只做低置信兜底
 │   ├── runtime_effects.py   # 事件/战斗 effects 写入市场、地点、关系、状态
@@ -517,6 +541,7 @@ saves/<slot>.json       # 具名存档分支
 canon_patches.jsonl     # 用户校正的设定补丁
 retrieval.sqlite        # 检索索引
 quality_report.md/json  # 可读蒸馏质量报告
+distillation_score.md/json # 叙事蒸馏质量评分
 ```
 
 由于可能含**版权文本**和**私设**，`worlds/` 默认在 `.gitignore` 里，不会被提交。唯一例外是公开瘦身预设 `worlds/doupo_cangqiong/`，它不包含 `chunks.jsonl`、`facts.jsonl` 或 `source_index.jsonl`。
@@ -528,6 +553,8 @@ quality_report.md/json  # 可读蒸馏质量报告
 
 - 是否符合原著 canon
 - 是否符合当前境界、资源、地点、时间
+- 是否越过特殊能力、物品、技法或境界的边界
+- 是否满足伏笔揭示所需的信任、证据、地点或事件条件
 - 是否触发风险、代价、敌意或世界事件
 - 是否只是"声明式成功"
 
@@ -575,6 +602,8 @@ python scripts/index.py --world fanren
 - LLM-assisted distillation 需要 API key，或使用 `prompt-pack` 交给宿主平台模型离线处理
 - 中文检索使用 SQLite FTS + LIKE 兜底，适合本地轻量使用
 - 纯启发式蒸馏能跑通流程，但复杂伏笔、隐性规则、人物动机和特殊能力边界更适合 LLM-assisted
+- 玩家行动必须进入 `action_resolver.py`；特殊能力、物品和技法会检查 `ability_boundaries.json`，不能把“异火”“魂骨”“封印物”“义体模块”等特殊设定当成万能钥匙
+- 调查、追问、秘密和真相类行动会进入伏笔揭示流程；玩家能发现表层线索，但隐藏真相必须满足关系、证据、地点或事件条件
 - 战斗系统已有基础数值、技能、装备和 Buff，但还没有完整职业树、复杂 AI 敌人、多单位战场或精细地图
 - `gameplay_profile.json` 只会启用有 canon 证据的机制；如果抽取不到关键设定，系统会偏保守，而不是擅自补题材套路
 - `worlds/` 可能含版权文本，**不要**公开发布未瘦身的私有世界目录
@@ -587,8 +616,9 @@ python scripts/index.py --world fanren
 - [x] 把 `extract.py` 接入可插拔的 LLM provider
 - [x] 用 `gameplay_profile.json` 从原著 canon 推导玩法机制
 - [x] 增加 NPC 动机、能力边界、伏笔和事件链叙事智能层
+- [x] 增加叙事蒸馏评分、能力边界运行时裁定和伏笔揭示运行时
 - [ ] EPUB / PDF 导入
-- [ ] 更强的 LLM-assisted 人物动机、伏笔和冲突抽取质量评估
+- [ ] 多题材真实小说小样本评测集
 - [ ] 更完整的敌人 AI、技能树、装备套装和长期经济系统
 - [ ] 多人合作模式（一桌跑团）
 - [ ] Web UI（可选）

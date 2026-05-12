@@ -6,6 +6,7 @@ from typing import Any
 
 from action_resolver import resolve_action
 from common import default_player_state, migrate_player_state, write_json, world_dir
+from foreshadow_runtime import advance_foreshadows
 from game_math import computed_stats
 from retrieve import retrieve
 from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
@@ -144,11 +145,13 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
     before_turn = int(meta.get("turn", 0))
     turn = before_turn + 1
     meta["turn"] = turn
+    foreshadow_messages, foreshadow_options = advance_foreshadows(world, state, player_input, canon_rows)
     event_messages, event_options, event_data = advance_world_events(world, state, player_input, dry_run)
 
     state_changes = [
         f"回合数：{before_turn} -> {turn}",
         *resolution.get("state_changes", []),
+        *foreshadow_messages,
         *event_messages,
         "行动记录已追加。" if not dry_run else "dry-run 未写入行动记录。",
     ]
@@ -176,7 +179,13 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
     canon_lines = summarize_canon(canon_rows)
     playable_lines = summarize_playable(canon_rows)
     stats = computed_stats(state)
-    options = build_options(player_input, state, canon_rows, resolution)
+    options = []
+    for option in foreshadow_options:
+        if option not in options:
+            options.append(option)
+    for option in build_options(player_input, state, canon_rows, resolution):
+        if option not in options:
+            options.append(option)
     for option in event_options:
         if option not in options:
             options.append(option)
@@ -203,6 +212,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str
         "",
         "## 世界动态",
         *(canon_lines or ["- 暂未检索到强相关 canon；本回合只做低影响推进。"]),
+        *[f"- {message}" for message in foreshadow_messages[:3]],
         *[f"- {message}" for message in event_messages[:3]],
         "",
         "## 主持约束",
