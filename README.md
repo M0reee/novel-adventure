@@ -51,6 +51,68 @@ python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹�
 
 `--profile auto` 会先从样本章节生成 `world_profile.json`，再用它指导全书抽取。已有专门 profile 时也可以指定，例如 `--profile doupo`。
 
+## 🚀 使用
+
+在你装了 Novel Adventure 的宿主里启动它：
+
+- 如果宿主支持 slash command，可以尝试输入 `/novel-adventure`。
+- 如果不支持 slash command，直接和 Agent 说：`启动 novel-adventure` 或 `使用 Novel Adventure 帮我玩小说文字冒险`。
+
+第一次启动建议先玩内置预设：
+
+```bash
+python scripts/start_game.py --world doupo_cangqiong --reset
+```
+
+启动后会显示主角身份、开场处境、当前困难和可选行动。然后复制任意行动继续：
+
+```bash
+python scripts/run_turn.py --world doupo_cangqiong --input "去乌坦城拍卖场打听筑基灵液价格"
+```
+
+如果你要导入自己的小说：
+
+```bash
+python scripts/build_world.py --world my_novel --input /path/to/novel.txt --profile auto
+python scripts/start_game.py --world my_novel --reset
+python scripts/run_turn.py --world my_novel --input "观察当前环境，确认我能做什么"
+```
+
+想要更强蒸馏质量，可以启用 LLM-assisted distillation：
+
+```bash
+export NOVEL_ADVENTURE_LLM_API_KEY="..."
+python scripts/build_world.py --world my_novel_llm --input /path/to/novel.txt --profile auto \
+  --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120
+```
+
+如果你希望由宿主平台模型来蒸馏，而不是配置 API：
+
+```bash
+python scripts/extract.py --world my_novel --profile auto --llm-provider prompt-pack --llm-max-chunks 80
+```
+
+这会生成 `worlds/my_novel/llm_requests.jsonl`，让宿主模型按里面的提示返回 JSONL，再用 `--llm-responses` 导入。
+
+## 🎛️ 管理命令
+
+| 命令 | 说明 |
+|---|---|
+| `启动 novel-adventure` | 在宿主 Agent 里触发这个 Skill |
+| `/novel-adventure` | 宿主支持 slash command 时的入口 |
+| `python scripts/install.py --target codex --force` | 安装到 Codex Skills 目录 |
+| `python scripts/install.py --target claude --force` | 安装到 Claude Skills 目录 |
+| `python scripts/list_worlds.py` | 列出可游玩世界 |
+| `python scripts/start_game.py --world <slug> --reset` | 初始化或重置某个世界的存档 |
+| `python scripts/run_turn.py --world <slug> --input "<行动>"` | 运行一回合文字冒险 |
+| `python scripts/build_world.py --world <slug> --input <txt_or_dir> --profile auto` | 从 TXT/MD 小说构建世界 |
+| `python scripts/build_world.py --world <slug> --input <txt_or_dir> --profile auto --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
+| `python scripts/extract.py --world <slug> --llm-provider prompt-pack --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
+| `python scripts/qa_world.py --world <slug>` | 检查世界库质量和运行时文件 |
+| `python scripts/retrieve.py --world <slug> --query "<关键词>"` | 检索当前世界 canon |
+| `python scripts/encounter_runtime.py --world <slug> --clear` | 清理当前战斗遭遇 |
+| `python scripts/rpg_profile.py --world <slug> --rebuild` | 重建世界观 RPG 术语映射 |
+
 如果要手动分步执行：
 
 ```bash

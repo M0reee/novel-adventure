@@ -40,6 +40,16 @@ Use `--llm-provider prompt-pack` when the host platform model should perform ext
 
 This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
+### First-Run Use
+
+If the user asks how to start after installation:
+
+1. Tell them to say `启动 novel-adventure` in the host Agent, or use `/novel-adventure` only if that host supports slash commands.
+2. For immediate play, run `python scripts/start_game.py --world doupo_cangqiong --reset`.
+3. Continue with `python scripts/run_turn.py --world doupo_cangqiong --input "<player action>"`.
+4. For a custom novel, run `python scripts/build_world.py --world <slug> --input <txt_or_dir> --profile auto`.
+5. For deeper extraction, add `--llm-provider openai-compatible --llm-max-chunks 120`, or use `--llm-provider prompt-pack` and import `--llm-responses`.
+
 Manual build:
 
 1. Import TXT/MD:
