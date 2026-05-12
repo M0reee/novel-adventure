@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import re
 from collections import defaultdict
+from pathlib import Path
 from typing import Any
 
 from common import (
@@ -17,6 +18,15 @@ from common import (
     text_window,
     world_dir,
     write_jsonl,
+)
+from llm_provider import (
+    DEFAULT_MODEL,
+    OpenAICompatibleProvider,
+    chunk_cache_key,
+    load_cached_facts,
+    load_response_facts,
+    save_cached_facts,
+    write_prompt_pack,
 )
 
 
@@ -229,7 +239,89 @@ def extract_chunk(chunk: dict[str, Any], profile: dict[str, Any]) -> list[dict[s
     return list(dedup.values())
 
 
-def extract(world: str, profile_name: str | None = None) -> None:
+def select_llm_chunks(chunks: list[dict[str, Any]], max_chunks: int | None) -> list[dict[str, Any]]:
+    if not max_chunks or max_chunks <= 0 or len(chunks) <= max_chunks:
+        return chunks
+    head_count = max(1, max_chunks // 3)
+    head = chunks[:head_count]
+    remaining = max_chunks - len(head)
+    if remaining <= 0:
+        return head
+    stride = max(1, (len(chunks) - len(head)) // remaining)
+    sampled = chunks[len(head) :: stride][:remaining]
+    return head + sampled
+
+
+def llm_assisted_facts(
+    wdir,
+    chunks: list[dict[str, Any]],
+    profile: dict[str, Any],
+    provider_name: str,
+    model: str,
+    max_chunks: int | None,
+    base_url: str | None,
+    responses_path: Path | None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    selected = select_llm_chunks(chunks, max_chunks)
+    chunks_by_id = {str(chunk.get("chunk_id")): chunk for chunk in chunks}
+    stats = {
+        "provider": provider_name,
+        "model": model,
+        "selected_chunks": len(selected),
+        "generated_facts": 0,
+        "prompt_pack": None,
+        "responses_imported": 0,
+        "cache_hits": 0,
+        "api_calls": 0,
+    }
+    facts: list[dict[str, Any]] = []
+
+    if responses_path:
+        imported = load_response_facts(responses_path, chunks_by_id)
+        facts.extend(imported)
+        stats["responses_imported"] = len(imported)
+
+    if provider_name == "none":
+        stats["generated_facts"] = len(facts)
+        return facts, stats
+
+    if provider_name == "prompt-pack":
+        prompt_path = wdir / "llm_requests.jsonl"
+        write_prompt_pack(prompt_path, selected, profile, model)
+        stats["prompt_pack"] = str(prompt_path)
+        stats["generated_facts"] = len(facts)
+        return facts, stats
+
+    if provider_name != "openai-compatible":
+        raise SystemExit(f"Unknown LLM provider: {provider_name}")
+
+    cache_path = wdir / "llm_facts_cache.jsonl"
+    cache = load_cached_facts(cache_path)
+    provider = OpenAICompatibleProvider(model=model, base_url=base_url)
+    for chunk in selected:
+        key = chunk_cache_key(chunk)
+        if key in cache:
+            facts.extend(cache[key])
+            stats["cache_hits"] += 1
+            continue
+        extracted = provider.extract_facts(chunk, profile)
+        cache[key] = extracted
+        facts.extend(extracted)
+        stats["api_calls"] += 1
+        save_cached_facts(cache_path, cache)
+    stats["generated_facts"] = len(facts)
+    return facts, stats
+
+
+def extract(
+    world: str,
+    profile_name: str | None = None,
+    llm_provider: str = "none",
+    llm_model: str = DEFAULT_MODEL,
+    llm_max_chunks: int | None = None,
+    llm_base_url: str | None = None,
+    llm_responses: Path | None = None,
+) -> None:
     wdir = world_dir(world)
     manifest = load_manifest(wdir, world)
     profile = load_world_profile(wdir, profile_name or manifest.get("profile", "generic"))
@@ -241,20 +333,41 @@ def extract(world: str, profile_name: str | None = None) -> None:
     for chunk in chunks:
         facts.extend(extract_chunk(chunk, profile))
 
+    llm_facts, llm_stats = llm_assisted_facts(
+        wdir,
+        chunks,
+        profile,
+        llm_provider,
+        llm_model,
+        llm_max_chunks,
+        llm_base_url,
+        llm_responses,
+    )
+    facts.extend(llm_facts)
+
     write_jsonl(wdir / "facts.jsonl", facts)
     manifest["profile"] = profile["name"]
     manifest["fact_count"] = len(facts)
     manifest["extractor"] = "profiled_heuristic_v2"
+    manifest["llm_assisted"] = llm_stats
     save_manifest(wdir, manifest)
-    print(f"Extracted {len(facts)} fact(s) into {wdir / 'facts.jsonl'} with profile={profile['name']}")
+    print(
+        f"Extracted {len(facts)} fact(s) into {wdir / 'facts.jsonl'} "
+        f"with profile={profile['name']} llm_provider={llm_provider} llm_facts={llm_stats['generated_facts']}"
+    )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Extract structured canon facts from chunks.")
     parser.add_argument("--world", required=True)
     parser.add_argument("--profile", help="Built-in profile name or generated profile from world_profile.json.")
+    parser.add_argument("--llm-provider", default="none", choices=["none", "openai-compatible", "prompt-pack"])
+    parser.add_argument("--llm-model", default=DEFAULT_MODEL)
+    parser.add_argument("--llm-max-chunks", type=int, help="Limit LLM-assisted chunks for cost control. Omit or <=0 for all chunks.")
+    parser.add_argument("--llm-base-url", help="OpenAI-compatible base URL. Defaults to env or https://api.openai.com/v1.")
+    parser.add_argument("--llm-responses", type=Path, help="Import completed prompt-pack responses from a JSONL file.")
     args = parser.parse_args()
-    extract(args.world, args.profile)
+    extract(args.world, args.profile, args.llm_provider, args.llm_model, args.llm_max_chunks, args.llm_base_url, args.llm_responses)
 
 
 if __name__ == "__main__":

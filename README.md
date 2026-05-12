@@ -37,6 +37,11 @@ python scripts/run_turn.py --world doupo_cangqiong --input "观察萧家练武�
 # 方式 B：把自己的小说切块入库（输入可以是单文件，也可以是目录）
 python scripts/build_world.py --world fanren --input /path/to/novel.txt --profile auto
 
+# 可选：用 LLM 辅助离线蒸馏，适合提升复杂设定抽取质量
+export NOVEL_ADVENTURE_LLM_API_KEY="..."
+python scripts/build_world.py --world fanren_llm --input /path/to/novel.txt --profile auto \
+  --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120
+
 # 然后开始玩
 python scripts/start_game.py --world fanren --reset
 python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹的消息"
@@ -58,6 +63,37 @@ python scripts/distill_playable.py --world fanren
 python scripts/index.py --world fanren
 python scripts/qa_world.py --world fanren
 ```
+
+## LLM 辅助蒸馏
+
+默认构建仍是无 LLM、本地启发式抽取。需要更深的设定、人物动机、隐藏代价、特殊能力边界时，可以在**离线抽取阶段**启用 LLM-assisted distillation。运行时游玩不会加载整本小说，也不会每回合重跑 LLM 蒸馏。
+
+API 模式：
+
+```bash
+export NOVEL_ADVENTURE_LLM_API_KEY="..."
+export NOVEL_ADVENTURE_LLM_MODEL="gpt-4.1-mini"
+python scripts/extract.py --world fanren --profile auto \
+  --llm-provider openai-compatible \
+  --llm-max-chunks 120
+```
+
+宿主平台模式：
+
+```bash
+python scripts/extract.py --world fanren --profile auto \
+  --llm-provider prompt-pack \
+  --llm-max-chunks 80
+```
+
+这会生成 `worlds/fanren/llm_requests.jsonl`。让安装了 Skill 的模型平台按其中的 `system/user` 字段返回 JSONL，再导入：
+
+```bash
+python scripts/extract.py --world fanren --profile auto \
+  --llm-responses worlds/fanren/llm_responses.jsonl
+```
+
+更多细节见 `references/llm_distillation.md`。
 
 每个回合 AI 会按以下结构回应：
 
@@ -267,7 +303,7 @@ python scripts/index.py --world fanren
 ## 已知限制
 
 - V1 只支持 TXT / MD，**不支持** EPUB / PDF（可以先转 TXT）
-- V1 的 extractor 是**启发式 + 自动 profile**，质量不如深度 LLM 蒸馏；可在 `extract.py` 或新增 provider 里接 LLM 提升
+- LLM-assisted distillation 需要 API key，或使用 `prompt-pack` 交给宿主平台模型离线处理
 - 中文检索使用 SQLite FTS + LIKE 兜底，适合本地轻量使用
 - `worlds/` 可能含版权文本，**不要**公开发布未瘦身的私有世界目录
 
@@ -276,7 +312,7 @@ python scripts/index.py --world fanren
 - [x] 自动生成 `world_profile.json`
 - [x] 二次蒸馏 `playable_canon.json`
 - [x] 一键构建与 QA 脚本
-- [ ] 把 `extract.py` 接入可插拔的 LLM provider
+- [x] 把 `extract.py` 接入可插拔的 LLM provider
 - [ ] EPUB / PDF 导入
 - [ ] 多人合作模式（一桌跑团）
 - [ ] Web UI（可选）

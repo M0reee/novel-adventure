@@ -32,6 +32,12 @@ Preferred one-command build:
 
 `python scripts/build_world.py --world <slug> --input <file_or_dir> --profile auto`
 
+Optional LLM-assisted offline distillation:
+
+`python scripts/build_world.py --world <slug> --input <file_or_dir> --profile auto --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120`
+
+Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
+
 This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 Manual build:
@@ -42,6 +48,8 @@ Manual build:
    `python scripts/bootstrap_profile.py --world <slug>`
 3. Extract facts:
    `python scripts/extract.py --world <slug>`
+   Optional LLM API: `python scripts/extract.py --world <slug> --llm-provider openai-compatible --llm-max-chunks 120`
+   Optional host-agent prompt pack: `python scripts/extract.py --world <slug> --llm-provider prompt-pack --llm-max-chunks 80`
 4. Merge canon:
    `python scripts/merge.py --world <slug>`
 5. Generate world-facing RPG profile:
@@ -97,6 +105,7 @@ RPG rule: numeric outcomes must come from structured state and scripts. Characte
 ## References
 
 - Extraction schema: `references/extraction_schema.md`
+- LLM-assisted distillation: `references/llm_distillation.md`
 - Game master rules: `references/game_master_rules.md`
 - Canon conflict policy: `references/canon_conflict_policy.md`
 - Narration style guide: `references/narration_style_guide.md`

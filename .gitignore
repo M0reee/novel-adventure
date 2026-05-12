@@ -9,6 +9,9 @@ worlds/*
 worlds/doupo_cangqiong/chunks.jsonl
 worlds/doupo_cangqiong/facts.jsonl
 worlds/doupo_cangqiong/source_index.jsonl
+worlds/doupo_cangqiong/llm_requests.jsonl
+worlds/doupo_cangqiong/llm_responses.jsonl
+worlds/doupo_cangqiong/llm_facts_cache.jsonl
 
 # Python
 __pycache__/

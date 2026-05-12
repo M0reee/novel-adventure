@@ -19,7 +19,14 @@ TARGETS = {
 EXCLUDE_DIRS = {"__pycache__", ".git"}
 EXCLUDE_SUFFIXES = {".pyc", ".sqlite", ".db", ".db-wal", ".db-shm"}
 PUBLIC_PRESET_WORLDS = {"doupo_cangqiong"}
-RAW_WORLD_FILES = {"chunks.jsonl", "facts.jsonl", "source_index.jsonl"}
+RAW_WORLD_FILES = {
+    "chunks.jsonl",
+    "facts.jsonl",
+    "source_index.jsonl",
+    "llm_requests.jsonl",
+    "llm_responses.jsonl",
+    "llm_facts_cache.jsonl",
+}
 
 
 def ignore(directory: str, names: list[str]) -> set[str]:
