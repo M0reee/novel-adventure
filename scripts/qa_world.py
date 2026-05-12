@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from common import read_json, read_jsonl, world_dir
+from common import read_json, read_jsonl, world_dir, write_json
 
 
 FULL_REQUIRED_FILES = [
@@ -68,6 +68,116 @@ def status(ok: bool) -> str:
     return "OK" if ok else "WARN"
 
 
+def score_checks(checks: list[tuple[str, bool, str]]) -> int:
+    if not checks:
+        return 0
+    base = sum(1 for _, ok, _ in checks if ok) / len(checks)
+    return round(base * 100)
+
+
+def build_readable_report(
+    world: str,
+    manifest: dict[str, Any],
+    checks: list[tuple[str, bool, str]],
+    entity_counts: dict[str, Any],
+    index_rows: int,
+    playable_count: int,
+) -> dict[str, Any]:
+    failed = [name for name, ok, _ in checks if not ok]
+    strengths: list[str] = []
+    risks: list[str] = []
+    recommendations: list[str] = []
+
+    if int(entity_counts.get("location", 0)) >= 8:
+        strengths.append("地点数量较充足，适合做探索、移动和区域风险。")
+    elif "locations" in failed:
+        risks.append("地点不足，玩家容易感觉世界像单点场景，而不是可探索地图。")
+        recommendations.append("增加 LLM-assisted 蒸馏 chunk 数，或手动补充 locations/canon_patches。")
+
+    if int(entity_counts.get("npc", 0)) >= 8:
+        strengths.append("NPC 覆盖较好，可以支撑关系、任务和社交玩法。")
+    elif "npcs" in failed:
+        risks.append("关键 NPC 不足，剧情驱动力和人际关系会偏弱。")
+        recommendations.append("优先补 NPC 的身份、动机、关系和可提供的任务/资源。")
+
+    if int(entity_counts.get("power_realm", 0)) >= 4 or int(entity_counts.get("cultivation_rule", 0)) >= 8:
+        strengths.append("成长/能力体系已有基础，可转成突破条件和能力边界。")
+    else:
+        risks.append("成长体系不完整，玩家升级、突破或学习能力时容易缺规则依据。")
+        recommendations.append("补充 power_system：阶段、突破条件、能力边界、失败代价、常见资源。")
+
+    if playable_count >= 40:
+        strengths.append("可玩 canon 数量较足，运行时检索能提供较多裁定依据。")
+    else:
+        risks.append("可玩规则偏少，运行时可能退回模板化主持。")
+        recommendations.append("重跑 distill_playable 或启用 LLM-assisted distillation。")
+
+    if index_rows >= playable_count and index_rows > 0:
+        strengths.append("检索索引可用，运行时无需加载整本小说。")
+    else:
+        risks.append("检索索引不完整，运行时可能找不到相关 canon。")
+        recommendations.append("重跑 python novel.py pipeline index <world> 或 python scripts/index.py --world <world>。")
+
+    if "rpg_profile" not in failed and "worldview_labels" not in failed:
+        strengths.append("RPG 术语已映射到世界观，资源/装备/技能名称不会固定成通用法力模板。")
+    else:
+        risks.append("RPG 术语映射不足，生命/能量/装备/技能可能不贴合小说世界。")
+        recommendations.append("重跑 python novel.py rebuild-rpg <world>，必要时补充 world_profile.json。")
+
+    if "item_market" in failed:
+        risks.append("经济与物品市场不足，购买、奖励和资源替代路径会不稳定。")
+        recommendations.append("补充 item_market：价格区间、购买条件、替代获取路径、稀有度。")
+    if "quest_templates" in failed:
+        risks.append("任务模板不足，玩家可能缺少明确的短中期目标。")
+        recommendations.append("补充 adventure_hooks 或重跑 quest_runtime。")
+    if "relationship_rules" in failed:
+        risks.append("关系规则不足，NPC 好感、敌意、人情债和势力后果会偏弱。")
+        recommendations.append("补充 NPC/势力关系规则，让社交行动能改变世界状态。")
+
+    if not recommendations:
+        recommendations.append("世界已达到基础可玩状态；下一步可增加长期世界事件和更多高质量 NPC 动机。")
+
+    return {
+        "world": world,
+        "score": score_checks(checks),
+        "genre": manifest.get("genre", "unknown"),
+        "profile": manifest.get("profile", "unknown"),
+        "strengths": strengths,
+        "risks": risks,
+        "recommendations": recommendations,
+        "failed_checks": failed,
+        "entity_counts": entity_counts,
+        "index_rows": index_rows,
+        "playable_count": playable_count,
+    }
+
+
+def write_markdown_report(wdir: Path, report: dict[str, Any]) -> None:
+    lines = [
+        f"# Quality Report: {report['world']}",
+        "",
+        f"- Score: {report['score']}/100",
+        f"- Genre: {report.get('genre')}",
+        f"- Profile: {report.get('profile')}",
+        f"- Retrieval rows: {report.get('index_rows')}",
+        f"- Playable canon: {report.get('playable_count')}",
+        "",
+        "## Strengths",
+        *(f"- {item}" for item in report.get("strengths", []) or ["暂无明显强项。"]),
+        "",
+        "## Risks",
+        *(f"- {item}" for item in report.get("risks", []) or ["暂无明显风险。"]),
+        "",
+        "## Recommendations",
+        *(f"- {item}" for item in report.get("recommendations", [])),
+        "",
+        "## Entity Counts",
+        *(f"- {key}: {value}" for key, value in sorted(report.get("entity_counts", {}).items())),
+        "",
+    ]
+    (wdir / "quality_report.md").write_text("\n".join(lines), encoding="utf-8")
+
+
 def qa(world: str) -> None:
     wdir = world_dir(world)
     manifest = read_json(wdir / "manifest.json", {})
@@ -113,6 +223,15 @@ def qa(world: str) -> None:
     print(f"profile={manifest.get('profile')} genre={manifest.get('genre', 'unknown')} preset={is_preset}")
     for name, ok, detail in checks:
         print(f"[{status(ok)}] {name}: {detail}")
+    report = build_readable_report(world, manifest, checks, entity_counts, index_rows, len(playable_entries))
+    write_json(wdir / "quality_report.json", {**quality, "readable_report": report})
+    write_markdown_report(wdir, report)
+    print(f"Quality score: {report['score']}/100")
+    if report["risks"]:
+        print("Top risks:")
+        for item in report["risks"][:3]:
+            print(f"- {item}")
+    print("Wrote quality_report.md")
 
 
 def main() -> None:

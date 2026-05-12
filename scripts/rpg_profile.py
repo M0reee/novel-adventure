@@ -78,6 +78,27 @@ SPECIAL_SYSTEMS = [
         "skill_name": "战术",
         "slots": ["主武器", "装甲", "核心芯片", "动力模块", "辅助模块"],
     },
+    {
+        "system_id": "cyberware",
+        "keywords": ("义体", "植入体", "黑客", "赛博", "神经接口"),
+        "equipment_name": "义体/插件",
+        "skill_name": "协议",
+        "slots": ["神经接口", "义眼", "义肢", "皮下护甲", "战斗插件"],
+    },
+    {
+        "system_id": "fantasy_relics",
+        "keywords": ("魔法", "法杖", "圣剑", "神器", "骑士", "精灵"),
+        "equipment_name": "魔法装备",
+        "skill_name": "法术/战技",
+        "slots": ["武器", "护甲", "法器", "戒指", "护符"],
+    },
+    {
+        "system_id": "sealed_artifacts",
+        "keywords": ("封印物", "遗物", "污染", "仪式", "禁忌"),
+        "equipment_name": "封印物",
+        "skill_name": "仪式/能力",
+        "slots": ["主封印物", "护符", "调查工具", "伪装物", "应急药剂"],
+    },
 ]
 
 GENRE_DEFAULTS = {
@@ -85,6 +106,11 @@ GENRE_DEFAULTS = {
     "xianxia": {"resource": "灵力", "currency": "灵石", "skill": "术法", "equipment": "法宝"},
     "wuxia": {"resource": "内力", "currency": "银两", "skill": "武功", "equipment": "兵器"},
     "scifi": {"resource": "能源", "currency": "信用点", "skill": "战术", "equipment": "模块"},
+    "cyberpunk": {"resource": "算力", "currency": "信用点", "skill": "协议", "equipment": "义体/插件"},
+    "fantasy": {"resource": "魔力", "currency": "金币", "skill": "法术/战技", "equipment": "魔法装备"},
+    "game": {"resource": "体力", "currency": "金币", "skill": "技能", "equipment": "装备"},
+    "historical": {"resource": "体力", "currency": "银两", "skill": "技艺", "equipment": "器物"},
+    "military": {"resource": "补给", "currency": "军功", "skill": "战术", "equipment": "装备"},
     "mystery": {"resource": "理智", "currency": "资源点", "skill": "仪式", "equipment": "封印物"},
     "apocalypse": {"resource": "体力", "currency": "物资", "skill": "生存技能", "equipment": "装备"},
     "urban": {"resource": "精力", "currency": "现金", "skill": "技能", "equipment": "物品"},
@@ -100,6 +126,10 @@ RESOURCE_CURRENCY_DEFAULTS = {
     "真气": "银两",
     "内力": "银两",
     "能源": "信用点",
+    "算力": "信用点",
+    "理智": "资源点",
+    "体力": "物资",
+    "补给": "军功",
 }
 
 

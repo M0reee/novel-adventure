@@ -1,6 +1,6 @@
 ---
-description: Start or reset a Novel Adventure world.
-argument-hint: "<world> [--reset]"
+description: Start or reset a Novel Adventure world or save slot.
+argument-hint: "<world> [--slot slot] [--reset]"
 ---
 
 # Start Novel Adventure World
@@ -14,3 +14,5 @@ python novel.py start $ARGUMENTS
 ```
 
 If the user does not provide a world slug, first run `python novel.py worlds` and ask which world to start.
+
+Use `--slot <name>` for named saves. If omitted, the default `player_state.json` save is used.

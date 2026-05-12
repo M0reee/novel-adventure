@@ -5,10 +5,11 @@ import argparse
 from typing import Any
 
 from action_resolver import resolve_action
-from common import default_player_state, migrate_player_state, read_json, write_json, world_dir
+from common import default_player_state, migrate_player_state, write_json, world_dir
 from game_math import computed_stats
 from retrieve import retrieve
 from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
+from save_manager import load_save, save_path, write_save
 
 
 HIGH_RISK_WORDS = ("硬闯", "强闯", "击杀", "挑战", "突破", "偷袭", "抢夺", "潜入", "威胁", "追杀")
@@ -120,10 +121,10 @@ def build_options(player_input: str, state: dict[str, Any], canon_rows: list[dic
     return deduped
 
 
-def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
+def run_turn(world: str, player_input: str, limit: int, dry_run: bool, slot: str | None = None) -> str:
     wdir = world_dir(world)
-    state_path = wdir / "player_state.json"
-    state = migrate_player_state(read_json(state_path, default_player_state(world)), world)
+    state_path = save_path(world, slot)
+    state = migrate_player_state(load_save(world, slot, default_player_state(world)), world)
     rpg_profile = load_rpg_profile(world)
     state = apply_rpg_profile_to_state(state, rpg_profile)
     meta = state.setdefault("meta", {})
@@ -163,7 +164,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
     )
     state["action_log"] = state["action_log"][-30:]
     if not dry_run:
-        write_json(state_path, state)
+        write_save(world, slot, state)
         for filename, data in resolution.get("runtime_files", {}).items():
             write_json(wdir / filename, data)
 
@@ -186,6 +187,7 @@ def run_turn(world: str, player_input: str, limit: int, dry_run: bool) -> str:
         "",
         "## 状态变化",
         *[f"- {line}" for line in state_changes],
+        f"- 存档：{state_path}",
         "",
         "## 人物属性",
         *format_stat_block(stats, rpg_profile),
@@ -209,10 +211,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run one text adventure turn using retrieved canon.")
     parser.add_argument("--world", required=True)
     parser.add_argument("--input", required=True)
+    parser.add_argument("--slot", help="Named save slot. Default uses player_state.json.")
     parser.add_argument("--limit", type=int, default=30)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    print(run_turn(args.world, args.input, args.limit, args.dry_run))
+    print(run_turn(args.world, args.input, args.limit, args.dry_run, args.slot))
 
 
 if __name__ == "__main__":

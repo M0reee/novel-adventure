@@ -11,6 +11,7 @@ from index import build_index
 from ingest import ingest
 from merge import merge
 from opening import build_opening
+from qa_world import qa
 
 
 def build(
@@ -36,6 +37,7 @@ def build(
     build_opening(world)
     distill(world)
     build_index(world)
+    qa(world)
     print(f"Build complete for world={world} profile={profile}")
 
 

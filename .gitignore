@@ -5,6 +5,7 @@ worlds/*
 !worlds/doupo_cangqiong/
 !worlds/doupo_cangqiong/*.json
 !worlds/doupo_cangqiong/*.jsonl
+!worlds/doupo_cangqiong/*.md
 !worlds/doupo_cangqiong/retrieval.sqlite
 worlds/doupo_cangqiong/chunks.jsonl
 worlds/doupo_cangqiong/facts.jsonl

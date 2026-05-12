@@ -12,6 +12,9 @@
 - **本地检索**：用 SQLite FTS 建索引，运行时只取与当前场景相关的设定，不把原文塞给模型
 - **玩文字冒险**：每回合输出场景叙事 / 规则裁定 / 行动结果 / 状态变化 / 世界动态 / 可选行动
 - **裁判而非许愿机**：玩家行动会按原著 canon、当前境界、资源、风险与时机来判罚，不接受声明式成功
+- **跨题材适配**：自动识别玄幻、仙侠、武侠、科幻、赛博朋克、奇幻、游戏、历史、军事、诡秘、末日、都市等题材，并映射资源、装备、技能和风险模型
+- **多存档**：同一世界可使用多个 slot，方便分支路线、回档试玩和测试
+- **质量报告**：`qa` 会生成 `quality_report.md/json`，告诉你世界库缺少什么、为什么玩起来可能不稳、下一步怎么补
 - **一键安装为 Skill**：支持 Claude Code、Codex、通用 Agent Skills 目录及自定义路径
 
 ## 为什么这样设计
@@ -88,12 +91,14 @@ python novel.py launch
 
 ```bash
 /novel-start doupo_cangqiong --reset
+/novel-start doupo_cangqiong --slot branch_a --reset
 ```
 
 启动后会显示主角身份、开场处境、当前困难和可选行动。然后复制任意行动继续：
 
 ```bash
 /novel-play doupo_cangqiong 去乌坦城拍卖场打听筑基灵液价格
+/novel-play doupo_cangqiong 观察萧家练武场 --slot branch_a
 ```
 
 如果你要导入自己的小说：
@@ -137,8 +142,11 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `启动 novel-adventure` | 在宿主 Agent 里触发这个 Skill |
 | `/novel-adventure` | 统一主入口；先询问“游玩已有世界”还是“蒸馏小说世界” |
 | `/novel-worlds` | 列出可游玩世界 |
-| `/novel-start <slug> --reset` | 初始化或重置某个世界的存档 |
-| `/novel-play <slug> <行动>` | 运行一回合文字冒险 |
+| `/novel-start <slug> --slot <slot> --reset` | 初始化或重置某个世界的指定存档 |
+| `/novel-play <slug> <行动> --slot <slot>` | 在指定存档运行一回合文字冒险 |
+| `/novel-saves <slug>` | 列出某个世界的所有存档 |
+| `/novel-copy-save <slug> <from_slot> <to_slot>` | 复制存档，用于分支路线或测试 |
+| `/novel-delete-save <slug> <slot>` | 删除具名存档，默认存档受保护 |
 | `/novel-build <slug> <txt_or_dir>` | 从 TXT/MD 小说构建世界 |
 | `/novel-build <slug> <txt_or_dir> --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
 | `/novel-llm-pack <slug> --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
@@ -156,10 +164,11 @@ CLI fallback：
 | `python novel.py install --target openclaw --force` | 安装到 OpenClaw 风格目录，并同步安装 commands |
 | `python novel.py launch` | 命令行启动向导，展示已有世界和存档状态 |
 | `python novel.py worlds` | 列出可游玩世界 |
-| `python novel.py start <slug> --reset` | 初始化或重置某个世界的存档 |
-| `python novel.py play <slug> "<行动>"` | 运行一回合文字冒险 |
+| `python novel.py start <slug> --slot <slot> --reset` | 初始化或重置某个世界的指定存档 |
+| `python novel.py play <slug> "<行动>" --slot <slot>` | 在指定存档运行一回合文字冒险 |
+| `python novel.py saves <slug>` | 列出某个世界的所有存档 |
 | `python novel.py build <slug> <txt_or_dir>` | 从 TXT/MD 小说构建世界 |
-| `python novel.py qa <slug>` | 检查世界库质量和运行时文件 |
+| `python novel.py qa <slug>` | 检查世界库质量，生成 `quality_report.md/json` |
 
 如果要手动分步执行：
 
@@ -222,6 +231,37 @@ python novel.py start <slug> --reset
 ```
 
 `python novel.py start` 会初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`python novel.py build <slug> <txt_or_dir>` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json` 和 `encounter_state.json`，不需要手写。
+
+## 多存档
+
+默认存档仍是 `worlds/<slug>/player_state.json`，保持旧版本兼容。具名存档会写入：
+
+```text
+worlds/<slug>/saves/<slot>.json
+```
+
+常用命令：
+
+```bash
+python novel.py saves doupo_cangqiong
+python novel.py start doupo_cangqiong --slot branch_a --reset
+python novel.py play doupo_cangqiong "观察周围环境" --slot branch_a
+python novel.py copy-save doupo_cangqiong branch_a before_breakthrough
+python novel.py delete-save doupo_cangqiong before_breakthrough
+```
+
+这样同一本小说世界可以保留多条人生线：主线、测试线、危险行动前备份、不同玩家的独立存档。
+
+## 蒸馏质量报告
+
+`python novel.py qa <slug>` 会输出命令行检查，并生成：
+
+```text
+worlds/<slug>/quality_report.json
+worlds/<slug>/quality_report.md
+```
+
+报告会给出 `score`、强项、风险和建议，例如地点不足、NPC 不足、成长体系缺失、物品市场不完整、任务模板不足、检索索引缺失等。这个报告用于判断一个新小说世界为什么“能跑但不好玩”，以及下一步该补哪一层。
 
 ## RPG 数值核心
 
@@ -330,6 +370,7 @@ novel-adventure/
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
 │   ├── run_turn.py          # 跑一回合
+│   ├── save_manager.py      # 多存档 slot 管理
 │   ├── build_world.py       # 一键完整构建
 │   ├── qa_world.py          # 蒸馏质量检查
 │   ├── install.py           # 安装为 Skill
@@ -362,8 +403,10 @@ timeline.json           # 时间线
 adventure_hooks.json    # 冒险钩子
 playable_canon.json     # 二次蒸馏后的可玩规则
 player_state.json       # 玩家存档
+saves/<slot>.json       # 具名存档分支
 canon_patches.jsonl     # 用户校正的设定补丁
 retrieval.sqlite        # 检索索引
+quality_report.md/json  # 可读蒸馏质量报告
 ```
 
 由于可能含**版权文本**和**私设**，`worlds/` 默认在 `.gitignore` 里，不会被提交。唯一例外是公开瘦身预设 `worlds/doupo_cangqiong/`，它不包含 `chunks.jsonl`、`facts.jsonl` 或 `source_index.jsonl`。

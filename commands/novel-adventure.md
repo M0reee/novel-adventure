@@ -37,14 +37,15 @@ If the user chooses `1`, show available worlds from `python novel.py worlds`, th
 ```text
 请选择世界或存档：
 - 输入世界 slug 或编号继续已有存档
-- 如果要重开，在选择后说明“重置”
+- 可输入存档 slot；如果要重开，在选择后说明“重置”
 ```
 
 After the user chooses, run one of:
 
 ```bash
 python novel.py start <world>
-python novel.py start <world> --reset
+python novel.py start <world> --slot <slot>
+python novel.py start <world> --slot <slot> --reset
 ```
 
 If the user chooses `2`, ask:

@@ -50,7 +50,7 @@ Optional LLM-assisted offline distillation:
 
 Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
 
-This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, and a RPG-ready `player_state.json` schema for custom worlds.
+This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 ### First-Run Use
 
@@ -58,7 +58,7 @@ If the user asks how to start after installation:
 
 1. Tell them to use `/novel-adventure`; in Codex versions that namespace prompts, use `/prompts:novel-adventure`.
 2. The first response should ask whether they want to `1. 游玩已有世界 / 读取存档` or `2. 蒸馏新的小说世界`.
-3. If they choose play, show worlds and save status with `python novel.py launch` or `python novel.py worlds`, then start with `/novel-start <slug>` or `/novel-start <slug> --reset`.
+3. If they choose play, show worlds and save status with `python novel.py launch` or `python novel.py worlds`, then start with `/novel-start <slug>`, `/novel-start <slug> --slot <slot>`, or `/novel-start <slug> --slot <slot> --reset`.
 4. If they choose distill, ask for distillation mode, world slug, and TXT/MD path. Modes are local heuristic, API LLM-assisted, and host-model prompt-pack.
 5. For immediate play without the wizard, use `/novel-start doupo_cangqiong --reset`, then `/novel-play doupo_cangqiong <player action>`.
 
@@ -116,6 +116,13 @@ Run:
 
 `/novel-play <slug> <player action>`
 
+Named save slots:
+
+- `/novel-saves <slug>` lists saves.
+- `/novel-start <slug> --slot <slot> --reset` starts or resets a branch.
+- `/novel-play <slug> <player action> --slot <slot>` writes that turn to the branch.
+- Default saves remain backward compatible at `worlds/<slug>/player_state.json`; named saves live in `worlds/<slug>/saves/<slot>.json`.
+
 For immediate testing, use the included redacted preset:
 
 `/novel-play doupo_cangqiong 我在乌坦城找药老打听异火和修炼斗气的方法`
@@ -125,6 +132,8 @@ Each turn must use retrieved canon, update `player_state.json`, and return scene
 Most important rule: the agent is a game master and rules judge, not a wish fulfiller. Player actions must be checked against canon, current state, resources, risk, time, location, relationships, and power limits before success is granted.
 
 RPG rule: numeric outcomes must come from structured state and scripts. Character stats live in `player_state.json` under `stats`, `equipment`, `skills`, `active_effects`, and `inventory`. World-facing names live in `rpg_profile.json`: do not assume every world has "MP", "法力", or generic equipment. Use `scripts/action_resolver.py` as the first stop for trade, cultivation, combat, quest, location, social, inventory, and info actions; it routes to `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, `scripts/game_math.py`, and `scripts/combat.py`. Do not invent HP, resource, damage, EXP, currency, equipment, skill, quest, relationship, location, encounter, or Buff changes in narration without writing them into state.
+
+Generality rule: do not hard-code a novel's genre assumptions. `bootstrap_profile.py` should infer broad genre and schema from text, then `rpg_profile.py` maps internal stats to world-specific terms such as spiritual energy, inner force, magic, stamina, sanity, credits, cyberware, artifacts, sealed items, mecha modules, or ordinary equipment. If the genre is unclear, use conservative generic defaults and rely on retrieved canon.
 
 ## References
 

@@ -4,7 +4,8 @@
     "current_time": "第一日 清晨",
     "current_location": "乌坦城",
     "current_stage": "开局",
-    "turn": 0
+    "turn": 0,
+    "save_slot": "default"
   },
   "player": {
     "name": "旅人",

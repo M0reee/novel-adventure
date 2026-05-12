@@ -23,6 +23,7 @@ from scripts.qa_world import qa
 from scripts.retrieve import retrieve
 from scripts.rpg_profile import build_rpg_profile
 from scripts.run_turn import run_turn
+from scripts.save_manager import copy_save, delete_save, format_saves
 from scripts.start_game import initialize_state
 
 
@@ -35,7 +36,7 @@ def _save_summary(world: str) -> str:
     state = read_json(state_path, {})
     meta = state.get("meta", {})
     player = state.get("player", {})
-    turn = meta.get("turn_count", state.get("turn_count", 0))
+    turn = meta.get("turn", meta.get("turn_count", state.get("turn_count", 0)))
     location = meta.get("current_location", "未知地点")
     realm = player.get("realm_or_level", "未知境界")
     return f"已有存档：回合 {turn} / {location} / {realm}"
@@ -63,6 +64,7 @@ def cmd_launch(args: argparse.Namespace) -> None:
     print("")
     print("也可以直接使用：")
     print("- /novel-start <world> --reset")
+    print("- /novel-saves <world>")
     print("- /novel-play <world> <行动>")
     print("- /novel-build <world> <txt_or_dir>")
     print("- /novel-llm-pack <world> --llm-max-chunks 80")
@@ -77,7 +79,8 @@ def cmd_launch(args: argparse.Namespace) -> None:
         selected = input("请选择世界编号或 slug: ").strip()
         world = rows[int(selected) - 1]["slug"] if selected.isdigit() else selected
         reset = input("是否重置存档？输入 y 重置，直接回车读取/创建存档: ").strip().lower() == "y"
-        state = initialize_state(world, reset)
+        slot = input("请输入存档 slot（直接回车使用 default）: ").strip() or None
+        state = initialize_state(world, reset, slot)
         print(format_opening(ensure_opening(world)))
         print("")
         print("## 当前角色")
@@ -85,7 +88,8 @@ def cmd_launch(args: argparse.Namespace) -> None:
         print(f"- 身份：{player.get('identity')}")
         print(f"- 境界/等级：{player.get('realm_or_level')}")
         print("")
-        print(f"下一步：python novel.py play {world} \"观察周围环境\"")
+        slot_arg = f" --slot {slot}" if slot else ""
+        print(f"下一步：python novel.py play {world} \"观察周围环境\"{slot_arg}")
         return
     if choice == "2":
         world = input("请输入世界 slug（例如 fanren）: ").strip()
@@ -113,17 +117,18 @@ def cmd_worlds(args: argparse.Namespace) -> None:
 
 
 def cmd_start(args: argparse.Namespace) -> None:
-    state = initialize_state(args.world, args.reset)
+    state = initialize_state(args.world, args.reset, args.slot)
     print(format_opening(ensure_opening(args.world)))
     player = state.get("player", {})
     print("")
     print("## 当前角色")
     print(f"- 身份：{player.get('identity')}")
     print(f"- 境界/等级：{player.get('realm_or_level')}")
+    print(f"- 存档：{state.get('meta', {}).get('save_slot', 'default')}")
 
 
 def cmd_play(args: argparse.Namespace) -> None:
-    print(run_turn(args.world, args.action, args.limit, args.dry_run))
+    print(run_turn(args.world, args.action, args.limit, args.dry_run, args.slot))
 
 
 def cmd_build(args: argparse.Namespace) -> None:
@@ -157,6 +162,19 @@ def cmd_llm_import(args: argparse.Namespace) -> None:
 
 def cmd_qa(args: argparse.Namespace) -> None:
     qa(args.world)
+
+
+def cmd_saves(args: argparse.Namespace) -> None:
+    print(format_saves(args.world))
+
+
+def cmd_copy_save(args: argparse.Namespace) -> None:
+    print(f"Copied save to {copy_save(args.world, args.from_slot, args.to_slot)}")
+
+
+def cmd_delete_save(args: argparse.Namespace) -> None:
+    delete_save(args.world, args.slot)
+    print(f"Deleted save slot {args.slot} for {args.world}")
 
 
 def cmd_search(args: argparse.Namespace) -> None:
@@ -231,12 +249,14 @@ def parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("start", help="Start or reset a world.")
     p.add_argument("world")
+    p.add_argument("--slot")
     p.add_argument("--reset", action="store_true")
     p.set_defaults(func=cmd_start)
 
     p = sub.add_parser("play", help="Run one adventure turn.")
     p.add_argument("world")
     p.add_argument("action")
+    p.add_argument("--slot")
     p.add_argument("--limit", type=int, default=30)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_play)
@@ -270,6 +290,21 @@ def parser() -> argparse.ArgumentParser:
     p = sub.add_parser("qa", help="Check world quality.")
     p.add_argument("world")
     p.set_defaults(func=cmd_qa)
+
+    p = sub.add_parser("saves", help="List save slots for a world.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_saves)
+
+    p = sub.add_parser("copy-save", help="Copy a save slot.")
+    p.add_argument("world")
+    p.add_argument("from_slot")
+    p.add_argument("to_slot")
+    p.set_defaults(func=cmd_copy_save)
+
+    p = sub.add_parser("delete-save", help="Delete a named save slot.")
+    p.add_argument("world")
+    p.add_argument("slot")
+    p.set_defaults(func=cmd_delete_save)
 
     p = sub.add_parser("search", help="Search canon.")
     p.add_argument("world")
