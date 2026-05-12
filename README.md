@@ -31,20 +31,20 @@ git clone https://github.com/M0reee/novel-adventure.git
 cd novel-adventure
 
 # 方式 A：直接玩内置试玩预设
-python scripts/start_game.py --world doupo_cangqiong --reset
-python scripts/run_turn.py --world doupo_cangqiong --input "观察萧家练武场，确认自己能接触哪些修炼机会"
+python novel.py start doupo_cangqiong --reset
+python novel.py play doupo_cangqiong "观察萧家练武场，确认自己能接触哪些修炼机会"
 
 # 方式 B：把自己的小说切块入库（输入可以是单文件，也可以是目录）
-python scripts/build_world.py --world fanren --input /path/to/novel.txt --profile auto
+python novel.py build fanren /path/to/novel.txt
 
 # 可选：用 LLM 辅助离线蒸馏，适合提升复杂设定抽取质量
 export NOVEL_ADVENTURE_LLM_API_KEY="..."
-python scripts/build_world.py --world fanren_llm --input /path/to/novel.txt --profile auto \
+python novel.py build fanren_llm /path/to/novel.txt \
   --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120
 
 # 然后开始玩
-python scripts/start_game.py --world fanren --reset
-python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹的消息"
+python novel.py start fanren --reset
+python novel.py play fanren "我去坊市打听筑基丹的消息"
 ```
 
 仓库内置的 `doupo_cangqiong` 是瘦身试玩预设，只包含结构化 canon、可玩规则、初始存档和检索索引；不包含原文切块、原始抽取 facts 或来源索引。
@@ -61,38 +61,47 @@ python scripts/run_turn.py --world fanren --input "我去坊市打听筑基丹�
 第一次启动建议先玩内置预设：
 
 ```bash
-python scripts/start_game.py --world doupo_cangqiong --reset
+python novel.py start doupo_cangqiong --reset
 ```
 
 启动后会显示主角身份、开场处境、当前困难和可选行动。然后复制任意行动继续：
 
 ```bash
-python scripts/run_turn.py --world doupo_cangqiong --input "去乌坦城拍卖场打听筑基灵液价格"
+python novel.py play doupo_cangqiong "去乌坦城拍卖场打听筑基灵液价格"
 ```
 
 如果你要导入自己的小说：
 
 ```bash
-python scripts/build_world.py --world my_novel --input /path/to/novel.txt --profile auto
-python scripts/start_game.py --world my_novel --reset
-python scripts/run_turn.py --world my_novel --input "观察当前环境，确认我能做什么"
+python novel.py build my_novel /path/to/novel.txt
+python novel.py start my_novel --reset
+python novel.py play my_novel "观察当前环境，确认我能做什么"
 ```
 
 想要更强蒸馏质量，可以启用 LLM-assisted distillation：
 
 ```bash
 export NOVEL_ADVENTURE_LLM_API_KEY="..."
-python scripts/build_world.py --world my_novel_llm --input /path/to/novel.txt --profile auto \
+python novel.py build my_novel_llm /path/to/novel.txt \
   --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120
 ```
 
 如果你希望由宿主平台模型来蒸馏，而不是配置 API：
 
 ```bash
-python scripts/extract.py --world my_novel --profile auto --llm-provider prompt-pack --llm-max-chunks 80
+python novel.py llm-pack my_novel --llm-max-chunks 80
 ```
 
 这会生成 `worlds/my_novel/llm_requests.jsonl`，让宿主模型按里面的提示返回 JSONL，再用 `--llm-responses` 导入。
+
+也可以不记命令，直接对宿主 Agent 说：
+
+- “启动 Novel Adventure，打开斗破预设。”
+- “帮我把 `/path/to/novel.txt` 构建成世界，slug 叫 `my_novel`。”
+- “用 LLM 辅助蒸馏 `my_novel`，最多处理 120 个 chunk。”
+- “在 `my_novel` 里运行一回合：我去坊市打听筑基丹。”
+- “列出我现在有哪些世界。”
+- “检查 `my_novel` 的世界库质量。”
 
 ## 🎛️ 管理命令
 
@@ -100,18 +109,19 @@ python scripts/extract.py --world my_novel --profile auto --llm-provider prompt-
 |---|---|
 | `启动 novel-adventure` | 在宿主 Agent 里触发这个 Skill |
 | `/novel-adventure` | 宿主支持 slash command 时的入口 |
-| `python scripts/install.py --target codex --force` | 安装到 Codex Skills 目录 |
-| `python scripts/install.py --target claude --force` | 安装到 Claude Skills 目录 |
-| `python scripts/list_worlds.py` | 列出可游玩世界 |
-| `python scripts/start_game.py --world <slug> --reset` | 初始化或重置某个世界的存档 |
-| `python scripts/run_turn.py --world <slug> --input "<行动>"` | 运行一回合文字冒险 |
-| `python scripts/build_world.py --world <slug> --input <txt_or_dir> --profile auto` | 从 TXT/MD 小说构建世界 |
-| `python scripts/build_world.py --world <slug> --input <txt_or_dir> --profile auto --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
-| `python scripts/extract.py --world <slug> --llm-provider prompt-pack --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
-| `python scripts/qa_world.py --world <slug>` | 检查世界库质量和运行时文件 |
-| `python scripts/retrieve.py --world <slug> --query "<关键词>"` | 检索当前世界 canon |
-| `python scripts/encounter_runtime.py --world <slug> --clear` | 清理当前战斗遭遇 |
-| `python scripts/rpg_profile.py --world <slug> --rebuild` | 重建世界观 RPG 术语映射 |
+| `python novel.py install --target codex --force` | 安装到 Codex Skills 目录 |
+| `python novel.py install --target claude --force` | 安装到 Claude Skills 目录 |
+| `python novel.py worlds` | 列出可游玩世界 |
+| `python novel.py start <slug> --reset` | 初始化或重置某个世界的存档 |
+| `python novel.py play <slug> "<行动>"` | 运行一回合文字冒险 |
+| `python novel.py build <slug> <txt_or_dir>` | 从 TXT/MD 小说构建世界 |
+| `python novel.py build <slug> <txt_or_dir> --llm-provider openai-compatible --llm-max-chunks 120` | 使用 LLM 辅助蒸馏 |
+| `python novel.py llm-pack <slug> --llm-max-chunks 80` | 导出给宿主模型处理的蒸馏请求 |
+| `python novel.py llm-import <slug> worlds/<slug>/llm_responses.jsonl` | 导入宿主模型返回的蒸馏结果 |
+| `python novel.py qa <slug>` | 检查世界库质量和运行时文件 |
+| `python novel.py search <slug> "<关键词>"` | 检索当前世界 canon |
+| `python novel.py clear-encounter <slug>` | 清理当前战斗遭遇 |
+| `python novel.py rebuild-rpg <slug>` | 重建世界观 RPG 术语映射 |
 
 如果要手动分步执行：
 
@@ -135,24 +145,20 @@ API 模式：
 ```bash
 export NOVEL_ADVENTURE_LLM_API_KEY="..."
 export NOVEL_ADVENTURE_LLM_MODEL="gpt-4.1-mini"
-python scripts/extract.py --world fanren --profile auto \
-  --llm-provider openai-compatible \
-  --llm-max-chunks 120
+python novel.py build fanren /path/to/novel.txt \
+  --llm-provider openai-compatible --llm-max-chunks 120
 ```
 
 宿主平台模式：
 
 ```bash
-python scripts/extract.py --world fanren --profile auto \
-  --llm-provider prompt-pack \
-  --llm-max-chunks 80
+python novel.py llm-pack fanren --llm-max-chunks 80
 ```
 
 这会生成 `worlds/fanren/llm_requests.jsonl`。让安装了 Skill 的模型平台按其中的 `system/user` 字段返回 JSONL，再导入：
 
 ```bash
-python scripts/extract.py --world fanren --profile auto \
-  --llm-responses worlds/fanren/llm_responses.jsonl
+python novel.py llm-import fanren worlds/fanren/llm_responses.jsonl
 ```
 
 更多细节见 `references/llm_distillation.md`。
@@ -173,11 +179,11 @@ python scripts/extract.py --world fanren --profile auto \
 ## 世界选择与开场
 
 ```bash
-python scripts/list_worlds.py
-python scripts/start_game.py
+python novel.py worlds
+python novel.py start <slug> --reset
 ```
 
-`start_game.py` 会列出可玩世界、初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`build_world.py --profile auto` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json` 和 `encounter_state.json`，不需要手写。
+`python novel.py start` 会初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`python novel.py build <slug> <txt_or_dir>` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json` 和 `encounter_state.json`，不需要手写。
 
 ## RPG 数值核心
 
@@ -233,16 +239,16 @@ python scripts/encounter_runtime.py --world doupo_cangqiong
 
 ```bash
 # Claude Code
-python scripts/install.py --target claude --force
+python novel.py install --target claude --force
 
 # Codex
-python scripts/install.py --target codex --force
+python novel.py install --target codex --force
 
 # 通用 Agent Skills
-python scripts/install.py --target agents --force
+python novel.py install --target agents --force
 
 # 自定义目录（Hermes / OpenClaw 等）
-python scripts/install.py --destination /path/to/skills --force
+python novel.py install --destination /path/to/skills --force
 ```
 
 安装脚本只复制公开瘦身预设 `worlds/doupo_cangqiong/`，不会复制其他私有世界，也会排除 `chunks.jsonl`、`facts.jsonl`、`source_index.jsonl` 等原文/原始抽取文件。

@@ -15,7 +15,7 @@ Core rule: never load a whole novel into context. Source text is processed offli
 
 This skill follows the Agent Skills folder format. Copy this directory into the target application skill directory, or use:
 
-`python scripts/install.py --target codex`
+`python novel.py install --target codex --force`
 
 Supported install targets:
 
@@ -30,11 +30,11 @@ Supported install targets:
 
 Preferred one-command build:
 
-`python scripts/build_world.py --world <slug> --input <file_or_dir> --profile auto`
+`python novel.py build <slug> <file_or_dir>`
 
 Optional LLM-assisted offline distillation:
 
-`python scripts/build_world.py --world <slug> --input <file_or_dir> --profile auto --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120`
+`python novel.py build <slug> <file_or_dir> --llm-provider openai-compatible --llm-model gpt-4.1-mini --llm-max-chunks 120`
 
 Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
 
@@ -45,10 +45,12 @@ This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest
 If the user asks how to start after installation:
 
 1. Tell them to say `启动 novel-adventure` in the host Agent, or use `/novel-adventure` only if that host supports slash commands.
-2. For immediate play, run `python scripts/start_game.py --world doupo_cangqiong --reset`.
-3. Continue with `python scripts/run_turn.py --world doupo_cangqiong --input "<player action>"`.
-4. For a custom novel, run `python scripts/build_world.py --world <slug> --input <txt_or_dir> --profile auto`.
+2. For immediate play, run `python novel.py start doupo_cangqiong --reset`.
+3. Continue with `python novel.py play doupo_cangqiong "<player action>"`.
+4. For a custom novel, run `python novel.py build <slug> <txt_or_dir>`.
 5. For deeper extraction, add `--llm-provider openai-compatible --llm-max-chunks 120`, or use `--llm-provider prompt-pack` and import `--llm-responses`.
+
+Prefer friendly commands through `novel.py` when explaining usage. Keep `scripts/*.py` commands for advanced/manual pipeline work.
 
 Manual build:
 
@@ -94,17 +96,17 @@ Manual build:
 
 List or choose a world:
 
-`python scripts/list_worlds.py`
+`python novel.py worlds`
 
-`python scripts/start_game.py --world <slug> --reset`
+`python novel.py start <slug> --reset`
 
 Run:
 
-`python scripts/run_turn.py --world <slug> --input "<player action>"`
+`python novel.py play <slug> "<player action>"`
 
 For immediate testing, use the included redacted preset:
 
-`python scripts/run_turn.py --world doupo_cangqiong --input "我在乌坦城找药老打听异火和修炼斗气的方法"`
+`python novel.py play doupo_cangqiong "我在乌坦城找药老打听异火和修炼斗气的方法"`
 
 Each turn must use retrieved canon, update `player_state.json`, and return scene narration, action result, state changes, world dynamics, 3-5 action options, and a custom action prompt.
 
