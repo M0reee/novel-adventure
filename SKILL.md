@@ -57,10 +57,10 @@ This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest
 If the user asks how to start after installation:
 
 1. Tell them to use `/novel-adventure`; in Codex versions that namespace prompts, use `/prompts:novel-adventure`.
-2. For immediate play, use `/novel-start doupo_cangqiong --reset`.
-3. Continue with `/novel-play doupo_cangqiong <player action>`.
-4. For a custom novel, use `/novel-build <slug> <txt_or_dir>`.
-5. For deeper extraction, add `--llm-provider openai-compatible --llm-max-chunks 120`, or use `/novel-llm-pack` and `/novel-llm-import`.
+2. The first response should ask whether they want to `1. 游玩已有世界 / 读取存档` or `2. 蒸馏新的小说世界`.
+3. If they choose play, show worlds and save status with `python novel.py launch` or `python novel.py worlds`, then start with `/novel-start <slug>` or `/novel-start <slug> --reset`.
+4. If they choose distill, ask for distillation mode, world slug, and TXT/MD path. Modes are local heuristic, API LLM-assisted, and host-model prompt-pack.
+5. For immediate play without the wizard, use `/novel-start doupo_cangqiong --reset`, then `/novel-play doupo_cangqiong <player action>`.
 
 Prefer slash commands when explaining usage. Use `python novel.py ...` as the CLI fallback. Keep `scripts/*.py` commands for advanced/manual pipeline work.
 

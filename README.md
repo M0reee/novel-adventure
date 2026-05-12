@@ -31,6 +31,7 @@ git clone https://github.com/M0reee/novel-adventure.git
 cd novel-adventure
 
 # 方式 A：直接玩内置试玩预设
+python novel.py launch
 python novel.py start doupo_cangqiong --reset
 python novel.py play doupo_cangqiong "观察萧家练武场，确认自己能接触哪些修炼机会"
 
@@ -59,7 +60,31 @@ python novel.py play fanren "我去坊市打听筑基丹的消息"
 - Codex 如果显示自定义 prompts 命名空间：输入 `/prompts:novel-adventure`。
 - 如果宿主没有开放自定义 slash command，直接说：`启动 novel-adventure` 或 `使用 Novel Adventure 帮我玩小说文字冒险`。
 
-第一次启动建议先玩内置预设：
+启动后不会立刻进入游戏，而是先进入向导：
+
+```text
+请选择你要做什么：
+1. 游玩已有世界 / 读取存档
+2. 蒸馏新的小说世界
+```
+
+选择 `1` 时，向导会列出当前已有世界和存档状态。你可以选择内置预设 `doupo_cangqiong`，也可以选择自己已经蒸馏过的世界；如果要从头开始，就选择重置存档。
+
+选择 `2` 时，向导会继续询问蒸馏方式和小说原稿路径：
+
+```text
+1. 本地启发式蒸馏：无需 API，最快，质量基础
+2. API LLM-assisted 蒸馏：质量更好，需要 NOVEL_ADVENTURE_LLM_API_KEY
+3. 宿主模型 prompt-pack：不需要 API，先导出请求再让宿主模型处理
+```
+
+CLI fallback：
+
+```bash
+python novel.py launch
+```
+
+如果你想跳过向导，第一次启动可以直接玩内置预设：
 
 ```bash
 /novel-start doupo_cangqiong --reset
@@ -110,7 +135,7 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | 命令 | 说明 |
 |---|---|
 | `启动 novel-adventure` | 在宿主 Agent 里触发这个 Skill |
-| `/novel-adventure` | 统一主入口；无参数时列出世界并提示开局 |
+| `/novel-adventure` | 统一主入口；先询问“游玩已有世界”还是“蒸馏小说世界” |
 | `/novel-worlds` | 列出可游玩世界 |
 | `/novel-start <slug> --reset` | 初始化或重置某个世界的存档 |
 | `/novel-play <slug> <行动>` | 运行一回合文字冒险 |
@@ -129,6 +154,7 @@ CLI fallback：
 | `python novel.py install --target claude --force` | 安装到 Claude Skills 目录，并同步安装 slash commands |
 | `python novel.py install --target hermes --force` | 安装到 Hermes 风格目录，并同步安装 commands |
 | `python novel.py install --target openclaw --force` | 安装到 OpenClaw 风格目录，并同步安装 commands |
+| `python novel.py launch` | 命令行启动向导，展示已有世界和存档状态 |
 | `python novel.py worlds` | 列出可游玩世界 |
 | `python novel.py start <slug> --reset` | 初始化或重置某个世界的存档 |
 | `python novel.py play <slug> "<行动>"` | 运行一回合文字冒险 |

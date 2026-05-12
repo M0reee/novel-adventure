@@ -26,8 +26,86 @@ from scripts.run_turn import run_turn
 from scripts.start_game import initialize_state
 
 
+def _save_summary(world: str) -> str:
+    from scripts.common import read_json, world_dir
+
+    state_path = world_dir(world) / "player_state.json"
+    if not state_path.exists():
+        return "无存档"
+    state = read_json(state_path, {})
+    meta = state.get("meta", {})
+    player = state.get("player", {})
+    turn = meta.get("turn_count", state.get("turn_count", 0))
+    location = meta.get("current_location", "未知地点")
+    realm = player.get("realm_or_level", "未知境界")
+    return f"已有存档：回合 {turn} / {location} / {realm}"
+
+
 def cmd_install(args: argparse.Namespace) -> None:
     install(args.target, args.destination, args.force, args.no_commands, args.command_destination)
+
+
+def cmd_launch(args: argparse.Namespace) -> None:
+    rows = discover_worlds()
+    print("## Novel Adventure 启动向导")
+    print("")
+    print("请选择你要做什么：")
+    print("1. 游玩已有世界 / 读取存档")
+    print("2. 蒸馏新的小说世界")
+    print("")
+    if rows:
+        print("## 当前已有世界")
+        for idx, row in enumerate(rows, 1):
+            preset = "内置预设" if row["preset"] == "yes" else "本地世界"
+            print(f"{idx}. {row['slug']} - {row['display_name']}（{preset}，{_save_summary(row['slug'])}）")
+    else:
+        print("当前没有可游玩世界。请选择 2 来蒸馏新的小说世界。")
+    print("")
+    print("也可以直接使用：")
+    print("- /novel-start <world> --reset")
+    print("- /novel-play <world> <行动>")
+    print("- /novel-build <world> <txt_or_dir>")
+    print("- /novel-llm-pack <world> --llm-max-chunks 80")
+
+    if not sys.stdin.isatty():
+        return
+
+    choice = input("请输入 1 或 2: ").strip()
+    if choice == "1":
+        if not rows:
+            raise SystemExit("No playable worlds found. Build one first.")
+        selected = input("请选择世界编号或 slug: ").strip()
+        world = rows[int(selected) - 1]["slug"] if selected.isdigit() else selected
+        reset = input("是否重置存档？输入 y 重置，直接回车读取/创建存档: ").strip().lower() == "y"
+        state = initialize_state(world, reset)
+        print(format_opening(ensure_opening(world)))
+        print("")
+        print("## 当前角色")
+        player = state.get("player", {})
+        print(f"- 身份：{player.get('identity')}")
+        print(f"- 境界/等级：{player.get('realm_or_level')}")
+        print("")
+        print(f"下一步：python novel.py play {world} \"观察周围环境\"")
+        return
+    if choice == "2":
+        world = input("请输入世界 slug（例如 fanren）: ").strip()
+        input_path = Path(input("请输入小说 TXT/MD 文件或目录路径: ").strip()).expanduser()
+        print("请选择蒸馏方式：")
+        print("1. 本地启发式蒸馏（无需 API，最快，质量基础）")
+        print("2. API LLM-assisted 蒸馏（质量更好，需要 NOVEL_ADVENTURE_LLM_API_KEY）")
+        print("3. 宿主模型 prompt-pack（不需要 API，先导出请求再让宿主模型处理）")
+        mode = input("请输入 1/2/3: ").strip()
+        if mode == "2":
+            max_chunks = int(input("LLM 最多处理多少 chunk？默认 120: ").strip() or "120")
+            build(world, input_path, "auto", 4000, 6000, 80, "openai-compatible", "gpt-4.1-mini", max_chunks, None)
+        elif mode == "3":
+            max_chunks = int(input("导出多少个 LLM 请求？默认 80: ").strip() or "80")
+            build(world, input_path, "auto", 4000, 6000, 80, "prompt-pack", "gpt-4.1-mini", max_chunks, None)
+            print(f"已生成 worlds/{world}/llm_requests.jsonl。让宿主模型处理后，用 python novel.py llm-import {world} worlds/{world}/llm_responses.jsonl 导入。")
+        else:
+            build(world, input_path, "auto", 4000, 6000, 80, "none", "gpt-4.1-mini", None, None)
+        return
+    raise SystemExit("Unknown choice. Enter 1 or 2.")
 
 
 def cmd_worlds(args: argparse.Namespace) -> None:
@@ -121,6 +199,9 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(description="Friendly command router for Novel Adventure.")
     sub = root.add_subparsers(dest="command", required=True)
+
+    p = sub.add_parser("launch", help="Interactive startup wizard.")
+    p.set_defaults(func=cmd_launch)
 
     p = sub.add_parser("install", help="Install this skill into a host skill directory.")
     p.add_argument(
