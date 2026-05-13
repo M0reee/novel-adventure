@@ -21,7 +21,7 @@ from skill_tree import learn_skill
 
 HIGH_RISK_WORDS = ("硬闯", "强闯", "击杀", "挑战", "偷袭", "抢夺", "潜入", "威胁", "追杀")
 INFO_WORDS = ("打听", "询问", "调查", "观察", "探查", "侦查", "判断", "确认")
-CULTIVATION_WORDS = ("修炼", "闭关", "突破", "炼化", "冲关")
+CULTIVATION_WORDS = ("修炼", "闭关", "突破", "炼化", "冲关", "训练", "练武", "吐纳", "复盘")
 TRADE_WORDS = ("购买", "交易", "出售", "买", "卖", "价格")
 COMBAT_WORDS = ("攻击", "战斗", "切磋", "打倒", "揍", "击败", "反击")
 QUEST_WORDS = ("接受", "接取", "任务", "追踪", "委托")
@@ -31,7 +31,7 @@ SOCIAL_WORDS = ("拜访", "结交", "求助", "拜师", "送礼", "道歉", "威
 SOCIAL_EXCHANGE_WORDS = ("筹码", "承诺", "交换", "人情", "报酬", "开价", "条件", "底线", "护法", "指导", "指点", "支付", "金币")
 SOCIAL_TARGET_WORDS = ("炼药师", "药老", "导师", "老师", "管事", "练武场管事", "伙计", "摊主", "低阶少年", "少年", "对方", "那位", "可信 NPC", "NPC")
 SOCIAL_INQUIRY_WORDS = ("询问", "请教", "请问", "确认", "打听", "问清", "问")
-SERVICE_QUEST_WORDS = ("跑腿", "核价", "小活", "换情报", "换取情报", "基础情报", "送信", "传话", "搬运", "沙袋", "清扫", "器械", "杂务", "旁听资格", "旁听名额", "旁听", "吐纳")
+SERVICE_QUEST_WORDS = ("跑腿", "核价", "小活", "换情报", "换取情报", "基础情报", "送信", "传话", "账单", "差事", "新机会", "搬运", "沙袋", "清扫", "器械", "杂务", "旁听资格", "旁听名额", "旁听", "吐纳")
 INVENTORY_WORDS = ("使用", "服用", "炼化", "吞服", "装备", "佩戴", "穿戴", "换上")
 DECLARED_SUCCESS_WORDS = ("直接成功", "一定成功", "秒杀", "无敌", "立刻突破", "马上成仙", "随便拿走")
 BLOCKING_MARKERS = ("不可", "不能", "禁止", "无法", "必须", "需要", "代价", "风险", "失败")
@@ -63,8 +63,10 @@ def classify_action(player_input: str) -> str:
         return "info"
     if any(word in player_input for word in ("观察", "判断", "确认风险", "看清")):
         return "info"
-    if any(word in player_input for word in ("复盘", "练习", "吐纳", "运转斗气", "低风险练习")):
+    if any(word in player_input for word in ("复盘", "练习", "训练", "吐纳", "运转斗气", "低风险练习", "低风险训练")):
         return "cultivation"
+    if any(word in player_input for word in ("新机会", "差事", "索要", "兑现", "关系提升后")) and any(word in player_input for word in SOCIAL_TARGET_WORDS):
+        return "social"
     if any(word in player_input for word in ("如何进入", "怎么进入", "进入练武场", "进练武场")) and any(word in player_input for word in SOCIAL_TARGET_WORDS):
         return "social"
     if any(word in player_input for word in SOCIAL_EXCHANGE_WORDS) and any(word in player_input for word in SOCIAL_TARGET_WORDS):
@@ -271,15 +273,32 @@ def resolve_cultivation(world: str, player_input: str, state: dict[str, Any], ca
             "state_changes": [],
             "options": resource_options + ["寻找安全修炼地点。", "请可信 NPC 护法或指导。"],
         }
+    low_risk_training = any(word in player_input for word in ("低风险", "训练", "复盘", "吐纳", "练习", "休整"))
     gain = 5 if not is_breakthrough else 15
     before = int(stats.get("exp", 0))
     stats["exp"] = before + gain
+    progression = player.setdefault("progression", {})
+    extra_changes: list[str] = []
+    extra_note = ""
+    if low_risk_training:
+        before_progress = int(progression.get("基础吐纳熟悉度", 0) or 0)
+        after_progress = min(100, before_progress + 15)
+        progression["基础吐纳熟悉度"] = after_progress
+        extra_changes.append(f"基础吐纳熟悉度：{before_progress}% -> {after_progress}%")
+        if before >= 20 and not progression.get("basic_breathing_stabilized"):
+            progression["basic_breathing_stabilized"] = True
+            before_max_mp = int(stats.get("max_mp", 40) or 40)
+            before_mp = int(stats.get("mp", before_max_mp) or before_max_mp)
+            stats["max_mp"] = before_max_mp + 5
+            stats["mp"] = min(before_mp + 5, int(stats["max_mp"]))
+            extra_changes.append(f"斗气上限：{before_max_mp} -> {stats['max_mp']}")
+            extra_note = " 你把先前旁听到的吐纳节奏真正稳定下来，斗气承载略有提升。"
     return {
         "kind": "cultivation",
         "status": "resolved",
         "verdict": "修炼获得稳定进展",
-        "consequence": f"你按当前境界的可承受范围修炼，没有跳过硬设定边界；本回合获得 {gain} 点历练。",
-        "state_changes": [f"历练：{before} -> {stats['exp']}"],
+        "consequence": f"你按当前境界的可承受范围修炼，没有跳过硬设定边界；本回合获得 {gain} 点历练。{extra_note}",
+        "state_changes": [f"历练：{before} -> {stats['exp']}", *extra_changes],
         "options": ["继续稳步修炼。", "寻找辅助资源提高效率。", "打听突破条件。"],
     }
 
@@ -550,6 +569,22 @@ def relationship_score(state: dict[str, Any], target: str) -> int:
     return 0
 
 
+def quest_status(state: dict[str, Any], quest_id: str) -> str:
+    for quest in state.get("active_quests", []):
+        if isinstance(quest, dict) and quest.get("quest_id") == quest_id:
+            return str(quest.get("status") or "")
+    return ""
+
+
+def opening_chore_completed(state: dict[str, Any]) -> bool:
+    return any(
+        isinstance(quest, dict)
+        and quest.get("source") == "opening_scene"
+        and quest.get("status") == "completed"
+        for quest in state.get("active_quests", [])
+    )
+
+
 def fallback_social_target(player_input: str, state: dict[str, Any]) -> str:
     relationships = [row for row in state.get("relationships", []) if isinstance(row, dict) and row.get("target")]
     for row in relationships:
@@ -631,6 +666,36 @@ def social_target_options(rules: dict[str, Any]) -> list[str]:
 def resolve_opening_social_target(target: str, player_input: str, state: dict[str, Any], relationship_change: str | None) -> dict[str, Any] | None:
     if target == "练武场管事":
         flags = state.setdefault("scene_flags", {})
+        asked = bool(flags.get("asked_training_ground_entry"))
+        score = relationship_score(state, target)
+        asks_new_opportunity = any(word in player_input for word in ("新机会", "差事", "索要", "兑现", "还有", "关系提升", "能做什么", "报酬"))
+        if opening_chore_completed(state) and (asks_new_opportunity or asked or score >= 10):
+            flags["training_ground_steward_unlocked"] = "药材账单核价"
+            return {
+                "kind": "social",
+                "status": "resolved",
+                "verdict": "关系阈值回报已解锁",
+                "consequence": (
+                    "管事这次没有再重复入场规矩。他看你已经做过杂务，语气松了一点："
+                    "“练武场名额不能天天给外人，但你若真想换点实际好处，可以替外院把药材账单送去坊市。"
+                    "把摊主签押和三家低阶药材价目带回来，报酬不多，却能顺便摸清药材行情。”"
+                    "这是一条可验证的小差事，不等于直接获得丹药或修炼资源。"
+                ),
+                "state_changes": [
+                    item
+                    for item in [
+                        relationship_change,
+                        "练武场管事兑现关系进度：解锁药材账单核价差事。",
+                    ]
+                    if item
+                ],
+                "options": [
+                    "接下送药材账单和核价差事，先问清报酬、期限和失败后果。",
+                    "先向药材伙计确认账单路线和三家药材摊位置。",
+                    "拒绝差事，改去坊市自行打听聚气散价格。",
+                    "暂时离开练武场，换地点自由探索。",
+                ],
+            }
         flags["asked_training_ground_entry"] = True
         return {
             "kind": "social",
@@ -645,10 +710,14 @@ def resolve_opening_social_target(target: str, player_input: str, state: dict[st
             ),
             "state_changes": [item for item in [relationship_change, "已问清练武场入场条件：完成杂务可换午后旁听机会。"] if item],
             "options": [
-                "接下搬运沙袋，换取午后旁听资格。",
-                "接下清扫器械，顺便观察萧家少年如何训练。",
-                "接下送药材账单，去坊市打听药材价格和跑腿报酬。",
-                "继续追问旁听规矩、失败后果和是否需要担保。",
+                option
+                for option, quest_id in [
+                    ("接下搬运沙袋，换取午后旁听资格。", "quest_training_ground_sandbag"),
+                    ("接下清扫器械，顺便观察萧家少年如何训练。", "quest_training_ground_cleaning"),
+                    ("接下送药材账单，去坊市打听药材价格和跑腿报酬。", ""),
+                    ("继续追问旁听规矩、失败后果和是否需要担保。", ""),
+                ]
+                if not quest_id or quest_status(state, quest_id) != "completed"
             ],
         }
     if target == "药材伙计":

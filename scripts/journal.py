@@ -49,6 +49,16 @@ def update_journal(
     if any(word in player_input for word in ("承诺", "人情", "交换", "答应", "以后")):
         journal.setdefault("promises", []).append({"turn": turn, "text": compact(player_input, 100), "status": "open"})
         journal["promises"] = journal["promises"][-30:]
+    active_ids = {
+        quest.get("quest_id")
+        for quest in state.get("active_quests", [])
+        if isinstance(quest, dict) and quest.get("status") == "active" and quest.get("quest_id")
+    }
+    journal["open_threads"] = [
+        row
+        for row in journal.get("open_threads", [])
+        if row.get("quest_id") in active_ids
+    ]
     for quest in state.get("active_quests", []):
         if isinstance(quest, dict) and quest.get("status") == "active":
             thread = {"quest_id": quest.get("quest_id"), "name": quest.get("name"), "phase": quest.get("phase_label", "进行中")}

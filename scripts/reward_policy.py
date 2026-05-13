@@ -12,9 +12,11 @@ DEFAULT_CHANNELS = [
     {"kind": "combat", "rewards": ["历练/经验", "少量货币", "掉落物"], "rule": "必须由 combat.py 结算。"},
     {"kind": "quest", "rewards": ["报酬", "关系", "情报", "地点入口"], "rule": "必须完成任务阶段或交付证据后结算。"},
     {"kind": "info", "rewards": ["线索", "价格", "风险边界"], "rule": "不能直接给物品、技能或突破。"},
+    {"kind": "trade", "rewards": ["价格", "货源", "真假风险", "购买机会"], "rule": "必须检查货币、库存、可信卖家和使用条件。"},
     {"kind": "social", "rewards": ["关系", "人情", "条件", "低风险机会"], "rule": "不能让 NPC 违背动机和底线。"},
     {"kind": "cultivation", "rewards": ["历练", "熟练度", "状态理解"], "rule": "不能跳过境界、资源和地点限制。"},
     {"kind": "location", "rewards": ["入口", "可见 NPC", "资源点", "风险信息"], "rule": "知道地点不等于安全进入。"},
+    {"kind": "general", "rewards": ["场景推进", "轻微信息"], "rule": "普通行动不能替代明确的交易、社交、任务或修炼结算。"},
 ]
 
 
@@ -41,7 +43,9 @@ def record_reward_channel(world: str, state: dict[str, Any], resolution: dict[st
     kind = str(resolution.get("kind") or "general")
     channel = next((row for row in policy.get("channels", []) if row.get("kind") == kind), None)
     if not channel:
-        return []
+        channel = next((row for row in DEFAULT_CHANNELS if row.get("kind") == kind), None)
+    if not channel:
+        channel = next(row for row in DEFAULT_CHANNELS if row.get("kind") == "general")
     ledger = state.setdefault("runtime", {}).setdefault("reward_ledger", [])
     entry = {
         "turn": turn,

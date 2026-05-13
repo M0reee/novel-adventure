@@ -66,6 +66,35 @@ def build_director_plan(world: str) -> dict[str, Any]:
     return output
 
 
+EARLY_BLOCKED_BEAT_WORDS = ("天府联盟", "魂族", "魂殿", "净莲妖火", "陨落心炎", "迦南学院", "丹会", "云岚宗复仇")
+EARLY_ALLOWED_BEAT_WORDS = ("乌坦城", "药材", "魔核", "筑基灵液", "筹钱", "废柴", "家族", "药老", "信任", "三年之约")
+
+
+def beat_text(beat: dict[str, Any]) -> str:
+    return " ".join(
+        [
+            str(beat.get("name") or ""),
+            str(beat.get("purpose") or ""),
+            " ".join(str(item) for item in beat.get("entry_signals", []) if item),
+        ]
+    )
+
+
+def eligible_pressure_beats(plan: dict[str, Any], state: dict[str, Any], location: str, turn: int) -> list[dict[str, Any]]:
+    player = state.get("player", {})
+    realm = str(player.get("realm_or_level") or player.get("realm") or "")
+    early_local = turn < 40 and ("乌坦" in location or "斗之气" in realm or "低段" in realm)
+    rows: list[dict[str, Any]] = []
+    for beat in plan.get("beats", []):
+        text = beat_text(beat)
+        if early_local and any(word in text for word in EARLY_BLOCKED_BEAT_WORDS):
+            continue
+        if early_local and not any(word in text for word in EARLY_ALLOWED_BEAT_WORDS):
+            continue
+        rows.append(beat)
+    return rows
+
+
 def advance_director(world: str, state: dict[str, Any], scene: dict[str, Any], resolution: dict[str, Any], turn: int) -> tuple[list[str], list[str]]:
     plan = read_json(world_dir(world) / "director_plan.json", {})
     runtime = state.setdefault("runtime", {}).setdefault("director", {"history": []})
@@ -76,6 +105,7 @@ def advance_director(world: str, state: dict[str, Any], scene: dict[str, Any], r
     mode = "free_roam"
     label = "自由探索"
     reason = "保持自由探索；不强制任务线。"
+    eligible_beats = eligible_pressure_beats(plan, state, location, turn)
     if status in {"blocked", "partial_or_blocked"}:
         mode = "cooldown"
         label = "缓冲准备"
@@ -84,7 +114,7 @@ def advance_director(world: str, state: dict[str, Any], scene: dict[str, Any], r
         mode = "consequence"
         label = "后果展开"
         reason = "行动已触发明确后果，下一步应展示局势变化而非立刻塞新任务。"
-    elif turn % 5 == 0 and plan.get("beats"):
+    elif turn % 5 == 0 and eligible_beats:
         mode = "pressure_ping"
         label = "机会窗口"
         reason = "可轻量提醒一个已蒸馏的机会窗口，但不能绑架玩家当前行动。"
@@ -97,7 +127,9 @@ def advance_director(world: str, state: dict[str, Any], scene: dict[str, Any], r
     if mode == "cooldown":
         options = ["先撤到安全位置复盘风险。", "找可信 NPC 问清前置条件。"]
     elif mode == "pressure_ping":
-        beat = plan.get("beats", [])[turn % len(plan.get("beats", []))]
+        used = {row.get("beat_id") for row in history[-8:] if row.get("beat_id")}
+        beat = next((row for row in eligible_beats if row.get("beat_id") not in used), eligible_beats[turn % len(eligible_beats)])
+        entry["beat_id"] = beat.get("beat_id")
         lines.append(f"- 机会窗口：{beat.get('name')}（来源：{beat.get('source')}）")
         options = [f"只打听「{beat.get('name')}」的现状，不承诺接下。"]
     return lines, options

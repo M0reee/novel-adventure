@@ -34,7 +34,7 @@ CULTIVATION_WORDS = ("修炼", "闭关", "突破", "炼化", "冲关")
 TRADE_WORDS = ("购买", "交易", "出售", "买", "卖")
 DECLARED_SUCCESS_WORDS = ("直接成功", "一定成功", "秒杀", "无敌", "立刻突破", "马上成仙", "随便拿走")
 BLOCKING_MARKERS = ("不可", "不能", "禁止", "无法", "必须", "需要", "代价", "风险", "失败")
-BAD_ENTITY_NAMES = {"不会", "没有理会", "这种等级", "听得药", "当前", "对方", "什么", "卷轴"}
+BAD_ENTITY_NAMES = {"不会", "没有理会", "这种等级", "听得药", "当前", "对方", "什么", "卷轴", "方才有可能成功"}
 BAD_OPTION_PHRASES = (
     "收集地点、人物和风险情报",
     "选择低风险入口或准备路线",
@@ -83,6 +83,8 @@ def humanize_option(option: str, state: dict[str, Any]) -> str:
     cleaned = option.strip()
     for bad, replacement in replacements.items():
         cleaned = cleaned.replace(bad, replacement)
+    if "围绕「眼前机会」行动" in cleaned and completed_opening_chore_ids(state):
+        cleaned = "围绕「眼前机会」行动：改从药材账单、跑腿核价或坊市行情寻找下一步。"
     while "。。" in cleaned:
         cleaned = cleaned.replace("。。", "。")
     return cleaned
@@ -118,6 +120,8 @@ def resolve_numbered_option(player_input: str, state: dict[str, Any]) -> tuple[s
             continue
         option = last_options[index - 1]
         if isinstance(option, dict) and option.get("text"):
+            option = dict(option)
+            option["intent"] = infer_option_intent(str(option.get("text")))
             selected.append(option)
     if not selected:
         return player_input, [], "选择编号无效；按原始输入处理。"
@@ -141,12 +145,12 @@ def infer_option_intent(option: str) -> str:
     text = str(option)
     if "推进当前任务" in text:
         return "quest"
-    if any(word in text for word in ("整理背包", "查看行囊", "清点资源", "状态")):
-        return "inventory"
     if any(word in text for word in ("辅助资源", "资源来源", "提高效率", "低阶药材", "药液价格")):
         return "info"
-    if any(word in text for word in ("复盘", "练习", "吐纳", "运转斗气", "低风险练习")):
+    if any(word in text for word in ("复盘", "练习", "训练", "吐纳", "运转斗气", "低风险练习", "低风险训练", "稳步修炼")):
         return "cultivation"
+    if any(word in text for word in ("整理背包", "查看行囊", "清点资源", "状态")) and not any(word in text for word in ("训练", "修炼", "吐纳", "练习")):
+        return "inventory"
     if any(word in text for word in ("搬运", "沙袋", "清扫", "器械", "杂务", "旁听名额", "旁听资格", "旁听")):
         return "quest"
     if "追问" in text:
@@ -317,16 +321,22 @@ def build_options(
     scene: dict[str, Any],
 ) -> list[str]:
     blocked_background_objectives = background_objective_texts(state)
-    raw_options = [option for option in resolution.get("options", []) if str(option) not in blocked_background_objectives]
+    raw_options = [
+        option
+        for option in resolution.get("options", [])
+        if str(option) not in blocked_background_objectives and not stale_option(str(option), state)
+    ]
     resolved_options = collapse_task_objective_options(state, list(raw_options))
-    scene_generated_options = scene_options(scene, state)
+    scene_generated_options = [option for option in scene_options(scene, state) if not stale_option(str(option), state)]
     if should_prioritize_resolution_options(resolution, state, resolved_options):
         options = [*resolved_options, *scene_generated_options]
     else:
         options = [*scene_generated_options, *resolved_options]
     for row in canon_rows:
         if "hook" in row.get("type", "") or row.get("source_json") == "adventure_hooks.json":
-            options.append(f"追踪冒险钩子：{row.get('name')}。")
+            hook_option = f"追踪冒险钩子：{row.get('name')}。"
+            if not stale_option(hook_option, state):
+                options.append(hook_option)
             break
     deduped: list[str] = []
     for option in options:
@@ -336,6 +346,28 @@ def build_options(
         if len(deduped) >= 5:
             break
     return deduped
+
+
+def completed_opening_chore_ids(state: dict[str, Any]) -> set[str]:
+    ids: set[str] = set()
+    for quest in state.get("active_quests", []):
+        if not isinstance(quest, dict) or quest.get("status") != "completed":
+            continue
+        quest_id = str(quest.get("quest_id") or "")
+        if quest_id in {"quest_training_ground_sandbag", "quest_training_ground_cleaning"}:
+            ids.add(quest_id)
+    return ids
+
+
+def stale_option(option: str, state: dict[str, Any]) -> bool:
+    completed = completed_opening_chore_ids(state)
+    if "搬运沙袋" in option and "quest_training_ground_sandbag" in completed:
+        return True
+    if "清扫器械" in option and "quest_training_ground_cleaning" in completed:
+        return True
+    if any(bad in option for bad in BAD_OPTION_PHRASES):
+        return True
+    return False
 
 
 def should_prioritize_resolution_options(resolution: dict[str, Any], state: dict[str, Any], options: list[str]) -> bool:
