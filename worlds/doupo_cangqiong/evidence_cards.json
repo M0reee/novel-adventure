@@ -1,0 +1,1026 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Evidence cards are short canon-facing summaries for runtime explanation. They do not replace source files or grant new abilities.",
+  "cards": [
+    {
+      "card_id": "ecard_164aaf1436b45c",
+      "type": "playable",
+      "name": "斗之气",
+      "source": "playable_canon.json",
+      "rule": "斗气修炼的基础阶段，通常以段位衡量；达到足够段位后可凝聚斗之气旋，迈入斗者",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_f72581712e6faa",
+      "type": "playable",
+      "name": "斗者",
+      "source": "playable_canon.json",
+      "rule": "正式踏入斗气修炼门槛，形成斗之气旋，可系统修习功法与斗技",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_a4c9b9d5f42b9d",
+      "type": "playable",
+      "name": "斗师",
+      "source": "playable_canon.json",
+      "rule": "斗气掌控力明显增强，可外放斗气并支撑更稳定的战斗消耗",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_5078975d69f3d0",
+      "type": "playable",
+      "name": "大斗师",
+      "source": "playable_canon.json",
+      "rule": "斗气强度和身体承载力进一步提升，低阶修炼者很难正面对抗",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_103092f669bff0",
+      "type": "playable",
+      "name": "斗灵",
+      "source": "playable_canon.json",
+      "rule": "能够更成熟地调动斗气战斗，是地方势力中的重要战力",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_520ca56225ec50",
+      "type": "playable",
+      "name": "斗王",
+      "source": "playable_canon.json",
+      "rule": "可以斗气化翼、短距离飞行，开始具备跨区域行动和压制低阶修炼者的能力",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_a76f931accfe41",
+      "type": "playable",
+      "name": "斗皇",
+      "source": "playable_canon.json",
+      "rule": "加玛帝国层面的顶尖强者，能显著影响宗门、家族与帝国格局",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_b87a6e700a774f",
+      "type": "playable",
+      "name": "斗宗",
+      "source": "playable_canon.json",
+      "rule": "可踏空而行，是大陆强者分水岭，对低阶修炼者具有压倒性威胁",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_65407dcdcf5ff7",
+      "type": "playable",
+      "name": "斗尊",
+      "source": "playable_canon.json",
+      "rule": "中州高阶强者层次，拥有极强空间与斗气掌控力",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_8357db17eb1cc9",
+      "type": "playable",
+      "name": "半圣",
+      "source": "playable_canon.json",
+      "rule": "斗尊与斗圣之间的过渡层次，已接近圣者领域",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_7ea41931458469",
+      "type": "playable",
+      "name": "斗圣",
+      "source": "playable_canon.json",
+      "rule": "远古种族与大陆顶级势力的核心战力，可开辟或影响空间",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_796c0bdf376b7e",
+      "type": "playable",
+      "name": "斗帝",
+      "source": "playable_canon.json",
+      "rule": "斗气大陆传说中的终极境界，长期绝迹；成帝需要极稀缺的源气",
+      "limits": [
+        "突破失败",
+        "反噬或受伤",
+        "资源损耗"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_8beaa03385c9ef",
+      "type": "playable",
+      "name": "斗气体系",
+      "source": "playable_canon.json",
+      "rule": "斗气大陆没有花俏魔法，主流力量是斗气；修炼依赖功法、斗技、资源、体质和机缘",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_ef31e54d272c99",
+      "type": "playable",
+      "name": "境界压制",
+      "source": "playable_canon.json",
+      "rule": "高境界通常对低境界形成压制；越级战斗需要异火、强斗技、特殊体质、经验或外力支撑",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_38a9f8e36534da",
+      "type": "playable",
+      "name": "功法等级",
+      "source": "playable_canon.json",
+      "rule": "功法通常分为天、地、玄、黄四阶，每阶又有低中高等层次；高阶功法决定修炼速度和斗气质量",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_f9f61e5a6d9d4b",
+      "type": "playable",
+      "name": "斗技等级",
+      "source": "playable_canon.json",
+      "rule": "斗技同样有品阶差异，高阶斗技威力强但消耗和修习门槛更高",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_562037b13900a3",
+      "type": "playable",
+      "name": "炼药师",
+      "source": "playable_canon.json",
+      "rule": "炼药师能炼制提升实力、疗伤或辅助突破的丹药，因此地位高且容易被势力拉拢",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_978d9b7dba7f64",
+      "type": "playable",
+      "name": "异火",
+      "source": "playable_canon.json",
+      "rule": "异火是天地奇火，威力狂暴，可增强战斗和炼药，但收服失败会造成重伤甚至死亡",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c99fd56345d9a8",
+      "type": "playable",
+      "name": "药老指导",
+      "source": "playable_canon.json",
+      "rule": "药老拥有高阶炼药与修炼经验，可提供指导，但不能让玩家无视资源、境界和风险直接成功",
+      "limits": [
+        "违反设定会失败",
+        "代价被结算",
+        "引发势力或环境反应"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_b4d75b4178add2",
+      "type": "playable",
+      "name": "斗气大陆",
+      "source": "playable_canon.json",
+      "rule": "这是斗气繁衍到巅峰的世界，强者、家族、宗派、学院和炼药师共同构成核心秩序",
+      "limits": [
+        "失败后果",
+        "资源消耗",
+        "关系变化"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_12625151fa9b85",
+      "type": "playable",
+      "name": "资源稀缺",
+      "source": "playable_canon.json",
+      "rule": "高级功法、斗技、丹药、异火和魔核都具备稀缺性，获取通常伴随竞争、交易或危险",
+      "limits": [
+        "失败后果",
+        "资源消耗",
+        "关系变化"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_93a8b226b66242",
+      "type": "playable",
+      "name": "势力后果",
+      "source": "playable_canon.json",
+      "rule": "家族、宗门和帝国势力会对玩家行为作出反应；羞辱、抢夺、杀戮和背叛都会产生长期后果",
+      "limits": [
+        "失败后果",
+        "资源消耗",
+        "关系变化"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_22a5caa19e2c7c",
+      "type": "playable",
+      "name": "乌坦城开局",
+      "source": "playable_canon.json",
+      "rule": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险",
+      "limits": [
+        "任务失败",
+        "关系变化",
+        "时间压力"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_d4ce3236e1898f",
+      "type": "playable",
+      "name": "异火线",
+      "source": "playable_canon.json",
+      "rule": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路",
+      "limits": [
+        "任务失败",
+        "关系变化",
+        "时间压力"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_6e8aa611fc52cc",
+      "type": "playable",
+      "name": "炼药线",
+      "source": "playable_canon.json",
+      "rule": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情",
+      "limits": [
+        "任务失败",
+        "关系变化",
+        "时间压力"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c955c65b120229",
+      "type": "playable",
+      "name": "势力线",
+      "source": "playable_canon.json",
+      "rule": "玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突",
+      "limits": [
+        "任务失败",
+        "关系变化",
+        "时间压力"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c8e40a271a2869",
+      "type": "playable",
+      "name": "乌坦城",
+      "source": "playable_canon.json",
+      "rule": "加玛帝国东北部城市，萧家早期根基所在；适合低阶玩家打听情报、购买基础资源、接触家族与拍卖场事件",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_a6652e92cc19e4",
+      "type": "playable",
+      "name": "萧家",
+      "source": "playable_canon.json",
+      "rule": "乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_9b22c7a77e84d4",
+      "type": "playable",
+      "name": "魔兽山脉",
+      "source": "playable_canon.json",
+      "rule": "乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c94003e6248e50",
+      "type": "playable",
+      "name": "云岚宗",
+      "source": "playable_canon.json",
+      "rule": "加玛帝国强大宗门，和退婚、三年之约等主线冲突有关；贸然挑衅会引来宗门级后果",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_ff428d90bb6725",
+      "type": "playable",
+      "name": "迦南学院",
+      "source": "playable_canon.json",
+      "rule": "大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_72f56d4cfb5408",
+      "type": "playable",
+      "name": "黑角域",
+      "source": "playable_canon.json",
+      "rule": "秩序混乱、强者和交易并存的区域；适合高风险交易、争夺功法斗技和卷入势力冲突",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_dd0a891282349e",
+      "type": "playable",
+      "name": "中州",
+      "source": "playable_canon.json",
+      "rule": "斗气大陆强者和顶级势力集中的核心舞台；玩家低阶时只能通过传闻和远期目标接触",
+      "limits": [
+        "敌对势力",
+        "陷阱或环境危险",
+        "时间流逝"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_1f7f8501c87262",
+      "type": "playable",
+      "name": "药老",
+      "source": "playable_canon.json",
+      "rule": "高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关",
+      "limits": [
+        "被拒绝",
+        "关系恶化",
+        "暴露秘密"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c6d4b5fb7dad47",
+      "type": "playable",
+      "name": "萧炎",
+      "source": "playable_canon.json",
+      "rule": "萧家少年，主线气运与成长压力集中在其身上；与他的关系会影响萧家、药老、异火和三年之约相关事件",
+      "limits": [
+        "被拒绝",
+        "关系恶化",
+        "暴露秘密"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_e6257904a62485",
+      "type": "playable",
+      "name": "薰儿",
+      "source": "playable_canon.json",
+      "rule": "萧家中身份特殊的少女，背景深厚；她的信任、保护或疏离会影响早期安全与后续远古种族线索",
+      "limits": [
+        "被拒绝",
+        "关系恶化",
+        "暴露秘密"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_1b948aec7562e9",
+      "type": "playable",
+      "name": "纳兰嫣然",
+      "source": "playable_canon.json",
+      "rule": "云岚宗弟子，退婚事件核心人物；相关互动会影响萧家名誉、云岚宗态度和三年之约走向",
+      "limits": [
+        "被拒绝",
+        "关系恶化",
+        "暴露秘密"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_12bf7d2144e419",
+      "type": "playable",
+      "name": "雅妃",
+      "source": "playable_canon.json",
+      "rule": "米特尔拍卖场人物，擅长交易与人脉经营；玩家可通过她获取资源、情报或商业合作，但需付出利益交换",
+      "limits": [
+        "被拒绝",
+        "关系恶化",
+        "暴露秘密"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_f9dd6baae45fea",
+      "type": "playable",
+      "name": "美杜莎",
+      "source": "playable_canon.json",
+      "rule": "蛇人族女王级强者，危险而强势；低阶玩家不能正面对抗，只能依靠谈判、筹码、时机或外力周旋",
+      "limits": [
+        "被拒绝",
+        "关系恶化",
+        "暴露秘密"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_d99a60d898754b",
+      "type": "playable",
+      "name": "萧家",
+      "source": "playable_canon.json",
+      "rule": "乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系",
+      "limits": [
+        "声望下降",
+        "追杀或封锁",
+        "人情债"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_561d7a54c98804",
+      "type": "playable",
+      "name": "云岚宗",
+      "source": "playable_canon.json",
+      "rule": "加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价",
+      "limits": [
+        "声望下降",
+        "追杀或封锁",
+        "人情债"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_508e788921a7cf",
+      "type": "playable",
+      "name": "米特尔家族",
+      "source": "playable_canon.json",
+      "rule": "加玛帝国商业与拍卖势力，可提供交易、情报和资源渠道；关系建立依赖信誉与利益",
+      "limits": [
+        "声望下降",
+        "追杀或封锁",
+        "人情债"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_786b84f2349f5c",
+      "type": "playable",
+      "name": "迦南学院",
+      "source": "playable_canon.json",
+      "rule": "以培养修炼者为核心的学院势力，适合试炼、晋升和结交同辈；规则竞争多于直接江湖厮杀",
+      "limits": [
+        "声望下降",
+        "追杀或封锁",
+        "人情债"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_09cd446b5f8d77",
+      "type": "playable",
+      "name": "魂殿",
+      "source": "playable_canon.json",
+      "rule": "暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险",
+      "limits": [
+        "声望下降",
+        "追杀或封锁",
+        "人情债"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_a98500fc777223",
+      "type": "playable",
+      "name": "丹塔",
+      "source": "playable_canon.json",
+      "rule": "炼药师体系的重要高阶势力，和丹药、药方、炼药师身份认证相关",
+      "limits": [
+        "声望下降",
+        "追杀或封锁",
+        "人情债"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_36f82fee2fbcb3",
+      "type": "playable",
+      "name": "异火",
+      "source": "playable_canon.json",
+      "rule": "天地奇火，能显著增强战斗与炼药能力；收服前必须确认位置、守护者、克制手段、丹药准备和失败代价",
+      "limits": [
+        "副作用",
+        "损耗",
+        "被觊觎"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_a7333fccf76dd7",
+      "type": "playable",
+      "name": "纳戒",
+      "source": "playable_canon.json",
+      "rule": "储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险",
+      "limits": [
+        "副作用",
+        "损耗",
+        "被觊觎"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_ae729c34447514",
+      "type": "playable",
+      "name": "玄重尺",
+      "source": "playable_canon.json",
+      "rule": "沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑",
+      "limits": [
+        "副作用",
+        "损耗",
+        "被觊觎"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_9707ec0fafeb09",
+      "type": "playable",
+      "name": "筑基灵液",
+      "source": "playable_canon.json",
+      "rule": "早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道",
+      "limits": [
+        "副作用",
+        "损耗",
+        "被觊觎"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_ba76291f303384",
+      "type": "playable",
+      "name": "聚气散",
+      "source": "playable_canon.json",
+      "rule": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件",
+      "limits": [
+        "副作用",
+        "损耗",
+        "被觊觎"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_390752d1c2ff00",
+      "type": "playable",
+      "name": "魔核",
+      "source": "playable_canon.json",
+      "rule": "魔兽体内能量核心，可用于炼药、交易和修炼资源；获取通常意味着猎杀或购买",
+      "limits": [
+        "副作用",
+        "损耗",
+        "被觊觎"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c09c4a94bf1f55",
+      "type": "playable",
+      "name": "焚诀",
+      "source": "playable_canon.json",
+      "rule": "可随吞噬异火进化的特殊功法，成长潜力极高但风险极大；每次进化都需要异火线索、护法和失败预案",
+      "limits": [
+        "走火入魔",
+        "消耗过大",
+        "熟练度不足"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_300b7254283f84",
+      "type": "playable",
+      "name": "佛怒火莲",
+      "source": "playable_canon.json",
+      "rule": "融合多种火焰形成的高风险高爆发斗技；威力巨大，但对控制力、火焰条件和自身承受力要求极高",
+      "limits": [
+        "走火入魔",
+        "消耗过大",
+        "熟练度不足"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_e66463b5678bd2",
+      "type": "playable",
+      "name": "八极崩",
+      "source": "playable_canon.json",
+      "rule": "近身爆发型斗技，适合贴身破防；需要判断距离、体魄和敌人防御",
+      "limits": [
+        "走火入魔",
+        "消耗过大",
+        "熟练度不足"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_402a877139aec1",
+      "type": "playable",
+      "name": "紫云翼",
+      "source": "playable_canon.json",
+      "rule": "飞行斗技，可提升移动与逃生能力；使用消耗斗气，低阶玩家不能无限飞行",
+      "limits": [
+        "走火入魔",
+        "消耗过大",
+        "熟练度不足"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_aea709aec5f433",
+      "type": "playable",
+      "name": "三千雷动",
+      "source": "playable_canon.json",
+      "rule": "高阶身法斗技，适合闪避、追击和脱身；修炼门槛与消耗较高",
+      "limits": [
+        "走火入魔",
+        "消耗过大",
+        "熟练度不足"
+      ],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_017faf804959d2",
+      "type": "story_arc",
+      "name": "乌坦城开局",
+      "source": "story_arcs.json",
+      "rule": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险",
+      "limits": [
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险"
+      ],
+      "requirements": [],
+      "confidence": 1.0
+    },
+    {
+      "card_id": "ecard_14551458e5e0dc",
+      "type": "story_arc",
+      "name": "异火线",
+      "source": "story_arcs.json",
+      "rule": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路",
+      "limits": [
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险"
+      ],
+      "requirements": [],
+      "confidence": 1.0
+    },
+    {
+      "card_id": "ecard_af9144579a15e5",
+      "type": "story_arc",
+      "name": "炼药线",
+      "source": "story_arcs.json",
+      "rule": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情",
+      "limits": [
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险"
+      ],
+      "requirements": [],
+      "confidence": 1.0
+    },
+    {
+      "card_id": "ecard_1cf301889c1adb",
+      "type": "skill",
+      "name": "三千雷动",
+      "source": "skill_tree.json",
+      "rule": "原著出现「三千雷动」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_53e25544c9f5eb",
+      "type": "skill",
+      "name": "八极崩",
+      "source": "skill_tree.json",
+      "rule": "原著出现「八极崩」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_b17d7c78544127",
+      "type": "skill",
+      "name": "佛怒火莲",
+      "source": "skill_tree.json",
+      "rule": "原著出现「佛怒火莲」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_fe8364870c9723",
+      "type": "skill",
+      "name": "焚诀",
+      "source": "skill_tree.json",
+      "rule": "原著出现「焚诀」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c753e782435eca",
+      "type": "acquisition_route",
+      "name": "三千雷动",
+      "source": "acquisition_routes.json",
+      "rule": "原著出现「三千雷动」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_b95eafc9ad3208",
+      "type": "acquisition_route",
+      "name": "八极崩",
+      "source": "acquisition_routes.json",
+      "rule": "原著出现「八极崩」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_83e1321020db17",
+      "type": "acquisition_route",
+      "name": "佛怒火莲",
+      "source": "acquisition_routes.json",
+      "rule": "原著出现「佛怒火莲」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_7bd611d9eab5d1",
+      "type": "acquisition_route",
+      "name": "焚诀",
+      "source": "acquisition_routes.json",
+      "rule": "原著出现「焚诀」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_047a5f71c4f269",
+      "type": "acquisition_route",
+      "name": "异火",
+      "source": "acquisition_routes.json",
+      "rule": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_9f72f984f3e245",
+      "type": "acquisition_route",
+      "name": "纳戒",
+      "source": "acquisition_routes.json",
+      "rule": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_bd05c55fc36b56",
+      "type": "acquisition_route",
+      "name": "玄重尺",
+      "source": "acquisition_routes.json",
+      "rule": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_9b562409061fba",
+      "type": "acquisition_route",
+      "name": "筑基灵液",
+      "source": "acquisition_routes.json",
+      "rule": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_e3e4af90f79696",
+      "type": "acquisition_route",
+      "name": "魔核",
+      "source": "acquisition_routes.json",
+      "rule": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_3148786e0c1643",
+      "type": "acquisition_route",
+      "name": "乌坦城",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_a798ac5ef036e9",
+      "type": "acquisition_route",
+      "name": "魔兽山脉",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_83c6eedc934ece",
+      "type": "acquisition_route",
+      "name": "云岚宗",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_c9a0c9caf74f48",
+      "type": "acquisition_route",
+      "name": "迦南学院",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_bb40948459aa78",
+      "type": "acquisition_route",
+      "name": "黑角域",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_9351ca46ee69ff",
+      "type": "acquisition_route",
+      "name": "萧家",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    },
+    {
+      "card_id": "ecard_27e86de3dfad01",
+      "type": "acquisition_route",
+      "name": "中州",
+      "source": "acquisition_routes.json",
+      "rule": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力",
+      "limits": [],
+      "requirements": [],
+      "confidence": "medium"
+    }
+  ]
+}

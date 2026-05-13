@@ -17,16 +17,22 @@ from common import (
     world_dir,
 )
 from acquisition_routes import build_acquisition_routes
+from canon_eval import build_canon_eval
+from director import build_director_plan
 from economy import build_economy
 from economy_runtime import build_economy_state
 from equipment_sets import build_equipment_sets
 from encounter_runtime import build_encounter_state
+from evidence_cards import build_evidence_cards
 from gameplay_profile import build_gameplay_profile
 from location_runtime import build_locations
 from narrative_intelligence import build_narrative_intelligence
+from npc_agency import build_npc_agency
 from ooc_qa import check_world
+from quest_lifecycle import build_quest_lifecycle
 from quest_runtime import build_quests
 from relationship_runtime import build_relationship_rules
+from reward_policy import build_reward_policy
 from rpg_profile import apply_rpg_profile_to_state, build_rpg_profile, load_rpg_profile
 from scene_graph import build_scene_graph
 from skill_tree import build_skill_tree
@@ -392,6 +398,12 @@ def merge(world: str) -> None:
     build_scene_graph(world)
     build_acquisition_routes(world)
     build_world_events(world)
+    build_director_plan(world)
+    build_quest_lifecycle(world)
+    build_npc_agency(world)
+    build_reward_policy(world)
+    build_evidence_cards(world)
+    build_canon_eval(world)
     check_world(world)
     manifest["rpg_profile"] = "rpg_profile.json"
     manifest["item_market"] = "item_market.json"
@@ -403,6 +415,12 @@ def merge(world: str) -> None:
     manifest["equipment_sets"] = "equipment_sets.json"
     manifest["economy_state"] = "economy_state.json"
     manifest["acquisition_routes"] = "acquisition_routes.json"
+    manifest["director_plan"] = "director_plan.json"
+    manifest["quest_lifecycle"] = "quest_lifecycle.json"
+    manifest["npc_agency"] = "npc_agency.json"
+    manifest["reward_policy"] = "reward_policy.json"
+    manifest["evidence_cards"] = "evidence_cards.json"
+    manifest["canon_eval"] = "canon_eval.json"
     manifest["encounter_state"] = "encounter_state.json"
     patches_path = wdir / "canon_patches.jsonl"
     if not patches_path.exists():
@@ -439,6 +457,12 @@ def merge(world: str) -> None:
         "equipment_sets.json",
         "economy_state.json",
         "acquisition_routes.json",
+        "director_plan.json",
+        "quest_lifecycle.json",
+        "npc_agency.json",
+        "reward_policy.json",
+        "evidence_cards.json",
+        "canon_eval.json",
         "encounter_state.json",
         "npc_motives.json",
         "ability_boundaries.json",

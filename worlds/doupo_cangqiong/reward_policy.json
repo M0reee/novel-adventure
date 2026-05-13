@@ -1,0 +1,64 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Rewards must be earned through structured resolution and canon-compatible channels. Hints are not grants.",
+  "currency": "金币",
+  "channels": [
+    {
+      "kind": "combat",
+      "rewards": [
+        "历练/经验",
+        "少量货币",
+        "掉落物"
+      ],
+      "rule": "必须由 combat.py 结算。"
+    },
+    {
+      "kind": "quest",
+      "rewards": [
+        "报酬",
+        "关系",
+        "情报",
+        "地点入口"
+      ],
+      "rule": "必须完成任务阶段或交付证据后结算。"
+    },
+    {
+      "kind": "info",
+      "rewards": [
+        "线索",
+        "价格",
+        "风险边界"
+      ],
+      "rule": "不能直接给物品、技能或突破。"
+    },
+    {
+      "kind": "social",
+      "rewards": [
+        "关系",
+        "人情",
+        "条件",
+        "低风险机会"
+      ],
+      "rule": "不能让 NPC 违背动机和底线。"
+    },
+    {
+      "kind": "cultivation",
+      "rewards": [
+        "历练",
+        "熟练度",
+        "状态理解"
+      ],
+      "rule": "不能跳过境界、资源和地点限制。"
+    },
+    {
+      "kind": "location",
+      "rewards": [
+        "入口",
+        "可见 NPC",
+        "资源点",
+        "风险信息"
+      ],
+      "rule": "知道地点不等于安全进入。"
+    }
+  ]
+}

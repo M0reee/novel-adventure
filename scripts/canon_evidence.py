@@ -5,6 +5,17 @@ from typing import Any
 
 
 HIDDEN_TYPES = {"npc_motive", "foreshadowing"}
+BAD_NAMES = {"不会", "没有理会", "这种等级", "听得药", "当前", "对方", "什么", "卷轴", "方才", "轻声"}
+RAW_NOISE = ("这废物", "目光", "脸庞", "微微", "手掌", "笑道", "说道", "袖袍", "缓缓", "身体", "直接动手吧", "这才", "先前")
+
+
+def good_name(name: str) -> bool:
+    value = str(name or "").strip()
+    if not value or value in BAD_NAMES:
+        return False
+    if len(value) > 18:
+        return False
+    return not any(mark in value for mark in ("。", "，", "；", "：", "？", "！", "\n"))
 
 
 def confidence_label(row: dict[str, Any]) -> str:
@@ -34,7 +45,9 @@ def looks_like_excerpt(text: str) -> bool:
     if value.startswith(("，", "。", "；", "：", "“", "”", "\"", "'")):
         return True
     quote_count = value.count("“") + value.count("”") + value.count("\"")
-    return len(value) > 120 and quote_count >= 2
+    if len(value) > 90 and quote_count >= 2:
+        return True
+    return len(value) > 100 and any(noise in value for noise in RAW_NOISE)
 
 
 def evidence_summary(row: dict[str, Any]) -> str:
@@ -55,6 +68,10 @@ def evidence_rows(canon_rows: list[dict[str, Any]], limit: int = 5) -> list[dict
         if row_type in HIDDEN_TYPES:
             continue
         name = str(row.get("name") or "")
+        if not good_name(name):
+            continue
+        if row_type == "evidence_card" and looks_like_excerpt(str(row.get("claim") or "")):
+            continue
         key = f"{row_type}:{name}:{row.get('source_json')}"
         if key in seen:
             continue

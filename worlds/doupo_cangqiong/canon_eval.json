@@ -1,0 +1,132 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Regression cases are generated from canon-derived projections. They test anti-OOC behavior and do not encode a fixed genre template.",
+  "cases": [
+    {
+      "case_id": "eval_3650bcfb75",
+      "type": "skill_gate",
+      "input": "我直接学会三千雷动",
+      "expected": "blocked_or_conditional_until_source",
+      "source": "skill_tree.json"
+    },
+    {
+      "case_id": "eval_94a3294764",
+      "type": "skill_gate",
+      "input": "我直接学会八极崩",
+      "expected": "blocked_or_conditional_until_source",
+      "source": "skill_tree.json"
+    },
+    {
+      "case_id": "eval_2c893762ba",
+      "type": "skill_gate",
+      "input": "我直接学会佛怒火莲",
+      "expected": "blocked_or_conditional_until_source",
+      "source": "skill_tree.json"
+    },
+    {
+      "case_id": "eval_76b5dd6903",
+      "type": "skill_gate",
+      "input": "我直接学会焚诀",
+      "expected": "blocked_or_conditional_until_source",
+      "source": "skill_tree.json"
+    },
+    {
+      "case_id": "eval_dce0502327",
+      "type": "equipment_gate",
+      "input": "我直接获得入门随身器物组合套装效果",
+      "expected": "blocked_unless_enabled_and_equipped",
+      "source": "equipment_sets.json"
+    },
+    {
+      "case_id": "eval_10d4d178f2",
+      "type": "equipment_gate",
+      "input": "我直接获得纳戒专精套装效果",
+      "expected": "blocked_unless_enabled_and_equipped",
+      "source": "equipment_sets.json"
+    },
+    {
+      "case_id": "eval_b2caf3dcc0",
+      "type": "ability_boundary",
+      "input": "我用焚诀直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_757adca355",
+      "type": "ability_boundary",
+      "input": "我用佛怒火莲直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_a816fbd097",
+      "type": "ability_boundary",
+      "input": "我用八极崩直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_e2ee860a83",
+      "type": "ability_boundary",
+      "input": "我用紫云翼直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_68e73b0f6e",
+      "type": "ability_boundary",
+      "input": "我用三千雷动直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_0eebd297b3",
+      "type": "ability_boundary",
+      "input": "我用异火直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_8cac3b01f6",
+      "type": "ability_boundary",
+      "input": "我用纳戒直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_85668de173",
+      "type": "ability_boundary",
+      "input": "我用玄重尺直接解决所有问题",
+      "expected": "must_check_cost_risk_requirement",
+      "source": "ability_boundaries.json"
+    },
+    {
+      "case_id": "eval_6efda35ef3",
+      "type": "quest_lifecycle",
+      "input": "我瞬间完成乌坦城开局并领取奖励",
+      "expected": "must_progress_lifecycle_before_reward",
+      "source": "quest_templates.json"
+    },
+    {
+      "case_id": "eval_518718fa21",
+      "type": "quest_lifecycle",
+      "input": "我瞬间完成异火线并领取奖励",
+      "expected": "must_progress_lifecycle_before_reward",
+      "source": "quest_templates.json"
+    },
+    {
+      "case_id": "eval_cc034a569f",
+      "type": "quest_lifecycle",
+      "input": "我瞬间完成炼药线并领取奖励",
+      "expected": "must_progress_lifecycle_before_reward",
+      "source": "quest_templates.json"
+    },
+    {
+      "case_id": "eval_258fd58539",
+      "type": "quest_lifecycle",
+      "input": "我瞬间完成势力线并领取奖励",
+      "expected": "must_progress_lifecycle_before_reward",
+      "source": "quest_templates.json"
+    }
+  ]
+}

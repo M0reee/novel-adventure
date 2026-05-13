@@ -1,0 +1,110 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "NPC agency may propose, refuse, delay, or react according to canon-derived motives. It cannot hand out unsupported rewards or override player freedom.",
+  "npcs": [
+    {
+      "npc": "药老",
+      "agency_id": "agency_d738259aaf",
+      "goal": "围绕自身身份和当前势力关系行动",
+      "leverage": [
+        "他的建议是情报和指导"
+      ],
+      "boundaries": [
+        "不等于自动成功或无代价通关"
+      ],
+      "possible_moves": [
+        "提出条件或交换",
+        "拒绝越界请求",
+        "提供低风险线索",
+        "在关系足够时给出有限帮助"
+      ]
+    },
+    {
+      "npc": "萧炎",
+      "agency_id": "agency_deeab5954b",
+      "goal": "围绕自身身份和当前势力关系行动",
+      "leverage": [
+        "可提供情报、资源、指导、交易或关系入口"
+      ],
+      "boundaries": [
+        "不会无条件满足玩家要求；需要筹码、关系、时机或代价"
+      ],
+      "possible_moves": [
+        "提出条件或交换",
+        "拒绝越界请求",
+        "提供低风险线索",
+        "在关系足够时给出有限帮助"
+      ]
+    },
+    {
+      "npc": "薰儿",
+      "agency_id": "agency_e2fd0a67e3",
+      "goal": "她的信任、保护或疏离会影响早期安全与后续远古种族线索",
+      "leverage": [
+        "薰儿 萧家中身份特殊的少女",
+        "萧家中身份特殊的少女"
+      ],
+      "boundaries": [
+        "不会无条件满足玩家要求；需要筹码、关系、时机或代价"
+      ],
+      "possible_moves": [
+        "提出条件或交换",
+        "拒绝越界请求",
+        "提供低风险线索",
+        "在关系足够时给出有限帮助"
+      ]
+    },
+    {
+      "npc": "纳兰嫣然",
+      "agency_id": "agency_148647f47b",
+      "goal": "围绕自身身份和当前势力关系行动",
+      "leverage": [
+        "可提供情报、资源、指导、交易或关系入口"
+      ],
+      "boundaries": [
+        "不会无条件满足玩家要求；需要筹码、关系、时机或代价"
+      ],
+      "possible_moves": [
+        "提出条件或交换",
+        "拒绝越界请求",
+        "提供低风险线索",
+        "在关系足够时给出有限帮助"
+      ]
+    },
+    {
+      "npc": "雅妃",
+      "agency_id": "agency_2a329cf2f4",
+      "goal": "玩家可通过她获取资源、情报或商业合作",
+      "leverage": [
+        "擅长交易与人脉经营",
+        "玩家可通过她获取资源、情报或商业合作"
+      ],
+      "boundaries": [
+        "不会无条件满足玩家要求；需要筹码、关系、时机或代价"
+      ],
+      "possible_moves": [
+        "提出条件或交换",
+        "拒绝越界请求",
+        "提供低风险线索",
+        "在关系足够时给出有限帮助"
+      ]
+    },
+    {
+      "npc": "美杜莎",
+      "agency_id": "agency_ac4f009189",
+      "goal": "围绕自身身份和当前势力关系行动",
+      "leverage": [
+        "可提供情报、资源、指导、交易或关系入口"
+      ],
+      "boundaries": [
+        "低阶玩家不能正面对抗"
+      ],
+      "possible_moves": [
+        "提出条件或交换",
+        "拒绝越界请求",
+        "提供低风险线索",
+        "在关系足够时给出有限帮助"
+      ]
+    }
+  ]
+}

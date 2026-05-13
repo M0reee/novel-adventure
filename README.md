@@ -183,6 +183,7 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `/novel-rebuild-narrative <slug>` | 重建 NPC 动机、能力边界、伏笔和事件链 |
 | `/novel-rebuild-gameplay <slug>` | 从 canon 重建战斗/事件玩法机制，避免题材模板硬套 |
 | `/novel-rebuild-routes <slug>` | 重建技能、物品、地点入口获取路线，并刷新 OOC 可用性检查 |
+| `/novel-rebuild-runtime <slug>` | 重建导演节奏、任务生命周期、NPC 主动性、收益策略、证据卡和 canon eval |
 
 CLI fallback：
 
@@ -206,6 +207,7 @@ CLI fallback：
 | `python novel.py rebuild-narrative <slug>` | 重建 `npc_motives/ability_boundaries/foreshadowing/event_chains/story_arcs` |
 | `python novel.py rebuild-gameplay <slug>` | 从 canon 重建 `gameplay_profile.json` |
 | `python novel.py rebuild-routes <slug>` | 重建 `acquisition_routes.json` 和 `ooc_report.json` |
+| `python novel.py rebuild-runtime <slug>` | 重建 `director_plan/quest_lifecycle/npc_agency/reward_policy/evidence_cards/canon_eval` |
 
 如果要手动分步执行：
 
@@ -389,6 +391,12 @@ worlds/<slug>/story_arcs.json
 - 每回合会输出 `Canon 证据`：列出本次裁定引用的检索事实、置信度、技能/物品获取门槛或保守裁定原因，避免玩家不知道“为什么不让做”。
 - 每回合会写入 `runtime.layers`：区分 canon 证据、可玩推导、已确认事实、未证实传闻和裁定记录，避免把线索、传闻、规则和真实状态混在一起。
 - 技能、物品和地点入口会读取 `acquisition_routes.json`：玩家看到的是下一步可执行路线，而不是任务步骤清单或凭空出现的奖励。
+- `director_plan.json` 只负责节奏提示和机会窗口，不会强制玩家接任务或替玩家推进剧情。
+- `quest_lifecycle.json` 把任务拆成线索、接触、准备、执行、结算、余波，避免任务像 checklist 或长期无进展。
+- `npc_agency.json` 让 NPC 按动机、底线和筹码偶尔主动提出条件、拒绝或给有限线索，但不能发放无证据奖励。
+- `reward_policy.json` 把战斗、任务、情报、社交、修炼、地点探索的收益通道结构化，保证非战斗玩法也有回报，但回报必须由脚本结算。
+- `journal.md` / `runtime.journal` 记录玩家实际做过的事、未清承诺、风险和开放线索，长线游玩不会失忆。
+- `canon_eval.json` 从当前小说的技能、装备、能力边界和任务生成反 OOC 回归用例，方便换书后检查是否乱套模板。
 
 ## 自由探索运行态
 
@@ -411,6 +419,13 @@ worlds/<slug>/story_arcs.json
 - `scripts/canon_evidence.py`：把检索事实、规则裁定和 canon gate 压缩成每回合可读的证据解释。
 - `scripts/runtime_layers.py`：把 canon、推导、确认事实、传闻和裁定分层写入存档，后续回合可追溯。
 - `scripts/ooc_qa.py`：检查技能、装备协同和获取路线是否有足够 canon gate，防止 OOC 可用性泄漏。
+- `scripts/director.py`：从 story arcs 和 world events 生成 canon-derived 节奏计划，只提醒机会和后果，不强迫路线。
+- `scripts/quest_lifecycle.py`：维护任务阶段，防止任务目标被当成自由选项或奖励提前发放。
+- `scripts/npc_agency.py`：让 NPC 根据动机和关系产生有限主动动作。
+- `scripts/reward_policy.py`：记录每种行动的合法收益通道，情报/社交/探索也能有结构化收益。
+- `scripts/journal.py`：维护存档日志和可读 journal，记录承诺、风险和最近行动。
+- `scripts/evidence_cards.py`：生成短证据卡，减少运行时解释依赖长原文摘要。
+- `scripts/canon_eval.py`：生成反 OOC regression cases，用于换小说后的通用性检查。
 
 这层的目标是提高自由度：任务、交易、社交、修炼和探索都可以成为有效行动，但只有满足地点、资源、关系、能力边界和原著证据时才会推进。
 
@@ -555,6 +570,13 @@ novel-adventure/
 │   ├── canon_evidence.py    # 每回合 canon 证据与裁定依据压缩展示
 │   ├── runtime_layers.py    # 运行时 canon、推导、确认事实、传闻和裁定分层
 │   ├── ooc_qa.py            # 技能/装备/获取路线 OOC 泄漏检查
+│   ├── director.py          # canon-derived 节奏计划，不强制任务路线
+│   ├── quest_lifecycle.py   # 任务阶段：线索/接触/准备/执行/结算/余波
+│   ├── npc_agency.py        # NPC 主动性：条件、拒绝、有限线索
+│   ├── reward_policy.py     # 行动收益通道与结构化结算策略
+│   ├── journal.py           # 存档日志、承诺、风险和开放线索
+│   ├── evidence_cards.py    # 短 canon 证据卡
+│   ├── canon_eval.py        # 反 OOC regression cases
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
 │   ├── run_turn.py          # 跑一回合
@@ -585,6 +607,12 @@ economy_state.json      # 库存、价格修正、市场可靠性和询价记录
 skill_tree.json         # canon-gated 技能可得性和训练进度图谱
 equipment_sets.json     # canon-gated 装备协同；低证据默认 disabled
 acquisition_routes.json # 技能、物品、地点入口的获取路线图
+director_plan.json      # 剧情节奏与机会窗口，不强制玩家路线
+quest_lifecycle.json    # 任务生命周期阶段规则
+npc_agency.json         # NPC 目标、底线和可能主动动作
+reward_policy.json      # 行动收益通道和结算策略
+evidence_cards.json     # 短 canon 证据卡
+canon_eval.json         # 自动生成的反 OOC 回归用例
 quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
 location_runtime.json   # 地点风险、入口条件、资源和默认行动
 relationship_rules.json # NPC/势力关系分数和影响规则
@@ -610,6 +638,7 @@ retrieval.sqlite        # 检索索引
 quality_report.md/json  # 可读蒸馏质量报告
 distillation_score.md/json # 叙事蒸馏质量评分
 ooc_report.json         # 技能、装备和获取路线的 OOC QA 结果
+journal.md              # 默认存档的可读冒险日志；具名存档为 journal_<slot>.md
 ```
 
 由于可能含**版权文本**和**私设**，`worlds/` 默认在 `.gitignore` 里，不会被提交。唯一例外是公开瘦身预设 `worlds/doupo_cangqiong/`，它不包含 `chunks.jsonl`、`facts.jsonl` 或 `source_index.jsonl`。
@@ -691,6 +720,7 @@ python scripts/index.py --world fanren
 - [x] 增加行动拆解、场景状态、NPC 记忆、资源调查记录和长期线索关注度运行态
 - [x] 增加 canon-gated `skill_tree.json`、`equipment_sets.json`、`economy_state.json`，补齐技能成长、装备协同和动态经济，同时避免 OOC 直接开技能/套装
 - [x] 增加 `acquisition_routes.json`、`Canon 证据` 输出、运行时分层和 OOC QA，保证获取路径、裁定依据和传闻/事实分离可追溯
+- [x] 增加导演节奏、任务生命周期、NPC 主动性、收益策略、journal 和 canon eval，让长期 RPG 更连贯但不牺牲自由度
 - [x] 增加敌人 AI 决策，让敌人按血量、风格和回合选择强攻、压制、防守或退守
 - [ ] EPUB / PDF 导入
 - [ ] 多题材真实小说小样本评测集

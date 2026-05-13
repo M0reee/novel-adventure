@@ -1,0 +1,99 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "The director layer controls pacing only. It may surface canon-derived pressure, downtime, and opportunity windows, but cannot invent hard facts or force a quest path.",
+  "default_free_roam_ratio": 0.6,
+  "locations": [
+    "乌坦城",
+    "魔兽山脉",
+    "云岚宗",
+    "迦南学院",
+    "黑角域",
+    "萧家",
+    "中州"
+  ],
+  "beats": [
+    {
+      "beat_id": "beat_98b769a68c",
+      "source": "story_arcs.json",
+      "name": "乌坦城开局",
+      "tempo": "slow_burn",
+      "purpose": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险",
+      "entry_signals": [
+        "修炼",
+        "拍卖",
+        "退婚"
+      ],
+      "allowed_pressure": "提示机会窗口、代价或旁人行动；不得替玩家做决定，不得跳过前置条件。"
+    },
+    {
+      "beat_id": "beat_7905e3c58b",
+      "source": "story_arcs.json",
+      "name": "异火线",
+      "tempo": "slow_burn",
+      "purpose": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路",
+      "entry_signals": [
+        "情报",
+        "追寻"
+      ],
+      "allowed_pressure": "提示机会窗口、代价或旁人行动；不得替玩家做决定，不得跳过前置条件。"
+    },
+    {
+      "beat_id": "beat_17a0296087",
+      "source": "story_arcs.json",
+      "name": "炼药线",
+      "tempo": "slow_burn",
+      "purpose": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情",
+      "entry_signals": [
+        "人情",
+        "修炼",
+        "炼药",
+        "药材"
+      ],
+      "allowed_pressure": "提示机会窗口、代价或旁人行动；不得替玩家做决定，不得跳过前置条件。"
+    },
+    {
+      "beat_id": "beat_ba7f6aca69",
+      "source": "world_events.json",
+      "name": "乌坦城开局",
+      "tempo": "time_pressure",
+      "purpose": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。；这是原著中反复出现或能持续推动玩家行动的目标线。；围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险",
+      "entry_signals": [
+        "乌坦城开局"
+      ],
+      "allowed_pressure": "只提醒已出现或将过期的 canon 事件，不凭空制造主线。"
+    },
+    {
+      "beat_id": "beat_d63e21f075",
+      "source": "world_events.json",
+      "name": "异火线",
+      "tempo": "time_pressure",
+      "purpose": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。；这是原著中反复出现或能持续推动玩家行动的目标线。；异火线 玩家可通过地图、情报、药老指导和高风险探索追寻…",
+      "entry_signals": [
+        "异火线"
+      ],
+      "allowed_pressure": "只提醒已出现或将过期的 canon 事件，不凭空制造主线。"
+    },
+    {
+      "beat_id": "beat_64f5ad0eb2",
+      "source": "world_events.json",
+      "name": "炼药线",
+      "tempo": "time_pressure",
+      "purpose": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。；借丹药提升修炼或换取资源与人情；炼药线 玩家可收集药材、魔核和药方；学习炼药",
+      "entry_signals": [
+        "炼药线"
+      ],
+      "allowed_pressure": "只提醒已出现或将过期的 canon 事件，不凭空制造主线。"
+    },
+    {
+      "beat_id": "beat_ad45bcb0bc",
+      "source": "world_events.json",
+      "name": "势力线",
+      "tempo": "time_pressure",
+      "purpose": "玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突",
+      "entry_signals": [
+        "势力线"
+      ],
+      "allowed_pressure": "只提醒已出现或将过期的 canon 事件，不凭空制造主线。"
+    }
+  ]
+}

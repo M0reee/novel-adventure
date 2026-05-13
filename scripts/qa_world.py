@@ -30,6 +30,12 @@ FULL_REQUIRED_FILES = [
     "economy_state.json",
     "acquisition_routes.json",
     "ooc_report.json",
+    "director_plan.json",
+    "quest_lifecycle.json",
+    "npc_agency.json",
+    "reward_policy.json",
+    "evidence_cards.json",
+    "canon_eval.json",
     "encounter_state.json",
     "npc_motives.json",
     "ability_boundaries.json",
@@ -63,6 +69,12 @@ PRESET_REQUIRED_FILES = [
     "economy_state.json",
     "acquisition_routes.json",
     "ooc_report.json",
+    "director_plan.json",
+    "quest_lifecycle.json",
+    "npc_agency.json",
+    "reward_policy.json",
+    "evidence_cards.json",
+    "canon_eval.json",
     "encounter_state.json",
     "npc_motives.json",
     "ability_boundaries.json",
@@ -187,6 +199,19 @@ def build_readable_report(
     else:
         risks.append("长期任务线不足，玩家容易只看到零散委托，缺少原著主线/支线代入感。")
         recommendations.append("重跑 story_arcs 或启用 LLM-assisted，重点抽反复出现的重要任务、资源追求、训练目标和势力冲突。")
+    for check_name, strength, risk, recommendation in [
+        ("director_plan", "导演层可用，能用 canon-derived beat 控制节奏但不强制玩家路线。", "导演层缺失，长期游玩可能缺章节节奏和机会窗口。", "重跑 director.py，确保 story_arcs/world_events 可生成 pacing beat。"),
+        ("quest_lifecycle", "任务生命周期可用，任务会分成线索、接触、准备、执行、结算和余波。", "任务生命周期缺失，任务容易像 checklist 或反复无进展。", "重跑 quest_lifecycle.py，或补 quest_templates 的 objectives。"),
+        ("npc_agency", "NPC 主动性层可用，重要 NPC 可按动机提出条件、拒绝或给有限线索。", "NPC 主动性缺失，人物容易只被动回应玩家。", "重跑 npc_agency.py，必要时补 npc_motives。"),
+        ("reward_policy", "收益通道已结构化，非战斗玩法也能保留情报、关系、入口和资源收益。", "收益策略缺失，探索/社交/情报可能缺少明确回报。", "重跑 reward_policy.py，并检查 action_resolver 是否通过结构化脚本结算奖励。"),
+        ("evidence_cards", "证据卡可用，运行时解释可减少长摘要和工程味提示。", "证据卡缺失，运行时证据解释可能仍偏粗糙。", "重跑 evidence_cards.py，必要时补短 canon 摘要。"),
+        ("canon_eval", "canon regression cases 已生成，可用于测试反 OOC、任务阶段和能力边界。", "canon eval 缺失，换书后难以回归检查是否 OOC。", "重跑 canon_eval.py，并用多本小说建立评测集。"),
+    ]:
+        if check_name not in failed:
+            strengths.append(strength)
+        else:
+            risks.append(risk)
+            recommendations.append(recommendation)
     distillation_score = read_json(world_dir(world) / "distillation_score.json", {})
     score_value = int(distillation_score.get("overall_score", 0) or 0)
     if score_value >= 85:
@@ -268,6 +293,12 @@ def qa(world: str) -> None:
     economy_state = read_json(wdir / "economy_state.json", {})
     acquisition_routes = read_json(wdir / "acquisition_routes.json", {})
     ooc_report = read_json(wdir / "ooc_report.json", {})
+    director_plan = read_json(wdir / "director_plan.json", {})
+    quest_lifecycle = read_json(wdir / "quest_lifecycle.json", {})
+    npc_agency = read_json(wdir / "npc_agency.json", {})
+    reward_policy = read_json(wdir / "reward_policy.json", {})
+    evidence_cards = read_json(wdir / "evidence_cards.json", {})
+    canon_eval = read_json(wdir / "canon_eval.json", {})
     encounter_state = read_json(wdir / "encounter_state.json", {})
     npc_motives = read_json(wdir / "npc_motives.json", {})
     ability_boundaries = read_json(wdir / "ability_boundaries.json", {})
@@ -318,6 +349,12 @@ def qa(world: str) -> None:
         ("economy_state", "items" in economy_state, str(len(economy_state.get("items", [])))),
         ("acquisition_routes", len(acquisition_routes.get("routes", [])) >= len(skill_tree.get("nodes", [])), str(len(acquisition_routes.get("routes", [])))),
         ("ooc_qa", bool(ooc_report.get("passed", False)), f"score={ooc_report.get('score', 'missing')} issues={len(ooc_report.get('issues', []))}"),
+        ("director_plan", len(director_plan.get("beats", [])) >= 1, str(len(director_plan.get("beats", [])))),
+        ("quest_lifecycle", len(quest_lifecycle.get("quests", [])) >= len(quests.get("quests", [])), str(len(quest_lifecycle.get("quests", [])))),
+        ("npc_agency", len(npc_agency.get("npcs", [])) >= 1, str(len(npc_agency.get("npcs", [])))),
+        ("reward_policy", len(reward_policy.get("channels", [])) >= 5, str(len(reward_policy.get("channels", [])))),
+        ("evidence_cards", len(evidence_cards.get("cards", [])) >= 20, str(len(evidence_cards.get("cards", [])))),
+        ("canon_eval", len(canon_eval.get("cases", [])) >= 3, str(len(canon_eval.get("cases", [])))),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
         ("npc_motives", len(npc_motives.get("npcs", [])) >= min(3, max(1, int(entity_counts.get("npc", 0)))), str(len(npc_motives.get("npcs", [])))),
         ("ability_boundaries", len(ability_boundaries.get("abilities", [])) >= 5, str(len(ability_boundaries.get("abilities", [])))),

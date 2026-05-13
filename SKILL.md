@@ -50,7 +50,7 @@ Optional LLM-assisted offline distillation:
 
 Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
 
-This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `economy_state.json`, `skill_tree.json`, `equipment_sets.json`, `acquisition_routes.json`, `story_arcs.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `scene_graph.json`, `encounter_state.json`, `world_events.json`, `ooc_report.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
+This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `economy_state.json`, `skill_tree.json`, `equipment_sets.json`, `acquisition_routes.json`, `director_plan.json`, `quest_lifecycle.json`, `npc_agency.json`, `reward_policy.json`, `evidence_cards.json`, `canon_eval.json`, `story_arcs.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `scene_graph.json`, `encounter_state.json`, `world_events.json`, `ooc_report.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 ### First-Run Use
 
@@ -104,15 +104,17 @@ Manual build:
    `python scripts/acquisition_routes.py --world <slug> --rebuild`
 17. Run OOC availability QA:
    `python scripts/ooc_qa.py --world <slug>`
-18. Generate opening:
+18. Generate long-form runtime projections:
+   `python novel.py rebuild-runtime <slug>`
+19. Generate opening:
    `python scripts/opening.py --world <slug> --rebuild`
-19. Distill merged canon into game-ready rules:
+20. Distill merged canon into game-ready rules:
    `python scripts/distill_playable.py --world <slug>`
-20. Build retrieval index:
+21. Build retrieval index:
    `python scripts/index.py --world <slug>`
-21. Score narrative distillation quality:
+22. Score narrative distillation quality:
    `python scripts/distillation_qa.py --world <slug>`
-22. Optional deterministic QA:
+23. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -164,6 +166,18 @@ Acquisition-route rule: skills, rare items, equipment sets, and restricted locat
 Canon-evidence rule: each turn should expose concise `Canon 证据` when a ruling depends on retrieved canon, a `canon_gate`, an acquisition route, or a conservative block. Show enough evidence for the player to understand why an action succeeded, failed, or became conditional, but never dump long raw source text into the response.
 
 Runtime-layer rule: use `player_state.json.runtime.layers` to keep canon evidence, derived playable rules, confirmed facts, rumors, and rulings separate. Do not promote rumors or route leads into confirmed world state until the player verifies them through action.
+
+Director rule: `director_plan.json` controls pacing only. It may surface canon-derived opportunity windows, cooldown, consequences, or pressure, but it must not force a quest, teleport the player, grant rewards, or override free-form actions.
+
+Quest-lifecycle rule: `quest_lifecycle.json` tracks lead/contact/prepare/execute/settle/aftermath. Do not present internal objectives as a checklist to be auto-completed; use phases to explain progress, required proof, and why rewards are or are not ready.
+
+NPC-agency rule: `npc_agency.json` lets NPCs act according to motives and boundaries. NPCs can refuse, ask for terms, offer limited clues, or follow up on promises, but cannot betray canon motives or hand out unsupported resources.
+
+Reward rule: `reward_policy.json` defines valid reward channels. Combat rewards come from `combat.py`; quest rewards require completed objectives; social/info/location actions may grant relationship, clues, access, or risk reduction, but not direct unearned items or skills.
+
+Journal rule: `runtime.journal` and `journal.md` preserve player-visible memory: recent actions, open threads, promises, and risks. Use it to maintain continuity, not to create new canon.
+
+Canon-eval rule: `canon_eval.json` contains generated anti-OOC regression cases for the current novel. Use it after major pipeline changes or when testing a new book to catch direct skill grants, instant rewards, and ability-boundary violations.
 
 World-event rule: long-running events live in `world_events.json` and are advanced by `run_turn.py`. Mention active or expired events when relevant; ignored events may expire and change the world, while intervened events may create quests, access, resources, relationships, or risk reduction. Event effects must be applied through `runtime_effects.py` so market, location, relationship, state flags, and follow-up events are structured.
 

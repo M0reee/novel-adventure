@@ -5,17 +5,24 @@ import argparse
 from pathlib import Path
 
 from bootstrap_profile import build_profile
+from canon_eval import build_canon_eval
+from director import build_director_plan
 from distill_playable import distill
 from distillation_qa import distillation_qa
+from evidence_cards import build_evidence_cards
 from extract import extract
 from gameplay_profile import build_gameplay_profile
 from index import build_index
 from ingest import ingest
 from merge import merge
 from narrative_intelligence import build_narrative_intelligence
+from npc_agency import build_npc_agency
 from opening import build_opening
+from ooc_qa import check_world
 from qa_world import qa
 from common import read_jsonl, world_dir
+from quest_lifecycle import build_quest_lifecycle
+from reward_policy import build_reward_policy
 from scene_graph import build_scene_graph
 from story_arcs import build_story_arcs
 from world_events import build_world_events
@@ -71,8 +78,15 @@ def import_prompt_pack(world: str, responses: Path, profile: str) -> None:
     build_gameplay_profile(world)
     build_scene_graph(world)
     build_world_events(world)
+    build_director_plan(world)
+    build_quest_lifecycle(world)
+    build_npc_agency(world)
+    build_reward_policy(world)
+    build_evidence_cards(world)
+    build_canon_eval(world)
     build_index(world)
     distillation_qa(world)
+    check_world(world)
     qa(world)
     print("")
     print("Host-model distillation import complete.")

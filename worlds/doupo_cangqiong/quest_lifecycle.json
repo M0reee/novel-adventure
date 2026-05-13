@@ -1,0 +1,189 @@
+{
+  "world": "doupo_cangqiong",
+  "phases": [
+    {
+      "phase": "lead",
+      "label": "线索",
+      "rule": "只确认来源、对象和风险，不默认接取。"
+    },
+    {
+      "phase": "contact",
+      "label": "接触",
+      "rule": "问清报酬、期限、筹码和失败后果。"
+    },
+    {
+      "phase": "prepare",
+      "label": "准备",
+      "rule": "准备资源、路线、关系或能力边界。"
+    },
+    {
+      "phase": "execute",
+      "label": "执行",
+      "rule": "按当前 objective 行动，失败也要写入后果。"
+    },
+    {
+      "phase": "settle",
+      "label": "结算",
+      "rule": "交付证据、领取奖励或承担代价。"
+    },
+    {
+      "phase": "aftermath",
+      "label": "余波",
+      "rule": "关系、市场、地点或事件链变化进入世界状态。"
+    }
+  ],
+  "quests": [
+    {
+      "quest_id": "quest_4cec438908",
+      "name": "乌坦城开局",
+      "source": "story_arcs.json",
+      "phases": [
+        {
+          "phase": "lead",
+          "label": "线索",
+          "rule": "只确认来源、对象和风险，不默认接取。"
+        },
+        {
+          "phase": "contact",
+          "label": "接触",
+          "rule": "问清报酬、期限、筹码和失败后果。"
+        },
+        {
+          "phase": "prepare",
+          "label": "准备",
+          "rule": "准备资源、路线、关系或能力边界。"
+        },
+        {
+          "phase": "execute",
+          "label": "执行",
+          "rule": "按当前 objective 行动，失败也要写入后果。"
+        },
+        {
+          "phase": "settle",
+          "label": "结算",
+          "rule": "交付证据、领取奖励或承担代价。"
+        },
+        {
+          "phase": "aftermath",
+          "label": "余波",
+          "rule": "关系、市场、地点或事件链变化进入世界状态。"
+        }
+      ],
+      "policy": "Quest lifecycle tracks stage and next pressure only; it must not force a route or grant rewards before objectives are resolved."
+    },
+    {
+      "quest_id": "quest_f6ce8fa48b",
+      "name": "异火线",
+      "source": "story_arcs.json",
+      "phases": [
+        {
+          "phase": "lead",
+          "label": "线索",
+          "rule": "只确认来源、对象和风险，不默认接取。"
+        },
+        {
+          "phase": "contact",
+          "label": "接触",
+          "rule": "问清报酬、期限、筹码和失败后果。"
+        },
+        {
+          "phase": "prepare",
+          "label": "准备",
+          "rule": "准备资源、路线、关系或能力边界。"
+        },
+        {
+          "phase": "execute",
+          "label": "执行",
+          "rule": "按当前 objective 行动，失败也要写入后果。"
+        },
+        {
+          "phase": "settle",
+          "label": "结算",
+          "rule": "交付证据、领取奖励或承担代价。"
+        },
+        {
+          "phase": "aftermath",
+          "label": "余波",
+          "rule": "关系、市场、地点或事件链变化进入世界状态。"
+        }
+      ],
+      "policy": "Quest lifecycle tracks stage and next pressure only; it must not force a route or grant rewards before objectives are resolved."
+    },
+    {
+      "quest_id": "quest_f188b7a895",
+      "name": "炼药线",
+      "source": "story_arcs.json",
+      "phases": [
+        {
+          "phase": "lead",
+          "label": "线索",
+          "rule": "只确认来源、对象和风险，不默认接取。"
+        },
+        {
+          "phase": "contact",
+          "label": "接触",
+          "rule": "问清报酬、期限、筹码和失败后果。"
+        },
+        {
+          "phase": "prepare",
+          "label": "准备",
+          "rule": "准备资源、路线、关系或能力边界。"
+        },
+        {
+          "phase": "execute",
+          "label": "执行",
+          "rule": "按当前 objective 行动，失败也要写入后果。"
+        },
+        {
+          "phase": "settle",
+          "label": "结算",
+          "rule": "交付证据、领取奖励或承担代价。"
+        },
+        {
+          "phase": "aftermath",
+          "label": "余波",
+          "rule": "关系、市场、地点或事件链变化进入世界状态。"
+        }
+      ],
+      "policy": "Quest lifecycle tracks stage and next pressure only; it must not force a route or grant rewards before objectives are resolved."
+    },
+    {
+      "quest_id": "quest_9f764c5292",
+      "name": "势力线",
+      "source": "adventure_hooks.json",
+      "phases": [
+        {
+          "phase": "lead",
+          "label": "线索",
+          "rule": "只确认来源、对象和风险，不默认接取。"
+        },
+        {
+          "phase": "contact",
+          "label": "接触",
+          "rule": "问清报酬、期限、筹码和失败后果。"
+        },
+        {
+          "phase": "prepare",
+          "label": "准备",
+          "rule": "准备资源、路线、关系或能力边界。"
+        },
+        {
+          "phase": "execute",
+          "label": "执行",
+          "rule": "按当前 objective 行动，失败也要写入后果。"
+        },
+        {
+          "phase": "settle",
+          "label": "结算",
+          "rule": "交付证据、领取奖励或承担代价。"
+        },
+        {
+          "phase": "aftermath",
+          "label": "余波",
+          "rule": "关系、市场、地点或事件链变化进入世界状态。"
+        }
+      ],
+      "policy": "Quest lifecycle tracks stage and next pressure only; it must not force a route or grant rewards before objectives are resolved."
+    }
+  ]
+}

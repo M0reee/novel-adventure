@@ -10,10 +10,15 @@ from action_resolver import resolve_action
 from arc_runtime import advance_arc_attention, arc_state_lines
 from canon_evidence import evidence_lines
 from common import default_player_state, migrate_player_state, write_json, world_dir
+from director import advance_director
 from equipment_sets import refresh_player_set_bonuses
 from foreshadow_runtime import advance_foreshadows
 from game_math import computed_stats
+from journal import journal_lines, update_journal, write_journal_markdown
+from npc_agency import advance_npc_agency
+from quest_lifecycle import advance_quest_lifecycle, quest_lifecycle_lines
 from retrieve import retrieve
+from reward_policy import record_reward_channel, reward_policy_lines
 from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
 from runtime_layers import record_runtime_layers, runtime_layer_lines
 from runtime_summary import runtime_summary_lines
@@ -180,6 +185,7 @@ def summarize_canon(rows: list[dict[str, Any]]) -> list[str]:
         "npc_motive",
         "ability_boundary",
         "foreshadowing",
+        "evidence_card",
     }
     hidden_sources = {
         "story_arcs.json",
@@ -187,6 +193,7 @@ def summarize_canon(rows: list[dict[str, Any]]) -> list[str]:
         "npc_motives.json",
         "ability_boundaries.json",
         "foreshadowing.json",
+        "evidence_cards.json",
     }
     for row in rows:
         row_type = str(row.get("type", ""))
@@ -539,6 +546,10 @@ def run_turn(
     scene_messages = advance_scene_state(state, scene, player_input, resolution, intent)
     arc_messages = advance_arc_attention(state, player_input, resolution)
     layer_messages = record_runtime_layers(state, canon_rows, resolution, turn, player_input)
+    lifecycle_messages = advance_quest_lifecycle(state)
+    director_lines, director_options = advance_director(world, state, scene, resolution, turn)
+    npc_agency_lines, npc_agency_options = advance_npc_agency(world, state, scene, turn, resolution)
+    reward_messages = record_reward_channel(world, state, resolution, turn)
 
     state_changes = [
         f"回合数：{before_turn} -> {turn}",
@@ -548,9 +559,16 @@ def run_turn(
         *resolution.get("state_changes", []),
         *scene_messages,
         *arc_messages,
+        *lifecycle_messages,
         *layer_messages,
+        *reward_messages,
         *foreshadow_messages,
         *event_messages,
+    ]
+    journal_messages = update_journal(state, player_input, resolution, state_changes, turn)
+    state_changes = [
+        *state_changes,
+        *journal_messages,
         "行动记录已追加。" if not dry_run else "dry-run 未写入行动记录。",
     ]
     meta["current_stage"] = "自由冒险推进中"
@@ -584,6 +602,12 @@ def run_turn(
     for option in build_options(player_input, state, canon_rows, resolution, scene):
         if option not in options:
             options.append(option)
+    for option in director_options:
+        if option not in options:
+            options.append(option)
+    for option in npc_agency_options:
+        if option not in options:
+            options.append(option)
     for option in event_options:
         if option not in options:
             options.append(option)
@@ -593,6 +617,9 @@ def run_turn(
     arc_runtime_lines = arc_state_lines(state)
     evidence_summary_lines = evidence_lines(canon_rows, resolution)
     layer_summary_lines = runtime_layer_lines(state)
+    lifecycle_summary_lines = quest_lifecycle_lines(state)
+    reward_summary_lines = reward_policy_lines(state)
+    journal_summary_lines = journal_lines(state)
     meta["last_options"] = [
         {
             "index": idx,
@@ -607,6 +634,7 @@ def run_turn(
         for filename, data in resolution.get("runtime_files", {}).items():
             write_json(wdir / filename, data)
         write_json(wdir / "world_events.json", event_data)
+        write_journal_markdown(world, state, slot)
     output = [
         "## 场景叙事",
         f"你选择：{player_input}" if raw_player_input == player_input else f"你选择：{raw_player_input}（{player_input}）",
@@ -642,8 +670,23 @@ def run_turn(
         "## RPG运行态",
         *runtime_summary_lines(state),
         "",
+        "## 潜在收益",
+        *reward_summary_lines,
+        "",
         "## 运行时分层",
         *layer_summary_lines,
+        "",
+        "## 任务阶段",
+        *lifecycle_summary_lines,
+        "",
+        "## 节奏与机会",
+        *director_lines,
+        "",
+        "## 人物动向",
+        *(npc_agency_lines or ["- 暂无人物主动插手；当前不打断你的自由行动。"]),
+        "",
+        "## 冒险日志",
+        *journal_summary_lines,
         "",
         "## 世界动态",
         *dynamic_lines,

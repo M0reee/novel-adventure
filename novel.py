@@ -12,8 +12,11 @@ if str(SCRIPTS) not in sys.path:
 
 from scripts.build_world import build
 from scripts.acquisition_routes import build_acquisition_routes
+from scripts.canon_eval import build_canon_eval
+from scripts.director import build_director_plan
 from scripts.distillation_qa import distillation_qa
 from scripts.encounter_runtime import clear_encounter
+from scripts.evidence_cards import build_evidence_cards
 from scripts.extract import extract
 from scripts.gameplay_profile import build_gameplay_profile
 from scripts.index import build_index
@@ -23,10 +26,13 @@ from scripts.host_distill import export_prompt_pack, import_prompt_pack, status 
 from scripts.list_worlds import discover_worlds, format_worlds
 from scripts.merge import merge
 from scripts.narrative_intelligence import build_narrative_intelligence
+from scripts.npc_agency import build_npc_agency
 from scripts.opening import build_opening, ensure_opening, format_opening
 from scripts.ooc_qa import check_world as check_ooc
 from scripts.qa_world import qa
+from scripts.quest_lifecycle import build_quest_lifecycle
 from scripts.retrieve import retrieve
+from scripts.reward_policy import build_reward_policy
 from scripts.rpg_profile import build_rpg_profile
 from scripts.run_turn import run_turn
 from scripts.save_manager import copy_save, delete_save, format_saves
@@ -233,6 +239,16 @@ def cmd_rebuild_routes(args: argparse.Namespace) -> None:
     print(f"Rebuilt acquisition routes for {args.world}. OOC score={report.get('score')} passed={report.get('passed')}")
 
 
+def cmd_rebuild_runtime(args: argparse.Namespace) -> None:
+    build_director_plan(args.world)
+    build_quest_lifecycle(args.world)
+    build_npc_agency(args.world)
+    build_reward_policy(args.world)
+    build_evidence_cards(args.world)
+    build_canon_eval(args.world)
+    qa(args.world)
+
+
 def cmd_rebuild_narrative(args: argparse.Namespace) -> None:
     build_narrative_intelligence(args.world)
     build_story_arcs(args.world)
@@ -268,6 +284,8 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
         build_acquisition_routes(args.world)
     elif args.step == "ooc-qa":
         check_ooc(args.world)
+    elif args.step == "runtime":
+        cmd_rebuild_runtime(args)
     elif args.step == "index":
         build_index(args.world)
 
@@ -411,12 +429,16 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_routes)
 
+    p = sub.add_parser("rebuild-runtime", help="Rebuild director, quest lifecycle, NPC agency, rewards, evidence cards, and canon evals.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_rebuild_runtime)
+
     p = sub.add_parser("rebuild-narrative", help="Rebuild NPC motives, ability boundaries, foreshadowing, event chains, and story arcs.")
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_narrative)
 
     p = sub.add_parser("pipeline", help="Advanced single pipeline step.")
-    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "story-arcs", "gameplay", "routes", "ooc-qa", "index"])
+    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "story-arcs", "gameplay", "routes", "ooc-qa", "runtime", "index"])
     p.add_argument("world")
     p.add_argument("input", nargs="?", type=Path)
     p.add_argument("--profile", default="auto")

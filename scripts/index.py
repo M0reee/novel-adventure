@@ -76,6 +76,8 @@ def infer_type(source: str, path: str) -> str:
         return "event_chain"
     if source == "story_arcs.json":
         return "story_arc"
+    if source == "evidence_cards.json":
+        return "evidence_card"
     checks = [
         ("world_laws", "world_law"),
         ("style_signals", "style_signal"),
@@ -260,6 +262,28 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
                         "source_json": source,
                         "quality": float(node.get("confidence", 0.68)),
                         "score": 520.0 if int(node.get("source_priority") or 0) >= 5 else 340.0 if node.get("canon_strength") == "high" else 300.0,
+                    }
+                )
+            elif source == "evidence_cards.json" and "card_id" in node:
+                claim = compact_parts(
+                    [
+                        node.get("rule", ""),
+                        [f"限制：{item}" for item in node.get("limits", [])[:3]],
+                        [f"前置：{item}" for item in node.get("requirements", [])[:3]],
+                    ],
+                    520,
+                )
+                rows.append(
+                    {
+                        "id": node.get("card_id"),
+                        "type": "evidence_card",
+                        "name": node.get("name", ""),
+                        "claim": claim,
+                        "aliases": node.get("type", ""),
+                        "evidence": node.get("source", ""),
+                        "source_json": source,
+                        "quality": 0.95 if node.get("confidence") in {"high", "hard"} else 0.8,
+                        "score": 880.0 if node.get("confidence") == "hard" else 720.0,
                     }
                 )
             elif "name" in node and ("summary" in node or "claims" in node):
