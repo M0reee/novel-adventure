@@ -389,8 +389,8 @@ worlds/<slug>/story_arcs.json
 - `scripts/scene_state.py`：记录当前场景的访问、NPC 记忆、资源调查、机会推进和最近行动，让练武场、坊市、拍卖会等地点逐步积累可用信息。
 - `scripts/arc_runtime.py`：长期任务线只记录关注度和阶段压力，不会每回合强制塞成主线任务；玩家可以暂时不管，世界仍会推进。
 - `scripts/runtime_summary.py`：把经济准备、战斗准备、资源调查和状态缺口明确展示给玩家，帮助玩家做 RPG 决策，而不是靠主持人临场编。
-- `scripts/skill_tree.py`：从 `techniques.json` 和可玩 canon 里抽取干净技能节点，学习后写入 `player.skills`，战斗会按消耗、威力和效果结算。
-- `scripts/equipment_sets.py`：从原著物品和世界观装备名推导装备套装，实际装备后写入 `equipment_set_bonuses` 并进入属性计算。
+- `scripts/skill_tree.py`：从 `techniques.json` 和可玩 canon 里抽取干净技能节点，但它是“技能可得性图谱”，不是直接技能树；玩家必须先获得来源、传承、许可或卷轴，再训练到可用。
+- `scripts/equipment_sets.py`：从原著物品和世界观装备名推导潜在装备协同；没有明确 canon 支撑时 `enabled=false`，不会进入属性计算。
 - `scripts/economy_runtime.py`：维护 `economy_state.json`，记录库存、价格修正、可靠性和市场检查记录，交易不再是静态价格表。
 
 这层的目标是提高自由度：任务、交易、社交、修炼和探索都可以成为有效行动，但只有满足地点、资源、关系、能力边界和原著证据时才会推进。
@@ -417,8 +417,8 @@ python novel.py host-import fanren worlds/fanren/llm_responses.jsonl
 - 装备的 `stats` 会进入最终属性。
 - Buff/Debuff 放在 `active_effects`，通过 `modifiers` 修改属性，并按 `duration_turns` 递减。
 - 技能包含 `mp_cost`、`power`、命中/暴击修正和效果；`mp_cost` 的展示名称由世界资源决定。
-- 技能树来自 `skill_tree.json`；玩家说“学习/修习/领悟某技能”时会检查等级和前置，成功后才加入 `player.skills`。
-- 装备套装来自 `equipment_sets.json`；只有玩家真的装备了对应槽位，套装 bonus 才写入 `equipment_set_bonuses` 并进入 `computed_stats`。
+- 技能可得性来自 `skill_tree.json`；每个节点有 `canon_gate`，原著出现过不等于玩家能学。玩家必须获得来源/传承/许可，再通过 `runtime.skill_progress` 从 `source_known -> training -> usable` 推进，成功后才加入 `player.skills`。
+- 装备协同来自 `equipment_sets.json`；每个协同有 `canon_gate.enabled`。只有 `enabled=true` 且玩家实际装备了对应槽位，bonus 才写入 `equipment_set_bonuses` 并进入 `computed_stats`。
 - 战斗用 `scripts/combat.py` 结算，奖励包含历练/经验、世界货币和物品掉落。
 - 敌人不再只固定反击；`enemy_ai.py` 会根据敌人风格、血量和回合数选择强攻、压制、防守或退守。
 - 经济运行态来自 `economy_state.json`；稀缺物品会有库存、可靠性和价格修正，购买或询价会留下市场记录。
@@ -457,7 +457,7 @@ python scripts/encounter_runtime.py --world doupo_cangqiong
 - 交易还会读取 `economy_state.json`，把库存、可靠性和价格修正纳入实际价格。
 - 修炼会检查突破资源、护法和安全地点；不能一句话直接突破。
 - 战斗调用 `combat.py`，并用 `encounter_state.json` 保存连续遭遇。
-- 学习技能读取 `skill_tree.json`，满足前置后才写入角色技能栏。
+- 学习技能读取 `skill_tree.json` 的 `canon_gate`；未获得来源时只记录“知道该技能存在”，不会直接学会。
 - 任务读取 `quest_templates.json`，玩家明确接取后才写入 `active_quests`，后续目标由 `quest_progress.py` 推进。
 - 场景优先读取 `scene_graph.json`，避免直接使用脏实体表生成“低声/方才/空间”这类出戏对象。
 - 地点行动读取 `location_runtime.json`，会更新当前位置、风险和可用行动。
@@ -658,7 +658,7 @@ python scripts/index.py --world fanren
 - [x] 增加叙事蒸馏评分、能力边界运行时裁定和伏笔揭示运行时
 - [x] 增加 `scene_graph.json`，把原始抽取实体清洗成可游玩的地点、NPC、资源和钩子
 - [x] 增加行动拆解、场景状态、NPC 记忆、资源调查记录和长期线索关注度运行态
-- [x] 增加 `skill_tree.json`、`equipment_sets.json`、`economy_state.json`，补齐技能成长、套装效果和动态经济
+- [x] 增加 canon-gated `skill_tree.json`、`equipment_sets.json`、`economy_state.json`，补齐技能成长、装备协同和动态经济，同时避免 OOC 直接开技能/套装
 - [x] 增加敌人 AI 决策，让敌人按血量、风格和回合选择强攻、压制、防守或退守
 - [ ] EPUB / PDF 导入
 - [ ] 多题材真实小说小样本评测集

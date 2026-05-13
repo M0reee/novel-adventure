@@ -17,6 +17,9 @@ SUPPORT_WORDS = ("炼", "丹", "药", "恢复", "治疗", "增幅", "辅助", "�
 MOVEMENT_WORDS = ("步", "身", "遁", "飞", "行", "闪", "移")
 SKILL_NAME_WORDS = ("掌", "拳", "印", "决", "诀", "步", "剑", "刀", "枪", "尺", "术", "法", "功", "技", "崩", "火", "雷")
 GENERIC_NAMES = {"成功", "斗技", "功法", "高级斗技", "玄阶斗技", "天阶斗技", "玄阶功", "斗气功", "成人仪式"}
+TEACHER_WORDS = ("老师", "师父", "导师", "药老", "长老", "管事", "教", "请教", "指点", "传授")
+SCROLL_WORDS = ("卷轴", "秘籍", "功法", "斗技", "传承", "玉简", "书", "残篇")
+SOURCE_WORDS = (*TEACHER_WORDS, *SCROLL_WORDS, "获得", "得到", "购买", "交换", "拜师", "准许", "资格")
 BAD_NAME_PARTS = (
     "手掌",
     "脚掌",
@@ -101,6 +104,51 @@ def node_stats(category: str, tier: int) -> dict[str, Any]:
     return {"mp_cost": mp_cost, "power": 1.0, "accuracy_modifier": 0.0, "crit_modifier": 0.0}
 
 
+def infer_source_type(summary: str) -> str:
+    if any(word in summary for word in TEACHER_WORDS):
+        return "teacher"
+    if any(word in summary for word in SCROLL_WORDS):
+        return "scroll"
+    if any(word in summary for word in ("血脉", "体质", "种族")):
+        return "bloodline"
+    if any(word in summary for word in ("宗门", "家族", "学院", "势力")):
+        return "faction"
+    if any(word in summary for word in ("自创", "领悟", "顿悟")):
+        return "self_created"
+    return "unknown"
+
+
+def canon_gate(row: dict[str, Any], name: str, summary: str, tier: int) -> dict[str, Any]:
+    source_type = infer_source_type(summary)
+    evidence_chunks = row.get("evidence_chunk_ids") or row.get("evidence") or []
+    if not isinstance(evidence_chunks, list):
+        evidence_chunks = [evidence_chunks]
+    fact_id = row.get("fact_id") or row.get("id")
+    evidence_fact_ids = [fact_id] if fact_id else []
+    canon_confidence = "high" if evidence_chunks or evidence_fact_ids or row.get("source") == "profile_seed" else "medium"
+    return {
+        "canon_status": "confirmed" if canon_confidence == "high" else "inferred",
+        "canon_confidence": canon_confidence,
+        "playable_confidence": "medium" if source_type != "unknown" else "low",
+        "source_type": source_type,
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": True,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+            "level": max(1, tier),
+            "requires_source": True,
+            "source_type": source_type,
+            "relationship_or_permission": source_type in {"teacher", "faction"},
+            "item_or_text": source_type == "scroll",
+            "safe_training": True,
+        },
+        "evidence_fact_ids": evidence_fact_ids,
+        "evidence_chunk_ids": evidence_chunks[:5],
+        "ooc_policy": f"原著出现「{name}」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。",
+    }
+
+
 def infer_tier(name: str, summary: str, fallback_index: int) -> int:
     text = f"{name} {summary}"
     if any(word in text for word in ("低级", "入门", "基础")):
@@ -145,6 +193,20 @@ def fallback_nodes(profile: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "skill_id": "guarded_strike",
             "name": f"入门{skill_label}",
+            "canon_gate": {
+                "canon_status": "starter",
+                "canon_confidence": "medium",
+                "playable_confidence": "high",
+                "source_type": "starter",
+                "availability": "learned_at_start",
+                "learnable_by_player": True,
+                "acquisition_required": False,
+                "numeric_source": "starter_low_impact",
+                "unlock_conditions": {"level": 1, "requires_source": False},
+                "evidence_fact_ids": [],
+                "evidence_chunk_ids": [],
+                "ooc_policy": "起步技能只代表最低限度自保能力，不声称来自原著主角传承。",
+            },
             "category": "attack",
             "tier": 1,
             "unlock": {"level": 1, "requires": []},
@@ -154,6 +216,20 @@ def fallback_nodes(profile: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "skill_id": "steady_guard",
             "name": f"稳守{skill_label}",
+            "canon_gate": {
+                "canon_status": "starter",
+                "canon_confidence": "medium",
+                "playable_confidence": "medium",
+                "source_type": "starter",
+                "availability": "trainable_basic",
+                "learnable_by_player": "conditional",
+                "acquisition_required": False,
+                "numeric_source": "starter_low_impact",
+                "unlock_conditions": {"level": 2, "requires_source": False},
+                "evidence_fact_ids": [],
+                "evidence_chunk_ids": [],
+                "ooc_policy": "基础防守动作只提供低影响数值，不冒充原著专属技能。",
+            },
             "category": "defense",
             "tier": 1,
             "unlock": {"level": 2, "requires": ["guarded_strike"]},
@@ -174,10 +250,12 @@ def build_skill_tree(world: str) -> dict[str, Any]:
         category = skill_category(name, summary)
         tier = infer_tier(name, summary, idx)
         runtime = node_stats(category, tier)
+        gate = canon_gate(row, name, summary, tier)
         nodes.append(
             {
                 "skill_id": stable_id("skill", name),
                 "name": name,
+                "canon_gate": gate,
                 "category": category,
                 "tier": tier,
                 "unlock": {"level": max(1, tier), "requires": [] if tier <= 1 or not nodes else [nodes[-1]["skill_id"]]},
@@ -201,7 +279,7 @@ def build_skill_tree(world: str) -> dict[str, Any]:
             previous_by_tier[tier] = str(node.get("skill_id"))
     output = {
         "world": world,
-        "policy": "Skill nodes are derived from distilled techniques/playable canon. Missing numeric values are low-impact playable parameters, not hard canon.",
+        "policy": "Skill nodes are canon-gated availability records. A skill appearing in the source does not mean the player can learn it; source, permission, prerequisites and training state must be satisfied first.",
         "resource_name": profile.get("systems", {}).get("resource_name", "能量"),
         "skill_name": profile.get("systems", {}).get("skill_name", "技能"),
         "nodes": nodes,
@@ -223,6 +301,28 @@ def learned_skill_ids(player: dict[str, Any]) -> set[str]:
     return {str(skill.get("skill_id")) for skill in player.get("skills", []) if isinstance(skill, dict)}
 
 
+def skill_runtime(state: dict[str, Any]) -> dict[str, Any]:
+    return state.setdefault("runtime", {}).setdefault("skill_progress", {})
+
+
+def source_access_granted(node: dict[str, Any], player_input: str, state: dict[str, Any]) -> bool:
+    gate = node.get("canon_gate", {})
+    if not gate.get("acquisition_required", True):
+        return True
+    if any(word in player_input for word in SOURCE_WORDS):
+        return True
+    progress = skill_runtime(state).get(str(node.get("skill_id")), {})
+    return progress.get("state") in {"source_acquired", "training", "usable"}
+
+
+def training_gain(player_input: str) -> int:
+    if any(word in player_input for word in ("练成", "掌握", "小成", "反复", "闭关")):
+        return 45
+    if any(word in player_input for word in ("训练", "练习", "修习", "学习", "领悟")):
+        return 30
+    return 15
+
+
 def learn_skill(world: str, state: dict[str, Any], player_input: str) -> dict[str, Any] | None:
     if not any(word in player_input for word in ("学习", "修习", "领悟", "练成", "掌握")):
         return None
@@ -236,11 +336,45 @@ def learn_skill(world: str, state: dict[str, Any], player_input: str) -> dict[st
             continue
         if node.get("skill_id") in known:
             return {"ok": False, "reason": f"你已经掌握「{name}」。"}
+        progress_rows = skill_runtime(state)
+        progress = progress_rows.setdefault(
+            str(node.get("skill_id")),
+            {
+                "skill_id": node.get("skill_id"),
+                "name": name,
+                "state": "rumored",
+                "progress": 0,
+                "source_type": node.get("canon_gate", {}).get("source_type", "unknown"),
+                "notes": [],
+            },
+        )
+        if not source_access_granted(node, player_input, state):
+            progress["state"] = "source_known"
+            progress.setdefault("notes", []).append("已知道该技能存在，但尚未获得传承、卷轴、导师许可或资格。")
+            progress["notes"] = progress["notes"][-5:]
+            return {
+                "ok": False,
+                "reason": f"你知道「{name}」存在，但还没有获得来源/传承，不能直接学会。",
+                "progress": progress,
+                "gate": node.get("canon_gate", {}),
+            }
         unlock = node.get("unlock", {})
         level_req = int(unlock.get("level", 1))
         missing = [req for req in unlock.get("requires", []) if req not in known]
         if int(stats.get("level", 1)) < level_req or missing:
-            return {"ok": False, "reason": f"「{name}」还不满足学习条件：等级至少 {level_req}，前置 {missing or '无'}。"}
+            progress["state"] = "blocked_by_prereq"
+            return {"ok": False, "reason": f"「{name}」还不满足学习条件：等级至少 {level_req}，前置 {missing or '无'}。", "progress": progress, "gate": node.get("canon_gate", {})}
+        progress["state"] = "training"
+        progress["progress"] = min(100, int(progress.get("progress", 0)) + training_gain(player_input))
+        progress.setdefault("notes", []).append(f"训练推进到 {progress['progress']}%。")
+        progress["notes"] = progress["notes"][-5:]
+        if progress["progress"] < 100:
+            return {
+                "ok": False,
+                "reason": f"你开始修习「{name}」，但还没有达到可实战使用。当前训练进度 {progress['progress']}%。",
+                "progress": progress,
+                "gate": node.get("canon_gate", {}),
+            }
         runtime = node.get("runtime", {})
         learned = {
             "skill_id": node.get("skill_id"),
@@ -254,7 +388,8 @@ def learn_skill(world: str, state: dict[str, Any], player_input: str) -> dict[st
             "description": node.get("canon_summary", ""),
         }
         player.setdefault("skills", []).append(learned)
-        return {"ok": True, "skill": learned, "node": node}
+        progress["state"] = "usable"
+        return {"ok": True, "skill": learned, "node": node, "progress": progress}
     return None
 
 

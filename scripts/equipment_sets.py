@@ -14,6 +14,7 @@ WEAPON_WORDS = ("剑", "刀", "枪", "尺", "棍", "杖", "弓", "刃", "武器"
 ARMOR_WORDS = ("甲", "衣", "袍", "盾", "护", "防具")
 ACCESSORY_WORDS = ("戒", "符", "令牌", "坠", "环", "骨", "模块", "插件", "封印物")
 BAD_ITEM_NAMES = {"卷轴", "丹药", "药材", "一些药", "两种丹药", "四品炼药", "传出药", "其纳戒", "当筑基灵液", "第一瓶筑基灵液"}
+COMBO_WORDS = ("套装", "成套", "组合", "共鸣", "联动", "五件", "组件", "阵眼", "魂骨套装", "模块联动")
 
 
 def stable_id(prefix: str, name: str) -> str:
@@ -37,6 +38,23 @@ def valid_item(name: str) -> bool:
     if name in BAD_ITEM_NAMES or name.startswith(("这", "那", "其", "当", "第一", "一瓶", "七瓶")):
         return False
     return not any(mark in name for mark in ("。", "，", "；", "：", "\n", "听得", "什么"))
+
+
+def combo_supported(*texts: str) -> bool:
+    joined = " ".join(texts)
+    return any(word in joined for word in COMBO_WORDS)
+
+
+def gate(enabled: bool, reason: str, source: str = "items.json") -> dict[str, Any]:
+    return {
+        "enabled": enabled,
+        "canon_status": "confirmed" if enabled else "inferred_disabled",
+        "canon_confidence": "high" if enabled else "low",
+        "playable_confidence": "medium" if enabled else "low",
+        "source": source,
+        "numeric_source": "canon_supported_playable" if enabled else "disabled_no_canon_support",
+        "ooc_policy": reason,
+    }
 
 
 def build_equipment_sets(world: str) -> dict[str, Any]:
@@ -64,10 +82,12 @@ def build_equipment_sets(world: str) -> dict[str, Any]:
         {
             "set_id": "starter_training_set",
             "name": starter_name,
+            "enabled": False,
+            "canon_gate": gate(False, "起步装备已经各自提供基础属性；没有原著证据时不额外启用套装加成。", "starter_equipment"),
             "required_slots": starter_required,
             "piece_count": len(starter_required),
             "bonuses": {"attack": 1, "defense": 1},
-            "notes": "默认起步组合，低影响补正，用于让装备系统可见。",
+            "notes": "默认起步组合仅作为 UI/结构展示，默认不启用额外属性。",
             "source": "starter_equipment",
         }
     ]
@@ -79,27 +99,33 @@ def build_equipment_sets(world: str) -> dict[str, Any]:
         weapon = by_slot["weapon"][0]
         armor = by_slot["armor"][0]
         set_name = f"{weapon['name']}与{armor['name']}"
+        enabled = combo_supported(weapon.get("summary", ""), armor.get("summary", ""))
         sets.append(
             {
                 "set_id": stable_id("set", set_name),
                 "name": set_name,
+                "enabled": enabled,
+                "canon_gate": gate(enabled, "只有原文明确支持成套、共鸣、组合或模块联动时才启用数值加成。"),
                 "required_slots": {"weapon": weapon["name"], "armor": armor["name"]},
                 "piece_count": 2,
                 "bonuses": {"attack": 2, "defense": 1},
-                "notes": "从原著物品名推导的轻量套装效果；数值是可玩参数，不等同硬 canon。",
+                "notes": "从原著物品名推导的潜在装备协同；未启用时不进入属性计算。",
                 "source": "items.json",
             }
         )
     if by_slot["accessory"]:
         accessory = by_slot["accessory"][0]
+        enabled = combo_supported(accessory.get("summary", ""))
         sets.append(
             {
                 "set_id": stable_id("set", accessory["name"]),
                 "name": f"{accessory['name']}专精",
+                "enabled": enabled,
+                "canon_gate": gate(enabled, "单件器物只有在原文明确说明特殊加成、共鸣或代价时才启用数值效果。"),
                 "required_slots": {"accessory": accessory["name"]},
                 "piece_count": 1,
                 "bonuses": {"damage_reduction": 0.02},
-                "notes": "特殊器物/饰品单件效果，只在玩家实际装备后生效。",
+                "notes": "特殊器物潜在效果；默认不把储物、身份或剧情用途转成战斗加成。",
                 "source": "items.json",
             }
         )
@@ -136,6 +162,8 @@ def active_set_bonuses(world: str, player: dict[str, Any]) -> list[dict[str, Any
     bonuses: list[dict[str, Any]] = []
     for row in data.get("sets", []):
         required = row.get("required_slots", {})
+        if not row.get("enabled", False):
+            continue
         if required and all(names.get(slot) == required_name for slot, required_name in required.items()):
             bonuses.append({"set_id": row.get("set_id"), "name": row.get("name"), "modifiers": row.get("bonuses", {}), "notes": row.get("notes", "")})
     return bonuses

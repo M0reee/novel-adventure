@@ -173,13 +173,19 @@ def resolve_skill_learning(world: str, player_input: str, state: dict[str, Any])
     if result is None:
         return None
     if not result.get("ok"):
+        progress = result.get("progress") or {}
+        state_text = str(progress.get("state", "blocked"))
+        status = "conditional" if state_text in {"source_known", "training"} else "blocked"
+        state_changes = []
+        if progress:
+            state_changes.append(f"技能状态：{progress.get('name')} -> {state_text}（{progress.get('progress', 0)}%）")
         return {
             "kind": "cultivation",
-            "status": "blocked",
-            "verdict": "技能学习条件不足",
+            "status": status,
+            "verdict": "技能受 canon gate 限制",
             "consequence": str(result.get("reason", "当前条件不足，不能直接学会。")),
-            "state_changes": [],
-            "options": ["先训练基础属性。", "寻找导师确认前置条件。", "换一个低阶技能。"],
+            "state_changes": state_changes,
+            "options": ["寻找技能来源或传承。", "请可信导师确认前置条件。", "先训练基础属性。"],
         }
     skill = result.get("skill", {})
     return {

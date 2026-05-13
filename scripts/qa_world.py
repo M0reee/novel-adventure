@@ -298,7 +298,17 @@ def qa(world: str) -> None:
         ("relationship_rules", len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])) >= 3, str(len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])))),
         ("scene_graph", len(scene_graph.get("locations", [])) >= 1 and len(scene_graph.get("npcs", [])) >= 1, f"locations={len(scene_graph.get('locations', []))} npcs={len(scene_graph.get('npcs', []))}"),
         ("skill_tree", len(skill_tree.get("nodes", [])) >= 1, str(len(skill_tree.get("nodes", [])))),
+        (
+            "skill_canon_gate",
+            all(isinstance(row, dict) and row.get("canon_gate") for row in skill_tree.get("nodes", [])),
+            "gated" if all(isinstance(row, dict) and row.get("canon_gate") for row in skill_tree.get("nodes", [])) else "missing gates",
+        ),
         ("equipment_sets", len(equipment_sets.get("sets", [])) >= 1, str(len(equipment_sets.get("sets", [])))),
+        (
+            "equipment_canon_gate",
+            all(isinstance(row, dict) and row.get("canon_gate") and "enabled" in row for row in equipment_sets.get("sets", [])),
+            "gated" if all(isinstance(row, dict) and row.get("canon_gate") and "enabled" in row for row in equipment_sets.get("sets", [])) else "missing gates",
+        ),
         ("economy_state", "items" in economy_state, str(len(economy_state.get("items", [])))),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
         ("npc_motives", len(npc_motives.get("npcs", [])) >= min(3, max(1, int(entity_counts.get("npc", 0)))), str(len(npc_motives.get("npcs", [])))),

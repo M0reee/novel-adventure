@@ -1,12 +1,33 @@
 {
   "world": "doupo_cangqiong",
-  "policy": "Skill nodes are derived from distilled techniques/playable canon. Missing numeric values are low-impact playable parameters, not hard canon.",
+  "policy": "Skill nodes are canon-gated availability records. A skill appearing in the source does not mean the player can learn it; source, permission, prerequisites and training state must be satisfied first.",
   "resource_name": "斗气",
   "skill_name": "斗技",
   "nodes": [
     {
       "skill_id": "skill_61769ae83d",
       "name": "三千雷动",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 3,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「三千雷动」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
       "category": "attack",
       "tier": 3,
       "unlock": {
@@ -25,6 +46,27 @@
     {
       "skill_id": "skill_31dffbb3d1",
       "name": "八极崩",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 3,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「八极崩」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
       "category": "attack",
       "tier": 3,
       "unlock": {
@@ -43,6 +85,27 @@
     {
       "skill_id": "skill_b06a30dd60",
       "name": "佛怒火莲",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 5,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「佛怒火莲」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
       "category": "attack",
       "tier": 5,
       "unlock": {
@@ -63,6 +126,27 @@
     {
       "skill_id": "skill_ade5eba5ff",
       "name": "焚诀",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 5,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「焚诀」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
       "category": "attack",
       "tier": 5,
       "unlock": {

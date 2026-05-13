@@ -6,6 +6,16 @@
     {
       "set_id": "starter_training_set",
       "name": "入门随身器物组合",
+      "enabled": false,
+      "canon_gate": {
+        "enabled": false,
+        "canon_status": "inferred_disabled",
+        "canon_confidence": "low",
+        "playable_confidence": "low",
+        "source": "starter_equipment",
+        "numeric_source": "disabled_no_canon_support",
+        "ooc_policy": "起步装备已经各自提供基础属性；没有原著证据时不额外启用套装加成。"
+      },
       "required_slots": {
         "primary": "入门武器",
         "defense": "粗制护具"
@@ -15,12 +25,22 @@
         "attack": 1,
         "defense": 1
       },
-      "notes": "默认起步组合，低影响补正，用于让装备系统可见。",
+      "notes": "默认起步组合仅作为 UI/结构展示，默认不启用额外属性。",
       "source": "starter_equipment"
     },
     {
       "set_id": "set_388d248a49",
       "name": "纳戒专精",
+      "enabled": false,
+      "canon_gate": {
+        "enabled": false,
+        "canon_status": "inferred_disabled",
+        "canon_confidence": "low",
+        "playable_confidence": "low",
+        "source": "items.json",
+        "numeric_source": "disabled_no_canon_support",
+        "ooc_policy": "单件器物只有在原文明确说明特殊加成、共鸣或代价时才启用数值效果。"
+      },
       "required_slots": {
         "accessory": "纳戒"
       },
@@ -28,7 +48,7 @@
       "bonuses": {
         "damage_reduction": 0.02
       },
-      "notes": "特殊器物/饰品单件效果，只在玩家实际装备后生效。",
+      "notes": "特殊器物潜在效果；默认不把储物、身份或剧情用途转成战斗加成。",
       "source": "items.json"
     }
   ]
