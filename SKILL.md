@@ -50,7 +50,7 @@ Optional LLM-assisted offline distillation:
 
 Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
 
-This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `economy_state.json`, `skill_tree.json`, `equipment_sets.json`, `story_arcs.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `scene_graph.json`, `encounter_state.json`, `world_events.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
+This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `economy_state.json`, `skill_tree.json`, `equipment_sets.json`, `acquisition_routes.json`, `story_arcs.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `scene_graph.json`, `encounter_state.json`, `world_events.json`, `ooc_report.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 ### First-Run Use
 
@@ -100,15 +100,19 @@ Manual build:
    `python scripts/gameplay_profile.py --world <slug> --rebuild`
 15. Generate long-running world events:
    `python scripts/world_events.py --world <slug> --rebuild`
-16. Generate opening:
+16. Generate acquisition routes:
+   `python scripts/acquisition_routes.py --world <slug> --rebuild`
+17. Run OOC availability QA:
+   `python scripts/ooc_qa.py --world <slug>`
+18. Generate opening:
    `python scripts/opening.py --world <slug> --rebuild`
-17. Distill merged canon into game-ready rules:
+19. Distill merged canon into game-ready rules:
    `python scripts/distill_playable.py --world <slug>`
-18. Build retrieval index:
+20. Build retrieval index:
    `python scripts/index.py --world <slug>`
-19. Score narrative distillation quality:
+21. Score narrative distillation quality:
    `python scripts/distillation_qa.py --world <slug>`
-20. Optional deterministic QA:
+22. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -155,6 +159,12 @@ Progression rule: learnable skills live in `skill_tree.json`; equipment set bonu
 
 OOC guardrail: never treat "appears in the novel" as "available to the player." Main-character-only skills, bloodline powers, faction secrets, one-off artifacts, sealed items, soul bones, cyberware modules, rituals, or equipment synergies require explicit acquisition and prerequisite checks. If evidence is weak, expose it as rumor, clue, or potential route, not as an immediately usable rule.
 
+Acquisition-route rule: skills, rare items, equipment sets, and restricted locations should use `acquisition_routes.json` as their route map. Offer the player concrete next steps such as discover/source/train/verify or locate/verify/acquire/use, but do not present internal task-step checklists as free-roam options. If a route is weak or inferred, describe it as a rumor or lead until the player verifies it in-world.
+
+Canon-evidence rule: each turn should expose concise `Canon 证据` when a ruling depends on retrieved canon, a `canon_gate`, an acquisition route, or a conservative block. Show enough evidence for the player to understand why an action succeeded, failed, or became conditional, but never dump long raw source text into the response.
+
+Runtime-layer rule: use `player_state.json.runtime.layers` to keep canon evidence, derived playable rules, confirmed facts, rumors, and rulings separate. Do not promote rumors or route leads into confirmed world state until the player verifies them through action.
+
 World-event rule: long-running events live in `world_events.json` and are advanced by `run_turn.py`. Mention active or expired events when relevant; ignored events may expire and change the world, while intervened events may create quests, access, resources, relationships, or risk reduction. Event effects must be applied through `runtime_effects.py` so market, location, relationship, state flags, and follow-up events are structured.
 
 Narrative intelligence rule: `npc_motives.json`, `ability_boundaries.json`, `foreshadowing.json`, `event_chains.json`, and `story_arcs.json` are host-facing canon-derived guidance. Use NPC motives for social offers/refusals, ability boundaries for special powers and item/technique use, foreshadowing to avoid premature spoilers, event chains for cause-and-effect pressure, and story arcs for original-novel long-running goals or recurring mission loops. These files guide rulings but cannot override canon patches, retrieved canon, or player state.
@@ -166,6 +176,8 @@ Ability-boundary rule: when the player uses, attacks with, consumes, equips, act
 Foreshadowing rule: investigation, questioning, secret, or truth-seeking actions may reveal surface clues from `foreshadowing.json`, but hidden truth cannot be disclosed until trust, evidence, location, or event conditions are met. Track discovered clues in `player_state.json` under `discovered_foreshadows`.
 
 Distillation-quality rule: after building, importing host responses, or rebuilding narrative intelligence, run `/novel-score <slug>` or `python novel.py score <slug>`. Treat low scores as a build problem, not a runtime narration problem; improve extraction, LLM-assisted chunks, or canon patches before expecting stable long-form play.
+
+OOC QA rule: after building or rebuilding gameplay projections, run `python scripts/ooc_qa.py --world <slug>` or `/novel-qa <slug>`. If `ooc_report.json` fails, fix gates/routes before playtesting; runtime narration should not compensate for missing canon availability data.
 
 Canon-first gameplay rule: base math remains in `game_math.py`, but `combat.py` and `world_events.py` must load `gameplay_profile.json` through `gameplay_profile.py` before applying any special combat or event logic. `gameplay_profile.json` may enable realm pressure, ammo/charge, contamination, alert tracking, market windows, faction reaction, location access, crafting, or backlash only when distilled canon contains supporting evidence. Broad genre labels are low-confidence fallback only; they must never override canon or introduce unsupported mechanics.
 

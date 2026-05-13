@@ -1,0 +1,678 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Acquisition routes explain how a player may canon-safely gain skills, items, and location access. They are gates, not grants.",
+  "routes": [
+    {
+      "route_id": "route_skill_61769ae83d",
+      "target_type": "skill",
+      "target": "三千雷动",
+      "state": "locked_until_source",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 3,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「三千雷动」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
+      "steps": [
+        {
+          "step_id": "discover",
+          "title": "确认技能存在",
+          "check": "必须来自检索 canon、NPC 口述、卷轴、传承或事件线索。",
+          "result": "只获得 rumor/source_known，不写入技能栏。"
+        },
+        {
+          "step_id": "source",
+          "title": "获得来源或许可",
+          "check": "需要 source_type=scroll 对应的导师、卷轴、势力资格、血脉或自创条件。",
+          "result": "进入 source_acquired。"
+        },
+        {
+          "step_id": "train",
+          "title": "训练到可用",
+          "check": "需要安全地点、时间、资源和失败代价裁定。",
+          "result": "runtime.skill_progress 达到 100%。"
+        },
+        {
+          "step_id": "verify",
+          "title": "实战或低风险验证",
+          "check": "第一次使用必须按能力边界结算消耗和失败风险。",
+          "result": "写入 player.skills。"
+        }
+      ],
+      "ooc_policy": "原著出现「三千雷动」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+    },
+    {
+      "route_id": "route_skill_31dffbb3d1",
+      "target_type": "skill",
+      "target": "八极崩",
+      "state": "locked_until_source",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 3,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「八极崩」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
+      "steps": [
+        {
+          "step_id": "discover",
+          "title": "确认技能存在",
+          "check": "必须来自检索 canon、NPC 口述、卷轴、传承或事件线索。",
+          "result": "只获得 rumor/source_known，不写入技能栏。"
+        },
+        {
+          "step_id": "source",
+          "title": "获得来源或许可",
+          "check": "需要 source_type=scroll 对应的导师、卷轴、势力资格、血脉或自创条件。",
+          "result": "进入 source_acquired。"
+        },
+        {
+          "step_id": "train",
+          "title": "训练到可用",
+          "check": "需要安全地点、时间、资源和失败代价裁定。",
+          "result": "runtime.skill_progress 达到 100%。"
+        },
+        {
+          "step_id": "verify",
+          "title": "实战或低风险验证",
+          "check": "第一次使用必须按能力边界结算消耗和失败风险。",
+          "result": "写入 player.skills。"
+        }
+      ],
+      "ooc_policy": "原著出现「八极崩」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+    },
+    {
+      "route_id": "route_skill_b06a30dd60",
+      "target_type": "skill",
+      "target": "佛怒火莲",
+      "state": "locked_until_source",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 5,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「佛怒火莲」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
+      "steps": [
+        {
+          "step_id": "discover",
+          "title": "确认技能存在",
+          "check": "必须来自检索 canon、NPC 口述、卷轴、传承或事件线索。",
+          "result": "只获得 rumor/source_known，不写入技能栏。"
+        },
+        {
+          "step_id": "source",
+          "title": "获得来源或许可",
+          "check": "需要 source_type=scroll 对应的导师、卷轴、势力资格、血脉或自创条件。",
+          "result": "进入 source_acquired。"
+        },
+        {
+          "step_id": "train",
+          "title": "训练到可用",
+          "check": "需要安全地点、时间、资源和失败代价裁定。",
+          "result": "runtime.skill_progress 达到 100%。"
+        },
+        {
+          "step_id": "verify",
+          "title": "实战或低风险验证",
+          "check": "第一次使用必须按能力边界结算消耗和失败风险。",
+          "result": "写入 player.skills。"
+        }
+      ],
+      "ooc_policy": "原著出现「佛怒火莲」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+    },
+    {
+      "route_id": "route_skill_ade5eba5ff",
+      "target_type": "skill",
+      "target": "焚诀",
+      "state": "locked_until_source",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "canon_confidence": "high",
+        "playable_confidence": "medium",
+        "source_type": "scroll",
+        "availability": "rumored",
+        "learnable_by_player": "conditional",
+        "acquisition_required": true,
+        "numeric_source": "derived_low_impact",
+        "unlock_conditions": {
+          "level": 5,
+          "requires_source": true,
+          "source_type": "scroll",
+          "relationship_or_permission": false,
+          "item_or_text": true,
+          "safe_training": true
+        },
+        "evidence_fact_ids": [],
+        "evidence_chunk_ids": [],
+        "ooc_policy": "原著出现「焚诀」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+      },
+      "steps": [
+        {
+          "step_id": "discover",
+          "title": "确认技能存在",
+          "check": "必须来自检索 canon、NPC 口述、卷轴、传承或事件线索。",
+          "result": "只获得 rumor/source_known，不写入技能栏。"
+        },
+        {
+          "step_id": "source",
+          "title": "获得来源或许可",
+          "check": "需要 source_type=scroll 对应的导师、卷轴、势力资格、血脉或自创条件。",
+          "result": "进入 source_acquired。"
+        },
+        {
+          "step_id": "train",
+          "title": "训练到可用",
+          "check": "需要安全地点、时间、资源和失败代价裁定。",
+          "result": "runtime.skill_progress 达到 100%。"
+        },
+        {
+          "step_id": "verify",
+          "title": "实战或低风险验证",
+          "check": "第一次使用必须按能力边界结算消耗和失败风险。",
+          "result": "写入 player.skills。"
+        }
+      ],
+      "ooc_policy": "原著出现「焚诀」不等于玩家已学会；必须先获得来源、许可或传承，再训练到可用。"
+    },
+    {
+      "route_id": "route_item_9d157dbb93",
+      "target_type": "item",
+      "target": "异火",
+      "state": "not_owned",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "item_market_playable"
+      },
+      "steps": [
+        {
+          "step_id": "locate",
+          "title": "确认来源",
+          "check": "读取 item_market、NPC 线索、地点资源或任务奖励。",
+          "result": "获得来源情报。"
+        },
+        {
+          "step_id": "verify",
+          "title": "验真与适配",
+          "check": "检查可靠性、使用条件、境界/身份/风险。",
+          "result": "确认是否适合当前玩家。"
+        },
+        {
+          "step_id": "acquire",
+          "title": "购买、交换、任务或探索获得",
+          "check": "必须支付货币、人情、风险或完成条件。",
+          "result": "写入 inventory。"
+        },
+        {
+          "step_id": "use",
+          "title": "使用或装备",
+          "check": "通过 inventory_runtime 结算效果。",
+          "result": "写入 active_effects/equipment 或消耗。"
+        }
+      ],
+      "ooc_policy": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过。"
+    },
+    {
+      "route_id": "route_item_388d248a49",
+      "target_type": "item",
+      "target": "纳戒",
+      "state": "not_owned",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "item_market_playable"
+      },
+      "steps": [
+        {
+          "step_id": "locate",
+          "title": "确认来源",
+          "check": "读取 item_market、NPC 线索、地点资源或任务奖励。",
+          "result": "获得来源情报。"
+        },
+        {
+          "step_id": "verify",
+          "title": "验真与适配",
+          "check": "检查可靠性、使用条件、境界/身份/风险。",
+          "result": "确认是否适合当前玩家。"
+        },
+        {
+          "step_id": "acquire",
+          "title": "购买、交换、任务或探索获得",
+          "check": "必须支付货币、人情、风险或完成条件。",
+          "result": "写入 inventory。"
+        },
+        {
+          "step_id": "use",
+          "title": "使用或装备",
+          "check": "通过 inventory_runtime 结算效果。",
+          "result": "写入 active_effects/equipment 或消耗。"
+        }
+      ],
+      "ooc_policy": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过。"
+    },
+    {
+      "route_id": "route_item_6f0c68a49a",
+      "target_type": "item",
+      "target": "玄重尺",
+      "state": "not_owned",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "item_market_playable"
+      },
+      "steps": [
+        {
+          "step_id": "locate",
+          "title": "确认来源",
+          "check": "读取 item_market、NPC 线索、地点资源或任务奖励。",
+          "result": "获得来源情报。"
+        },
+        {
+          "step_id": "verify",
+          "title": "验真与适配",
+          "check": "检查可靠性、使用条件、境界/身份/风险。",
+          "result": "确认是否适合当前玩家。"
+        },
+        {
+          "step_id": "acquire",
+          "title": "购买、交换、任务或探索获得",
+          "check": "必须支付货币、人情、风险或完成条件。",
+          "result": "写入 inventory。"
+        },
+        {
+          "step_id": "use",
+          "title": "使用或装备",
+          "check": "通过 inventory_runtime 结算效果。",
+          "result": "写入 active_effects/equipment 或消耗。"
+        }
+      ],
+      "ooc_policy": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过。"
+    },
+    {
+      "route_id": "route_item_957a6e91f8",
+      "target_type": "item",
+      "target": "筑基灵液",
+      "state": "not_owned",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "item_market_playable"
+      },
+      "steps": [
+        {
+          "step_id": "locate",
+          "title": "确认来源",
+          "check": "读取 item_market、NPC 线索、地点资源或任务奖励。",
+          "result": "获得来源情报。"
+        },
+        {
+          "step_id": "verify",
+          "title": "验真与适配",
+          "check": "检查可靠性、使用条件、境界/身份/风险。",
+          "result": "确认是否适合当前玩家。"
+        },
+        {
+          "step_id": "acquire",
+          "title": "购买、交换、任务或探索获得",
+          "check": "必须支付货币、人情、风险或完成条件。",
+          "result": "写入 inventory。"
+        },
+        {
+          "step_id": "use",
+          "title": "使用或装备",
+          "check": "通过 inventory_runtime 结算效果。",
+          "result": "写入 active_effects/equipment 或消耗。"
+        }
+      ],
+      "ooc_policy": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过。"
+    },
+    {
+      "route_id": "route_item_fbd3e6ede1",
+      "target_type": "item",
+      "target": "魔核",
+      "state": "not_owned",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "item_market_playable"
+      },
+      "steps": [
+        {
+          "step_id": "locate",
+          "title": "确认来源",
+          "check": "读取 item_market、NPC 线索、地点资源或任务奖励。",
+          "result": "获得来源情报。"
+        },
+        {
+          "step_id": "verify",
+          "title": "验真与适配",
+          "check": "检查可靠性、使用条件、境界/身份/风险。",
+          "result": "确认是否适合当前玩家。"
+        },
+        {
+          "step_id": "acquire",
+          "title": "购买、交换、任务或探索获得",
+          "check": "必须支付货币、人情、风险或完成条件。",
+          "result": "写入 inventory。"
+        },
+        {
+          "step_id": "use",
+          "title": "使用或装备",
+          "check": "通过 inventory_runtime 结算效果。",
+          "result": "写入 active_effects/equipment 或消耗。"
+        }
+      ],
+      "ooc_policy": "物品存在不等于市场有货；剧情限定物品不能被普通购买绕过。"
+    },
+    {
+      "route_id": "route_location_c5e7474e47",
+      "target_type": "location",
+      "target": "乌坦城",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    },
+    {
+      "route_id": "route_location_529666d6d8",
+      "target_type": "location",
+      "target": "魔兽山脉",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    },
+    {
+      "route_id": "route_location_bd7e3a3b5e",
+      "target_type": "location",
+      "target": "云岚宗",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    },
+    {
+      "route_id": "route_location_755f5e4864",
+      "target_type": "location",
+      "target": "迦南学院",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    },
+    {
+      "route_id": "route_location_a758844093",
+      "target_type": "location",
+      "target": "黑角域",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    },
+    {
+      "route_id": "route_location_ad86aee31a",
+      "target_type": "location",
+      "target": "萧家",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    },
+    {
+      "route_id": "route_location_93e08a3dd9",
+      "target_type": "location",
+      "target": "中州",
+      "state": "unknown_or_unreached",
+      "canon_gate": {
+        "canon_status": "confirmed",
+        "acquisition_required": true,
+        "numeric_source": "location_runtime_playable"
+      },
+      "steps": [
+        {
+          "step_id": "clue",
+          "title": "获得地点线索",
+          "check": "通过 NPC、地图、任务、事件或传闻发现入口。",
+          "result": "地点进入 known。"
+        },
+        {
+          "step_id": "access",
+          "title": "满足进入条件",
+          "check": "检查身份、路线、风险、时间窗口和敌对势力。",
+          "result": "地点进入 accessible。"
+        },
+        {
+          "step_id": "prepare",
+          "title": "准备撤退和资源",
+          "check": "高风险地点必须准备补给、队友、护法或退路。",
+          "result": "降低失败后果。"
+        },
+        {
+          "step_id": "enter",
+          "title": "进入并触发现场状态",
+          "check": "写入 current_location 和 location flags。",
+          "result": "进入可探索状态。"
+        }
+      ],
+      "ooc_policy": "知道地点名字不等于能瞬移进入；必须有路线、权限或风险承受能力。"
+    }
+  ]
+}

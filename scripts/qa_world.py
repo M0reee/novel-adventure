@@ -28,6 +28,8 @@ FULL_REQUIRED_FILES = [
     "skill_tree.json",
     "equipment_sets.json",
     "economy_state.json",
+    "acquisition_routes.json",
+    "ooc_report.json",
     "encounter_state.json",
     "npc_motives.json",
     "ability_boundaries.json",
@@ -59,6 +61,8 @@ PRESET_REQUIRED_FILES = [
     "skill_tree.json",
     "equipment_sets.json",
     "economy_state.json",
+    "acquisition_routes.json",
+    "ooc_report.json",
     "encounter_state.json",
     "npc_motives.json",
     "ability_boundaries.json",
@@ -262,6 +266,8 @@ def qa(world: str) -> None:
     skill_tree = read_json(wdir / "skill_tree.json", {})
     equipment_sets = read_json(wdir / "equipment_sets.json", {})
     economy_state = read_json(wdir / "economy_state.json", {})
+    acquisition_routes = read_json(wdir / "acquisition_routes.json", {})
+    ooc_report = read_json(wdir / "ooc_report.json", {})
     encounter_state = read_json(wdir / "encounter_state.json", {})
     npc_motives = read_json(wdir / "npc_motives.json", {})
     ability_boundaries = read_json(wdir / "ability_boundaries.json", {})
@@ -310,6 +316,8 @@ def qa(world: str) -> None:
             "gated" if all(isinstance(row, dict) and row.get("canon_gate") and "enabled" in row for row in equipment_sets.get("sets", [])) else "missing gates",
         ),
         ("economy_state", "items" in economy_state, str(len(economy_state.get("items", [])))),
+        ("acquisition_routes", len(acquisition_routes.get("routes", [])) >= len(skill_tree.get("nodes", [])), str(len(acquisition_routes.get("routes", [])))),
+        ("ooc_qa", bool(ooc_report.get("passed", False)), f"score={ooc_report.get('score', 'missing')} issues={len(ooc_report.get('issues', []))}"),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
         ("npc_motives", len(npc_motives.get("npcs", [])) >= min(3, max(1, int(entity_counts.get("npc", 0)))), str(len(npc_motives.get("npcs", [])))),
         ("ability_boundaries", len(ability_boundaries.get("abilities", [])) >= 5, str(len(ability_boundaries.get("abilities", [])))),

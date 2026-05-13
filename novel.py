@@ -11,6 +11,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from scripts.build_world import build
+from scripts.acquisition_routes import build_acquisition_routes
 from scripts.distillation_qa import distillation_qa
 from scripts.encounter_runtime import clear_encounter
 from scripts.extract import extract
@@ -23,6 +24,7 @@ from scripts.list_worlds import discover_worlds, format_worlds
 from scripts.merge import merge
 from scripts.narrative_intelligence import build_narrative_intelligence
 from scripts.opening import build_opening, ensure_opening, format_opening
+from scripts.ooc_qa import check_world as check_ooc
 from scripts.qa_world import qa
 from scripts.retrieve import retrieve
 from scripts.rpg_profile import build_rpg_profile
@@ -225,6 +227,12 @@ def cmd_rebuild_gameplay(args: argparse.Namespace) -> None:
     build_gameplay_profile(args.world)
 
 
+def cmd_rebuild_routes(args: argparse.Namespace) -> None:
+    build_acquisition_routes(args.world)
+    report = check_ooc(args.world)
+    print(f"Rebuilt acquisition routes for {args.world}. OOC score={report.get('score')} passed={report.get('passed')}")
+
+
 def cmd_rebuild_narrative(args: argparse.Namespace) -> None:
     build_narrative_intelligence(args.world)
     build_story_arcs(args.world)
@@ -256,6 +264,10 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
         build_story_arcs(args.world)
     elif args.step == "gameplay":
         build_gameplay_profile(args.world)
+    elif args.step == "routes":
+        build_acquisition_routes(args.world)
+    elif args.step == "ooc-qa":
+        check_ooc(args.world)
     elif args.step == "index":
         build_index(args.world)
 
@@ -395,12 +407,16 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_gameplay)
 
+    p = sub.add_parser("rebuild-routes", help="Rebuild acquisition routes and OOC availability report.")
+    p.add_argument("world")
+    p.set_defaults(func=cmd_rebuild_routes)
+
     p = sub.add_parser("rebuild-narrative", help="Rebuild NPC motives, ability boundaries, foreshadowing, event chains, and story arcs.")
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_narrative)
 
     p = sub.add_parser("pipeline", help="Advanced single pipeline step.")
-    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "story-arcs", "gameplay", "index"])
+    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "story-arcs", "gameplay", "routes", "ooc-qa", "index"])
     p.add_argument("world")
     p.add_argument("input", nargs="?", type=Path)
     p.add_argument("--profile", default="auto")

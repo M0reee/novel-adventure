@@ -357,6 +357,7 @@ def advance_world_events(world: str, state: dict[str, Any], player_input: str, d
     messages: list[str] = []
     options: list[str] = []
     state_events = state.setdefault("world_events", [])
+    causal_log = state.setdefault("runtime", {}).setdefault("causal_log", [])
 
     for event in events:
         status = event.get("status", "scheduled")
@@ -386,6 +387,15 @@ def advance_world_events(world: str, state: dict[str, Any], player_input: str, d
                     existing_ids.add(created.get("event_id"))
                     messages.append(event_created_message(created, event))
             history.append({"turn": turn, "event_id": event.get("event_id"), "result": "intervened"})
+            causal_log.append(
+                {
+                    "turn": turn,
+                    "event": event.get("title"),
+                    "cause": "player_intervened",
+                    "effects": event.get("effects", {}).get("intervened", [])[:4],
+                    "triggers": [trigger.get("create_event", {}).get("title") for trigger in event.get("triggers", []) if isinstance(trigger, dict)][:4],
+                }
+            )
             continue
         if turn >= expires:
             event["status"] = "expired"
@@ -405,6 +415,15 @@ def advance_world_events(world: str, state: dict[str, Any], player_input: str, d
                     existing_ids.add(created.get("event_id"))
                     messages.append(event_created_message(created, event))
             history.append({"turn": turn, "event_id": event.get("event_id"), "result": "expired", "consequences": consequences[:3]})
+            causal_log.append(
+                {
+                    "turn": turn,
+                    "event": event.get("title"),
+                    "cause": "event_expired",
+                    "consequences": consequences[:4],
+                    "effects": event.get("effects", {}).get("ignored", [])[:4],
+                }
+            )
         else:
             remain = expires - turn
             if event.get("surfaced") or event_relevant_to_context(event, state, player_input):
@@ -421,6 +440,7 @@ def advance_world_events(world: str, state: dict[str, Any], player_input: str, d
         for event in events
         if event.get("status") in {"active", "scheduled"}
     ][:12]
+    del causal_log[:-40]
     return messages, options[:4], data
 
 

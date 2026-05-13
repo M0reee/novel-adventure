@@ -5,6 +5,7 @@ import argparse
 from pathlib import Path
 
 from bootstrap_profile import build_profile
+from acquisition_routes import build_acquisition_routes
 from distill_playable import distill
 from distillation_qa import distillation_qa
 from extract import extract
@@ -14,6 +15,7 @@ from ingest import ingest
 from merge import merge
 from narrative_intelligence import build_narrative_intelligence
 from opening import build_opening
+from ooc_qa import check_world
 from qa_world import qa
 from scene_graph import build_scene_graph
 from skill_tree import build_skill_tree
@@ -52,9 +54,11 @@ def build(
     build_equipment_sets(world)
     build_economy_state(world)
     build_scene_graph(world)
+    build_acquisition_routes(world)
     build_world_events(world)
     build_index(world)
     distillation_qa(world)
+    check_world(world)
     qa(world)
     print(f"Build complete for world={world} profile={profile}")
 

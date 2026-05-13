@@ -186,6 +186,7 @@ def resolve_skill_learning(world: str, player_input: str, state: dict[str, Any])
             "consequence": str(result.get("reason", "当前条件不足，不能直接学会。")),
             "state_changes": state_changes,
             "options": ["寻找技能来源或传承。", "请可信导师确认前置条件。", "先训练基础属性。"],
+            "canon_gate": result.get("gate") or {},
         }
     skill = result.get("skill", {})
     return {
@@ -195,6 +196,7 @@ def resolve_skill_learning(world: str, player_input: str, state: dict[str, Any])
         "consequence": f"你把「{skill.get('name')}」整理成可实战使用的技能。以后战斗结算会按它的消耗、威力、命中和效果计算。",
         "state_changes": [f"习得技能：{skill.get('name')}"],
         "options": [f"用「{skill.get('name')}」进行一次低风险试招。", "查看当前技能。", "继续修炼基础属性。"],
+        "canon_gate": (result.get("node") or {}).get("canon_gate", {}),
     }
 
 

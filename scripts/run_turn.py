@@ -8,12 +8,14 @@ from typing import Any
 from action_intent import action_intent_lines, analyze_action
 from action_resolver import resolve_action
 from arc_runtime import advance_arc_attention, arc_state_lines
+from canon_evidence import evidence_lines
 from common import default_player_state, migrate_player_state, write_json, world_dir
 from equipment_sets import refresh_player_set_bonuses
 from foreshadow_runtime import advance_foreshadows
 from game_math import computed_stats
 from retrieve import retrieve
 from rpg_profile import apply_rpg_profile_to_state, format_stat_block, load_rpg_profile
+from runtime_layers import record_runtime_layers, runtime_layer_lines
 from runtime_summary import runtime_summary_lines
 from save_manager import load_save, save_path, write_save
 from scene_engine import current_scene, scene_lines, scene_options
@@ -525,6 +527,9 @@ def run_turn(
     scene = current_scene(world, state, canon_rows)
     intent = analyze_action(player_input, forced_kind, scene)
     resolution = resolve_action(world, player_input, state, canon_rows, forced_kind=forced_kind)
+    resolution_kind = str(resolution.get("kind") or "")
+    if resolution_kind and resolution_kind != "general" and intent.get("kind") != resolution_kind:
+        intent = analyze_action(player_input, resolution_kind, scene)
     result = resolution["consequence"]
     before_turn = int(meta.get("turn", 0))
     turn = before_turn + 1
@@ -533,6 +538,7 @@ def run_turn(
     event_messages, event_options, event_data = advance_world_events(world, state, player_input, dry_run)
     scene_messages = advance_scene_state(state, scene, player_input, resolution, intent)
     arc_messages = advance_arc_attention(state, player_input, resolution)
+    layer_messages = record_runtime_layers(state, canon_rows, resolution, turn, player_input)
 
     state_changes = [
         f"回合数：{before_turn} -> {turn}",
@@ -542,6 +548,7 @@ def run_turn(
         *resolution.get("state_changes", []),
         *scene_messages,
         *arc_messages,
+        *layer_messages,
         *foreshadow_messages,
         *event_messages,
         "行动记录已追加。" if not dry_run else "dry-run 未写入行动记录。",
@@ -584,6 +591,8 @@ def run_turn(
     task_lines = summarize_active_tasks(state)
     thread_lines = summarize_long_term_threads(state)
     arc_runtime_lines = arc_state_lines(state)
+    evidence_summary_lines = evidence_lines(canon_rows, resolution)
+    layer_summary_lines = runtime_layer_lines(state)
     meta["last_options"] = [
         {
             "index": idx,
@@ -608,6 +617,9 @@ def run_turn(
         f"- 裁定：{resolution['verdict']}",
         f"- 状态：{resolution['status']}",
         "",
+        "## Canon 证据",
+        *evidence_summary_lines,
+        "",
         "## 行动拆解",
         *action_intent_lines(intent),
         "",
@@ -629,6 +641,9 @@ def run_turn(
         "",
         "## RPG运行态",
         *runtime_summary_lines(state),
+        "",
+        "## 运行时分层",
+        *layer_summary_lines,
         "",
         "## 世界动态",
         *dynamic_lines,

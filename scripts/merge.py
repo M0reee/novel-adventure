@@ -16,6 +16,7 @@ from common import (
     write_jsonl,
     world_dir,
 )
+from acquisition_routes import build_acquisition_routes
 from economy import build_economy
 from economy_runtime import build_economy_state
 from equipment_sets import build_equipment_sets
@@ -23,6 +24,7 @@ from encounter_runtime import build_encounter_state
 from gameplay_profile import build_gameplay_profile
 from location_runtime import build_locations
 from narrative_intelligence import build_narrative_intelligence
+from ooc_qa import check_world
 from quest_runtime import build_quests
 from relationship_runtime import build_relationship_rules
 from rpg_profile import apply_rpg_profile_to_state, build_rpg_profile, load_rpg_profile
@@ -388,7 +390,9 @@ def merge(world: str) -> None:
     build_equipment_sets(world)
     build_economy_state(world)
     build_scene_graph(world)
+    build_acquisition_routes(world)
     build_world_events(world)
+    check_world(world)
     manifest["rpg_profile"] = "rpg_profile.json"
     manifest["item_market"] = "item_market.json"
     manifest["quest_templates"] = "quest_templates.json"
@@ -398,6 +402,7 @@ def merge(world: str) -> None:
     manifest["skill_tree"] = "skill_tree.json"
     manifest["equipment_sets"] = "equipment_sets.json"
     manifest["economy_state"] = "economy_state.json"
+    manifest["acquisition_routes"] = "acquisition_routes.json"
     manifest["encounter_state"] = "encounter_state.json"
     patches_path = wdir / "canon_patches.jsonl"
     if not patches_path.exists():
@@ -433,6 +438,7 @@ def merge(world: str) -> None:
         "skill_tree.json",
         "equipment_sets.json",
         "economy_state.json",
+        "acquisition_routes.json",
         "encounter_state.json",
         "npc_motives.json",
         "ability_boundaries.json",

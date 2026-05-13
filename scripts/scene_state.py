@@ -38,6 +38,8 @@ def ensure_scene_record(state: dict[str, Any], scene: dict[str, Any]) -> dict[st
                     "status": "present_or_reachable",
                     "last_interaction_turn": None,
                     "memory": [],
+                    "promises": [],
+                    "known_leverage": [],
                 },
             )
     for resource in scene.get("resources", []):
@@ -96,6 +98,14 @@ def advance_scene_state(
                 }
             )
             npc["memory"] = npc["memory"][-8:]
+            if any(word in player_input for word in ("承诺", "答应", "以后", "人情", "交换", "报酬")):
+                npc.setdefault("promises", []).append({"turn": turn, "text": player_input[:100], "status": "open"})
+                npc["promises"] = npc["promises"][-6:]
+                messages.append(f"NPC承诺：{target} 记下了你的承诺或交换条件。")
+            if any(word in player_input for word in ("筹码", "价格", "条件", "底线", "需要什么")):
+                npc.setdefault("known_leverage", []).append({"turn": turn, "text": str(resolution.get("verdict", ""))[:100]})
+                npc["known_leverage"] = npc["known_leverage"][-6:]
+                messages.append(f"NPC筹码：{target} 的条件/底线已记录。")
             messages.append(f"NPC记忆：{target} 记住了这次互动。")
 
     if kind in {"info", "trade", "social"}:
@@ -138,6 +148,13 @@ def scene_state_lines(state: dict[str, Any], scene: dict[str, Any]) -> list[str]
     ]
     if npcs:
         lines.append(f"- 有互动记忆的 NPC：{'、'.join(npcs[:4])}")
+    promises = [
+        f"{name}（承诺 {len(row.get('promises', []))}）"
+        for name, row in record.get("known_npcs", {}).items()
+        if row.get("promises")
+    ]
+    if promises:
+        lines.append(f"- NPC承诺/交换：{'、'.join(promises[:3])}")
     resources = [
         name
         for name, row in record.get("known_resources", {}).items()

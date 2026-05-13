@@ -182,6 +182,7 @@ export NOVEL_ADVENTURE_LLM_API_KEY="..."
 | `/novel-search <slug> <关键词>` | 检索当前世界 canon |
 | `/novel-rebuild-narrative <slug>` | 重建 NPC 动机、能力边界、伏笔和事件链 |
 | `/novel-rebuild-gameplay <slug>` | 从 canon 重建战斗/事件玩法机制，避免题材模板硬套 |
+| `/novel-rebuild-routes <slug>` | 重建技能、物品、地点入口获取路线，并刷新 OOC 可用性检查 |
 
 CLI fallback：
 
@@ -204,6 +205,7 @@ CLI fallback：
 | `python novel.py score <slug>` | 检查叙事蒸馏质量，生成 `distillation_score.md/json` |
 | `python novel.py rebuild-narrative <slug>` | 重建 `npc_motives/ability_boundaries/foreshadowing/event_chains/story_arcs` |
 | `python novel.py rebuild-gameplay <slug>` | 从 canon 重建 `gameplay_profile.json` |
+| `python novel.py rebuild-routes <slug>` | 重建 `acquisition_routes.json` 和 `ooc_report.json` |
 
 如果要手动分步执行：
 
@@ -251,10 +253,12 @@ python novel.py llm-import fanren worlds/fanren/llm_responses.jsonl
 ```
 ## 场景叙事
 ## 规则裁定
+## Canon 证据
 ## 行动结果
 ## 状态变化
 ## 人物属性
 ## 世界动态
+## 运行时分层
 ## 可执行行动
 ## 自定义行动
 ```
@@ -266,7 +270,7 @@ python novel.py worlds
 python novel.py start <slug> --reset
 ```
 
-`python novel.py start` 会初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`python novel.py build <slug> <txt_or_dir>` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json`、`scene_graph.json` 和 `encounter_state.json`，不需要手写。
+`python novel.py start` 会初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`python novel.py build <slug> <txt_or_dir>` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`economy_state.json`、`skill_tree.json`、`equipment_sets.json`、`acquisition_routes.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json`、`scene_graph.json`、`encounter_state.json` 和 `ooc_report.json`，不需要手写。
 
 ## 多存档
 
@@ -297,7 +301,15 @@ worlds/<slug>/quality_report.json
 worlds/<slug>/quality_report.md
 ```
 
-报告会给出 `score`、强项、风险和建议，例如地点不足、NPC 不足、成长体系缺失、物品市场不完整、任务模板不足、检索索引缺失等。这个报告用于判断一个新小说世界为什么“能跑但不好玩”，以及下一步该补哪一层。
+报告会给出 `score`、强项、风险和建议，例如地点不足、NPC 不足、成长体系缺失、物品市场不完整、任务模板不足、检索索引缺失、获取路线缺失或 OOC 保护不足等。这个报告用于判断一个新小说世界为什么“能跑但不好玩”，以及下一步该补哪一层。
+
+`scripts/ooc_qa.py` 会额外生成：
+
+```text
+worlds/<slug>/ooc_report.json
+```
+
+它检查技能、装备协同、市场物品和获取路线是否有 canon gate，防止“原著出现过”被错误解释为“玩家开局就能用”。`qa` 会读取这个报告；如果 OOC QA 没通过，应优先补抽取、补 `canon_patches.jsonl` 或重新跑 LLM-assisted，而不是靠运行时硬编。
 
 `python novel.py score <slug>` 会额外检查叙事蒸馏质量，并生成：
 
@@ -374,6 +386,9 @@ worlds/<slug>/story_arcs.json
 - 任务和长期目标读取 `story_arcs.json`，不会只生成“跑腿/打怪”模板，而会尽量围绕原著反复出现的目标、资源压力、势力矛盾和阶段性 payoff。
 - 当前地点、可见 NPC、资源、钩子和自由行动优先读取 `scene_graph.json`，避免把抽取噪声、泛化名词或任务步骤直接当成玩家选项。
 - 每回合会写入 `player_state.json` 的 `runtime.scenes` 和 `runtime.story_arcs`：场景访问次数、NPC 互动记忆、资源调查进度、机会推进记录、长期线索关注度都会被保留，后续回合不能假装没发生过。
+- 每回合会输出 `Canon 证据`：列出本次裁定引用的检索事实、置信度、技能/物品获取门槛或保守裁定原因，避免玩家不知道“为什么不让做”。
+- 每回合会写入 `runtime.layers`：区分 canon 证据、可玩推导、已确认事实、未证实传闻和裁定记录，避免把线索、传闻、规则和真实状态混在一起。
+- 技能、物品和地点入口会读取 `acquisition_routes.json`：玩家看到的是下一步可执行路线，而不是任务步骤清单或凭空出现的奖励。
 
 ## 自由探索运行态
 
@@ -392,6 +407,10 @@ worlds/<slug>/story_arcs.json
 - `scripts/skill_tree.py`：从 `techniques.json` 和可玩 canon 里抽取干净技能节点，但它是“技能可得性图谱”，不是直接技能树；玩家必须先获得来源、传承、许可或卷轴，再训练到可用。
 - `scripts/equipment_sets.py`：从原著物品和世界观装备名推导潜在装备协同；没有明确 canon 支撑时 `enabled=false`，不会进入属性计算。
 - `scripts/economy_runtime.py`：维护 `economy_state.json`，记录库存、价格修正、可靠性和市场检查记录，交易不再是静态价格表。
+- `scripts/acquisition_routes.py`：把技能、物品、地点入口转成 discover/source/train/verify 或 locate/verify/acquire/use 这类获取路线。
+- `scripts/canon_evidence.py`：把检索事实、规则裁定和 canon gate 压缩成每回合可读的证据解释。
+- `scripts/runtime_layers.py`：把 canon、推导、确认事实、传闻和裁定分层写入存档，后续回合可追溯。
+- `scripts/ooc_qa.py`：检查技能、装备协同和获取路线是否有足够 canon gate，防止 OOC 可用性泄漏。
 
 这层的目标是提高自由度：任务、交易、社交、修炼和探索都可以成为有效行动，但只有满足地点、资源、关系、能力边界和原著证据时才会推进。
 
@@ -443,6 +462,8 @@ python scripts/economy.py --world doupo_cangqiong
 python scripts/economy_runtime.py --world doupo_cangqiong
 python scripts/skill_tree.py --world doupo_cangqiong
 python scripts/equipment_sets.py --world doupo_cangqiong
+python scripts/acquisition_routes.py --world doupo_cangqiong
+python scripts/ooc_qa.py --world doupo_cangqiong
 python scripts/quest_runtime.py --world doupo_cangqiong
 python scripts/location_runtime.py --world doupo_cangqiong
 python scripts/relationship_runtime.py --world doupo_cangqiong
@@ -530,6 +551,10 @@ novel-adventure/
 │   ├── gameplay_profile.py  # 从原著 canon 推导战斗/事件玩法机制
 │   ├── combat_profiles.py   # 读取 gameplay_profile，题材只做低置信兜底
 │   ├── runtime_effects.py   # 事件/战斗 effects 写入市场、地点、关系、状态
+│   ├── acquisition_routes.py # 技能、物品、地点入口的 canon 获取路线
+│   ├── canon_evidence.py    # 每回合 canon 证据与裁定依据压缩展示
+│   ├── runtime_layers.py    # 运行时 canon、推导、确认事实、传闻和裁定分层
+│   ├── ooc_qa.py            # 技能/装备/获取路线 OOC 泄漏检查
 │   ├── game_math.py         # RPG 属性与公式
 │   ├── combat.py            # 战斗与奖励结算
 │   ├── run_turn.py          # 跑一回合
@@ -556,6 +581,10 @@ event_chains.json       # 事件因果链、介入收益和忽略后果
 story_arcs.json         # 原著长期任务线、阶段目标和反复出现的可玩循环
 gameplay_profile.json   # 原著 canon 证据驱动的战斗/事件玩法机制
 item_market.json        # 物品价格、稀有度、购买条件、替代获取路径
+economy_state.json      # 库存、价格修正、市场可靠性和询价记录
+skill_tree.json         # canon-gated 技能可得性和训练进度图谱
+equipment_sets.json     # canon-gated 装备协同；低证据默认 disabled
+acquisition_routes.json # 技能、物品、地点入口的获取路线图
 quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
 location_runtime.json   # 地点风险、入口条件、资源和默认行动
 relationship_rules.json # NPC/势力关系分数和影响规则
@@ -580,6 +609,7 @@ canon_patches.jsonl     # 用户校正的设定补丁
 retrieval.sqlite        # 检索索引
 quality_report.md/json  # 可读蒸馏质量报告
 distillation_score.md/json # 叙事蒸馏质量评分
+ooc_report.json         # 技能、装备和获取路线的 OOC QA 结果
 ```
 
 由于可能含**版权文本**和**私设**，`worlds/` 默认在 `.gitignore` 里，不会被提交。唯一例外是公开瘦身预设 `worlds/doupo_cangqiong/`，它不包含 `chunks.jsonl`、`facts.jsonl` 或 `source_index.jsonl`。
@@ -641,6 +671,7 @@ python scripts/index.py --world fanren
 - 中文检索使用 SQLite FTS + LIKE 兜底，适合本地轻量使用
 - 纯启发式蒸馏能跑通流程，但复杂伏笔、隐性规则、人物动机和特殊能力边界更适合 LLM-assisted
 - 玩家行动必须进入 `action_resolver.py`；特殊能力、物品和技法会检查 `ability_boundaries.json`，不能把“异火”“魂骨”“封印物”“义体模块”等特殊设定当成万能钥匙
+- 技能、装备协同、稀有物品和地点入口必须经过 `acquisition_routes.json` 与 canon gate；有线索不等于已拥有，有名字不等于能使用
 - 调查、追问、秘密和真相类行动会进入伏笔揭示流程；玩家能发现表层线索，但隐藏真相必须满足关系、证据、地点或事件条件
 - 战斗系统已有基础数值、技能、装备和 Buff，但还没有完整职业树、复杂 AI 敌人、多单位战场或精细地图
 - `gameplay_profile.json` 只会启用有 canon 证据的机制；如果抽取不到关键设定，系统会偏保守，而不是擅自补题材套路
@@ -659,6 +690,7 @@ python scripts/index.py --world fanren
 - [x] 增加 `scene_graph.json`，把原始抽取实体清洗成可游玩的地点、NPC、资源和钩子
 - [x] 增加行动拆解、场景状态、NPC 记忆、资源调查记录和长期线索关注度运行态
 - [x] 增加 canon-gated `skill_tree.json`、`equipment_sets.json`、`economy_state.json`，补齐技能成长、装备协同和动态经济，同时避免 OOC 直接开技能/套装
+- [x] 增加 `acquisition_routes.json`、`Canon 证据` 输出、运行时分层和 OOC QA，保证获取路径、裁定依据和传闻/事实分离可追溯
 - [x] 增加敌人 AI 决策，让敌人按血量、风格和回合选择强攻、压制、防守或退守
 - [ ] EPUB / PDF 导入
 - [ ] 多题材真实小说小样本评测集

@@ -354,6 +354,12 @@ def build_ability_boundaries(world: str, entities: dict[str, list[dict[str, Any]
         costs = claim_sentences(text, COST_WORDS, "需要资源、时间、状态或环境条件。", 4)
         risks = claim_sentences(text, RISK_WORDS, "失败会带来资源损耗、暴露、反噬或关系后果。", 4)
         requirements = claim_sentences(text, REQ_WORDS, "需要满足当前状态、地点、资源、身份或能力前置。", 4)
+        acquisition_conditions = claim_sentences(
+            text,
+            ("获得", "传承", "卷轴", "老师", "师父", "许可", "资格", "购买", "交换", "拜入", "血脉", "身份"),
+            "必须先获得来源、许可、传承、物品或资格；不能因为原著出现就直接可用。",
+            4,
+        )
         cannot_do = claim_sentences(
             text,
             CANNOT_WORDS,
@@ -371,7 +377,9 @@ def build_ability_boundaries(world: str, entities: dict[str, list[dict[str, Any]
                 "costs": costs,
                 "risks": risks,
                 "requirements": requirements,
+                "acquisition_conditions": acquisition_conditions,
                 "scaling": scaling,
+                "ooc_policy": "出现于原著不等于玩家可用；必须检查获取路径、身份/境界、资源和失败代价。",
                 "evidence": text[:260],
                 "confidence": confidence_from(row),
             }
