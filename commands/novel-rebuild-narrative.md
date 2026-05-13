@@ -1,5 +1,5 @@
 ---
-description: Rebuild NPC motives, ability boundaries, foreshadowing, and event chains for a Novel Adventure world.
+description: Rebuild NPC motives, ability boundaries, foreshadowing, event chains, and story arcs for a Novel Adventure world.
 argument-hint: "<world>"
 ---
 
@@ -19,5 +19,6 @@ This regenerates:
 - `ability_boundaries.json`
 - `foreshadowing.json`
 - `event_chains.json`
+- `story_arcs.json`
 
 Use it after editing NPCs, items, techniques, power systems, events, adventure hooks, or after importing LLM-assisted distillation responses.

@@ -31,7 +31,7 @@ Novel Adventure 把"读小说"和"玩小说"分开 ——
 
 ## 当前系统评价
 
-当前版本已经从“能把小说摘要成设定集”进入到“能把设定转成可运行规则”的阶段。它不是完整商业 RPG 引擎，但已经具备一个通用小说文字冒险 Skill 的核心骨架：离线蒸馏、结构化世界库、本地检索、数值状态、行动裁定、长期事件、多存档、QA 报告、叙事蒸馏评分和原著证据驱动的玩法机制。
+当前版本已经从“能把小说摘要成设定集”进入到“能把设定转成可运行规则”的阶段。它不是完整商业 RPG 引擎，但已经具备一个通用小说文字冒险 Skill 的核心骨架：离线蒸馏、结构化世界库、本地检索、数值状态、行动裁定、长期任务线、长期事件、多存档、QA 报告、叙事蒸馏评分和原著证据驱动的玩法机制。
 
 按当前能力，我会给它约 **90/100**：核心链路已经完整，通用性和主持稳定性明显提高；剩下主要差距在更多真实小说样本验证、复杂敌人 AI、长期经济系统和更精细的剧情任务编排。
 
@@ -202,7 +202,7 @@ CLI fallback：
 | `python novel.py host-status <slug>` | 查看宿主模型蒸馏进度 |
 | `python novel.py qa <slug>` | 检查世界库质量，生成 `quality_report.md/json` |
 | `python novel.py score <slug>` | 检查叙事蒸馏质量，生成 `distillation_score.md/json` |
-| `python novel.py rebuild-narrative <slug>` | 重建 `npc_motives/ability_boundaries/foreshadowing/event_chains` |
+| `python novel.py rebuild-narrative <slug>` | 重建 `npc_motives/ability_boundaries/foreshadowing/event_chains/story_arcs` |
 | `python novel.py rebuild-gameplay <slug>` | 从 canon 重建 `gameplay_profile.json` |
 
 如果要手动分步执行：
@@ -266,7 +266,7 @@ python novel.py worlds
 python novel.py start <slug> --reset
 ```
 
-`python novel.py start` 会初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`python novel.py build <slug> <txt_or_dir>` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json` 和 `encounter_state.json`，不需要手写。
+`python novel.py start` 会初始化 `player_state.json`，并展示主角背景、开场场景、动机、当前困难和开局行动。`python novel.py build <slug> <txt_or_dir>` 会为用户自己蒸馏的新世界自动生成 `opening.json`、`rpg_profile.json`、`item_market.json`、`quest_templates.json`、`location_runtime.json`、`relationship_rules.json`、`scene_graph.json` 和 `encounter_state.json`，不需要手写。
 
 ## 多存档
 
@@ -342,33 +342,58 @@ worlds/<slug>/world_events.json
 worlds/<slug>/gameplay_profile.json
 ```
 
-`gameplay_profile.json` 会优先从 `world_bible.json`、`power_system.json`、`items.json`、`techniques.json`、`locations.json`、`factions.json`、`npcs.json`、`timeline.json`、`adventure_hooks.json` 等直接蒸馏 canon 文件里找证据。`game_rules.json`、`playable_canon.json`、`item_market.json`、`rpg_profile.json` 只能辅助展示和选择具体对象，不能反过来证明某种机制存在，避免“模板自证”。只有小说里真的出现或可从设定明确推导时，才启用境界压制、反噬、副作用、弹药/充能、污染、警报追踪、市场窗口、势力反应、地点准入等机制。
+`gameplay_profile.json` 会优先从 `world_bible.json`、`power_system.json`、`items.json`、`techniques.json`、`locations.json`、`factions.json`、`npcs.json`、`timeline.json`、`adventure_hooks.json`、`story_arcs.json` 等直接蒸馏 canon 文件里找证据。`game_rules.json`、`playable_canon.json`、`item_market.json`、`rpg_profile.json` 只能辅助展示和选择具体对象，不能反过来证明某种机制存在，避免“模板自证”。只有小说里真的出现或可从设定明确推导时，才启用境界压制、反噬、副作用、弹药/充能、污染、警报追踪、市场窗口、势力反应、地点准入等机制。
 
 这条规则保证通用性：一本没有“法力”的小说不会被强行套法力；一本没有“义体”的赛博题材也不会凭标签生成义体过载；一本普通历史小说只会使用它 canon 中存在的军纪、声望、补给、地理和关系后果。
 
 ## 叙事智能层
 
-LLM-assisted distillation 不只应该抽“有什么”，还要抽“为什么、不能做什么、什么时候揭示、忽略后会怎样”。构建世界时会生成四个叙事智能文件：
+LLM-assisted distillation 不只应该抽“有什么”，还要抽“为什么、不能做什么、什么时候揭示、忽略后会怎样”。构建世界时会生成五个叙事智能文件：
 
 ```text
 worlds/<slug>/npc_motives.json
 worlds/<slug>/ability_boundaries.json
 worlds/<slug>/foreshadowing.json
 worlds/<slug>/event_chains.json
+worlds/<slug>/story_arcs.json
 ```
 
 - `npc_motives.json`：记录 NPC 的公开目标、隐藏目标、恐惧、筹码、底线和可互动钩子，社交裁定会读取它。
 - `ability_boundaries.json`：记录能力、物品、技法、境界能做什么、不能做什么、消耗、风险、前置和成长边界，防止特殊能力变成万能钥匙。
 - `foreshadowing.json`：区分玩家可见线索和主持人隐藏真相，只有满足揭示条件才逐步公开，避免开局剧透。
 - `event_chains.json`：把冒险钩子和重大事件转成因果链，世界事件会引用它生成更具体的介入收益和忽略后果。
+- `story_arcs.json`：把原著反复出现的重要目标和长期任务循环沉淀成阶段式目标，例如资源筹措、训练成长、势力冲突、探索秘密、复仇赴约或救援保护；`quest_templates.json`、`world_events.json` 和检索都会优先读取它。
 
 这些文件同样是 canon-first：纯启发式会给出保守版本；LLM-assisted 或 host prompt-pack 能显著提高人物动机、伏笔、能力边界和复杂事件链质量。
 
-运行时已经接入三条硬规则：
+运行时已经接入这些硬规则：
 
 - 社交行动读取 `npc_motives.json`，不会因为玩家一句话就让 NPC 违背目标、恐惧、筹码或底线。
 - 能力、物品、功法和特殊设定读取 `ability_boundaries.json`，越级秒杀、无代价使用、强行突破会被阻止或降级成试探/准备行动。
 - 调查和追问读取 `foreshadowing.json`，只先暴露表层线索；隐藏真相必须满足信任、证据、地点或事件推进条件。
+- 任务和长期目标读取 `story_arcs.json`，不会只生成“跑腿/打怪”模板，而会尽量围绕原著反复出现的目标、资源压力、势力矛盾和阶段性 payoff。
+- 当前地点、可见 NPC、资源、钩子和自由行动优先读取 `scene_graph.json`，避免把抽取噪声、泛化名词或任务步骤直接当成玩家选项。
+- 每回合会写入 `player_state.json` 的 `runtime.scenes` 和 `runtime.story_arcs`：场景访问次数、NPC 互动记忆、资源调查进度、机会推进记录、长期线索关注度都会被保留，后续回合不能假装没发生过。
+
+## 自由探索运行态
+
+运行时不是“永远推一个任务选项”的线性任务机。`run_turn.py` 会先做行动拆解，再根据当前场景和 canon 资源裁定结果：
+
+```text
+玩家输入 -> action_intent -> scene_graph -> action_resolver -> scene_state / arc_runtime -> options
+```
+
+关键运行态文件和模块：
+
+- `scripts/action_intent.py`：把玩家输入拆成行动类型、目标、风险和需要校验的规则，避免把“找机会赚钱”“询问筹码”都误判成泛泛叙事。
+- `scripts/scene_state.py`：记录当前场景的访问、NPC 记忆、资源调查、机会推进和最近行动，让练武场、坊市、拍卖会等地点逐步积累可用信息。
+- `scripts/arc_runtime.py`：长期任务线只记录关注度和阶段压力，不会每回合强制塞成主线任务；玩家可以暂时不管，世界仍会推进。
+- `scripts/runtime_summary.py`：把经济准备、战斗准备、资源调查和状态缺口明确展示给玩家，帮助玩家做 RPG 决策，而不是靠主持人临场编。
+- `scripts/skill_tree.py`：从 `techniques.json` 和可玩 canon 里抽取干净技能节点，学习后写入 `player.skills`，战斗会按消耗、威力和效果结算。
+- `scripts/equipment_sets.py`：从原著物品和世界观装备名推导装备套装，实际装备后写入 `equipment_set_bonuses` 并进入属性计算。
+- `scripts/economy_runtime.py`：维护 `economy_state.json`，记录库存、价格修正、可靠性和市场检查记录，交易不再是静态价格表。
+
+这层的目标是提高自由度：任务、交易、社交、修炼和探索都可以成为有效行动，但只有满足地点、资源、关系、能力边界和原著证据时才会推进。
 
 ## 宿主模型蒸馏向导
 
@@ -392,7 +417,11 @@ python novel.py host-import fanren worlds/fanren/llm_responses.jsonl
 - 装备的 `stats` 会进入最终属性。
 - Buff/Debuff 放在 `active_effects`，通过 `modifiers` 修改属性，并按 `duration_turns` 递减。
 - 技能包含 `mp_cost`、`power`、命中/暴击修正和效果；`mp_cost` 的展示名称由世界资源决定。
+- 技能树来自 `skill_tree.json`；玩家说“学习/修习/领悟某技能”时会检查等级和前置，成功后才加入 `player.skills`。
+- 装备套装来自 `equipment_sets.json`；只有玩家真的装备了对应槽位，套装 bonus 才写入 `equipment_set_bonuses` 并进入 `computed_stats`。
 - 战斗用 `scripts/combat.py` 结算，奖励包含历练/经验、世界货币和物品掉落。
+- 敌人不再只固定反击；`enemy_ai.py` 会根据敌人风格、血量和回合数选择强攻、压制、防守或退守。
+- 经济运行态来自 `economy_state.json`；稀缺物品会有库存、可靠性和价格修正，购买或询价会留下市场记录。
 - 缺失数值可以由系统补成低影响可玩参数，但必须写入结构化文件，并且可被 `canon_patches.jsonl` 覆盖。
 
 公式示例：
@@ -411,6 +440,9 @@ python scripts/game_math.py --world doupo_cangqiong
 python scripts/combat.py --world doupo_cangqiong --enemy training_dummy --skill starter_attack --dry-run
 python scripts/rpg_profile.py --world doupo_cangqiong
 python scripts/economy.py --world doupo_cangqiong
+python scripts/economy_runtime.py --world doupo_cangqiong
+python scripts/skill_tree.py --world doupo_cangqiong
+python scripts/equipment_sets.py --world doupo_cangqiong
 python scripts/quest_runtime.py --world doupo_cangqiong
 python scripts/location_runtime.py --world doupo_cangqiong
 python scripts/relationship_runtime.py --world doupo_cangqiong
@@ -422,9 +454,12 @@ python scripts/encounter_runtime.py --world doupo_cangqiong
 `scripts/action_resolver.py` 会把自然语言行动分成交易、修炼、战斗、任务、地点、社交、物品、情报和高风险行动，并调用对应规则：
 
 - 交易读取 `item_market.json`，会判断价格、货币、是否买得起、替代获取路径。
+- 交易还会读取 `economy_state.json`，把库存、可靠性和价格修正纳入实际价格。
 - 修炼会检查突破资源、护法和安全地点；不能一句话直接突破。
 - 战斗调用 `combat.py`，并用 `encounter_state.json` 保存连续遭遇。
+- 学习技能读取 `skill_tree.json`，满足前置后才写入角色技能栏。
 - 任务读取 `quest_templates.json`，玩家明确接取后才写入 `active_quests`，后续目标由 `quest_progress.py` 推进。
+- 场景优先读取 `scene_graph.json`，避免直接使用脏实体表生成“低声/方才/空间”这类出戏对象。
 - 地点行动读取 `location_runtime.json`，会更新当前位置、风险和可用行动。
 - 社交行动读取 `relationship_rules.json`，会把 NPC/势力关系写入 `relationships`。
 - 物品行动通过 `inventory_runtime.py`，使用、装备、Buff 必须进入结构化状态。
@@ -479,7 +514,8 @@ novel-adventure/
 │   ├── opening.py           # 生成 opening.json
 │   ├── rpg_profile.py       # 世界观 RPG 术语与系统映射
 │   ├── economy.py           # 物品价格、购买条件和替代获取路径
-│   ├── quest_runtime.py     # 冒险钩子 → 任务模板
+│   ├── story_arcs.py        # 原著长期任务线和反复出现的任务循环
+│   ├── quest_runtime.py     # 长期任务线/冒险钩子 → 任务模板
 │   ├── quest_progress.py    # 推进任务目标与奖励
 │   ├── world_events.py      # 长期世界事件、过期后果和介入收益
 │   ├── location_runtime.py  # 地点入口、风险、资源、行动
@@ -517,11 +553,13 @@ npc_motives.json        # NPC 目标、恐惧、筹码、底线和互动钩子
 ability_boundaries.json # 能力/物品/技法/境界的可用范围、代价和限制
 foreshadowing.json      # 伏笔、揭示条件和主持人隐藏信息
 event_chains.json       # 事件因果链、介入收益和忽略后果
+story_arcs.json         # 原著长期任务线、阶段目标和反复出现的可玩循环
 gameplay_profile.json   # 原著 canon 证据驱动的战斗/事件玩法机制
 item_market.json        # 物品价格、稀有度、购买条件、替代获取路径
 quest_templates.json    # 可接取任务模板、目标、奖励、失败后果
 location_runtime.json   # 地点风险、入口条件、资源和默认行动
 relationship_rules.json # NPC/势力关系分数和影响规则
+scene_graph.json        # 清洗后的可玩场景图：地点、NPC、资源、机会和关联
 encounter_state.json    # 当前遭遇和历史战斗记录
 world_events.json       # 长期世界事件和时间压力
 opening.json            # 开场身份、场景、动机和开局选项
@@ -616,10 +654,15 @@ python scripts/index.py --world fanren
 - [x] 把 `extract.py` 接入可插拔的 LLM provider
 - [x] 用 `gameplay_profile.json` 从原著 canon 推导玩法机制
 - [x] 增加 NPC 动机、能力边界、伏笔和事件链叙事智能层
+- [x] 增加 `story_arcs.json`，把原著反复出现的重要任务线转成长期可玩目标
 - [x] 增加叙事蒸馏评分、能力边界运行时裁定和伏笔揭示运行时
+- [x] 增加 `scene_graph.json`，把原始抽取实体清洗成可游玩的地点、NPC、资源和钩子
+- [x] 增加行动拆解、场景状态、NPC 记忆、资源调查记录和长期线索关注度运行态
+- [x] 增加 `skill_tree.json`、`equipment_sets.json`、`economy_state.json`，补齐技能成长、套装效果和动态经济
+- [x] 增加敌人 AI 决策，让敌人按血量、风格和回合选择强攻、压制、防守或退守
 - [ ] EPUB / PDF 导入
 - [ ] 多题材真实小说小样本评测集
-- [ ] 更完整的敌人 AI、技能树、装备套装和长期经济系统
+- [ ] 更精细的多单位战场、职业分支、装备词条和长期商会/拍卖模拟
 - [ ] 多人合作模式（一桌跑团）
 - [ ] Web UI（可选）
 

@@ -35,7 +35,7 @@ def user_prompt(chunk: dict[str, Any], profile: dict[str, Any]) -> str:
     schema = {
         "facts": [
             {
-                "type": "world_law | power_realm | cultivation_rule | faction | location | npc | item | technique | event | relationship | style_signal | playable_hook",
+                "type": "world_law | power_realm | cultivation_rule | faction | location | npc | item | technique | event | relationship | story_arc | recurring_mission | style_signal | playable_hook",
                 "name": "short canonical name",
                 "claim": "atomic claim useful for gameplay and retrieval",
                 "aliases": ["optional alias"],
@@ -69,6 +69,9 @@ def user_prompt(chunk: dict[str, Any], profile: dict[str, Any]) -> str:
         "- For items/techniques/powers, capture can-do, cannot-do, costs, risks, requirements, failure modes, and scaling limits.\n"
         "- For foreshadowing, capture the player-visible clue as a fact without spoiling hidden truth unless the chunk explicitly states it.\n"
         "- For events, capture cause/effect, deadlines, ignored consequences, intervention outcomes, and follow-up hooks.\n"
+        "- For story_arc, capture long-running canon arcs that shape multiple chapters, such as revenge vows, tournaments, academy trials, rescue arcs, faction wars, pilgrimage/search goals, or recurring resource pursuits.\n"
+        "- For recurring_mission, capture repeatable or repeatedly referenced gameplay loops from the novel, such as earning money, gathering materials, training, gathering intelligence, winning trust, hunting, escorting, crafting, trading, or preparing for a named arc.\n"
+        "- Important: story_arc and recurring_mission facts must state why the goal matters, what starts it, what progresses it, and what risks or rewards it implies if the chunk supports that.\n"
         "- If the chunk has no useful canon, return an empty facts array.\n"
         "- Return JSON only.\n\n"
         f"Expected JSON shape:\n{json.dumps(schema, ensure_ascii=False)}\n\n"

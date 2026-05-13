@@ -1,0 +1,35 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Equipment sets are derived from distilled items and starter equipment. Bonuses are structured playable parameters and can be overridden by canon patches.",
+  "equipment_name": "随身器物",
+  "sets": [
+    {
+      "set_id": "starter_training_set",
+      "name": "入门随身器物组合",
+      "required_slots": {
+        "primary": "入门武器",
+        "defense": "粗制护具"
+      },
+      "piece_count": 2,
+      "bonuses": {
+        "attack": 1,
+        "defense": 1
+      },
+      "notes": "默认起步组合，低影响补正，用于让装备系统可见。",
+      "source": "starter_equipment"
+    },
+    {
+      "set_id": "set_388d248a49",
+      "name": "纳戒专精",
+      "required_slots": {
+        "accessory": "纳戒"
+      },
+      "piece_count": 1,
+      "bonuses": {
+        "damage_reduction": 0.02
+      },
+      "notes": "特殊器物/饰品单件效果，只在玩家实际装备后生效。",
+      "source": "items.json"
+    }
+  ]
+}

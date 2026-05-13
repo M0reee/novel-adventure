@@ -15,6 +15,11 @@ from merge import merge
 from narrative_intelligence import build_narrative_intelligence
 from opening import build_opening
 from qa_world import qa
+from scene_graph import build_scene_graph
+from skill_tree import build_skill_tree
+from equipment_sets import build_equipment_sets
+from economy_runtime import build_economy_state
+from story_arcs import build_story_arcs
 from world_events import build_world_events
 
 
@@ -41,7 +46,12 @@ def build(
     build_opening(world)
     distill(world)
     build_narrative_intelligence(world)
+    build_story_arcs(world)
     build_gameplay_profile(world)
+    build_skill_tree(world)
+    build_equipment_sets(world)
+    build_economy_state(world)
+    build_scene_graph(world)
     build_world_events(world)
     build_index(world)
     distillation_qa(world)

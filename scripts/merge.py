@@ -17,6 +17,8 @@ from common import (
     world_dir,
 )
 from economy import build_economy
+from economy_runtime import build_economy_state
+from equipment_sets import build_equipment_sets
 from encounter_runtime import build_encounter_state
 from gameplay_profile import build_gameplay_profile
 from location_runtime import build_locations
@@ -24,6 +26,9 @@ from narrative_intelligence import build_narrative_intelligence
 from quest_runtime import build_quests
 from relationship_runtime import build_relationship_rules
 from rpg_profile import apply_rpg_profile_to_state, build_rpg_profile, load_rpg_profile
+from scene_graph import build_scene_graph
+from skill_tree import build_skill_tree
+from story_arcs import build_story_arcs
 from world_events import build_world_events
 
 
@@ -36,6 +41,8 @@ ENTITY_LIMITS = {
     "item": 500,
     "technique": 500,
     "event": 300,
+    "story_arc": 120,
+    "recurring_mission": 160,
     "playable_hook": 120,
     "world_law": 160,
     "style_signal": 40,
@@ -348,6 +355,8 @@ def merge(world: str) -> None:
         "item": entities(grouped, "item"),
         "technique": entities(grouped, "technique"),
         "event": entities(grouped, "event"),
+        "story_arc": entities(grouped, "story_arc"),
+        "recurring_mission": entities(grouped, "recurring_mission"),
         "playable_hook": entities(grouped, "playable_hook"),
     }
     if manifest.get("profile") == "doupo":
@@ -368,18 +377,27 @@ def merge(world: str) -> None:
 
     profile = build_rpg_profile(world)
     build_economy(world)
+    build_story_arcs(world)
     build_quests(world)
     build_locations(world)
     build_relationship_rules(world)
     build_encounter_state(world)
     build_narrative_intelligence(world)
     build_gameplay_profile(world)
+    build_skill_tree(world)
+    build_equipment_sets(world)
+    build_economy_state(world)
+    build_scene_graph(world)
     build_world_events(world)
     manifest["rpg_profile"] = "rpg_profile.json"
     manifest["item_market"] = "item_market.json"
     manifest["quest_templates"] = "quest_templates.json"
     manifest["location_runtime"] = "location_runtime.json"
     manifest["relationship_rules"] = "relationship_rules.json"
+    manifest["scene_graph"] = "scene_graph.json"
+    manifest["skill_tree"] = "skill_tree.json"
+    manifest["equipment_sets"] = "equipment_sets.json"
+    manifest["economy_state"] = "economy_state.json"
     manifest["encounter_state"] = "encounter_state.json"
     patches_path = wdir / "canon_patches.jsonl"
     if not patches_path.exists():
@@ -411,11 +429,16 @@ def merge(world: str) -> None:
         "quest_templates.json",
         "location_runtime.json",
         "relationship_rules.json",
+        "scene_graph.json",
+        "skill_tree.json",
+        "equipment_sets.json",
+        "economy_state.json",
         "encounter_state.json",
         "npc_motives.json",
         "ability_boundaries.json",
         "foreshadowing.json",
         "event_chains.json",
+        "story_arcs.json",
         "gameplay_profile.json",
         "curated_facts.jsonl",
         "quality_report.json",

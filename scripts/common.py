@@ -20,6 +20,8 @@ FACT_TYPES = {
     "technique",
     "event",
     "relationship",
+    "story_arc",
+    "recurring_mission",
     "style_signal",
     "playable_hook",
 }

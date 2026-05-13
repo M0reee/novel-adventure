@@ -1,120 +1,165 @@
 {
   "world": "doupo_cangqiong",
-  "policy": "任务模板来自冒险钩子；运行时只把玩家明确接受或推进的任务写入 active_quests。",
+  "policy": "任务模板优先来自 story_arcs.json 的原著长期任务线，其次来自冒险钩子；运行时只把玩家明确接受或推进的任务写入 active_quests。",
   "quests": [
     {
-      "quest_id": "quest_7a6ddc4c80",
+      "quest_id": "quest_4cec438908",
       "name": "乌坦城开局",
       "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
       "status": "available",
       "objectives": [
         {
-          "id": "gather_info",
-          "text": "收集地点、人物和风险情报",
+          "id": "name_stake",
+          "text": "确认约定、羞辱、仇怨或长期目标的来源",
           "done": false
         },
         {
-          "id": "choose_path",
-          "text": "选择低风险入口或准备路线",
+          "id": "grow_power",
+          "text": "围绕资源、训练、关系和情报积累胜算",
           "done": false
         },
         {
-          "id": "resolve_first_step",
-          "text": "完成第一个可验证的小目标",
+          "id": "face_pressure",
+          "text": "处理竞争者、势力阻挠、时间窗口和名声压力",
+          "done": false
+        },
+        {
+          "id": "attempt_payoff",
+          "text": "在满足条件后挑战、赴约、和解或改写局势",
           "done": false
         }
       ],
       "rewards": {
-        "exp": 20,
+        "exp": 30,
         "coins": [
-          5,
-          20
+          0,
+          30
         ],
         "items": [],
-        "relationship": "相关 NPC 或势力态度可能变化"
+        "relationship": "根据任务线相关 NPC 或势力结算关系、人情、敌意或声望。",
+        "canon_rewards": [
+          "成功推进可获得资源、关系、情报、地点入口或成长机会。"
+        ]
       },
       "failure_consequences": [
-        "时间窗口错过",
-        "竞争者介入",
-        "关系或声望下降"
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险。"
       ],
-      "source": "adventure_hooks.json"
+      "source": "story_arcs.json",
+      "story_arc_id": "arc_ba67764340",
+      "arc_type": "revenge_or_vow",
+      "canon_strength": "medium",
+      "key_terms": [
+        "修炼",
+        "拍卖",
+        "退婚"
+      ]
     },
     {
-      "quest_id": "quest_2b6c39112e",
+      "quest_id": "quest_f6ce8fa48b",
       "name": "异火线",
       "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
       "status": "available",
       "objectives": [
         {
-          "id": "collect_clue",
-          "text": "获得异火位置或传闻的可靠线索",
+          "id": "find_clue",
+          "text": "取得可靠线索、地图、向导或入口条件",
           "done": false
         },
         {
-          "id": "prepare_protection",
-          "text": "准备护体丹药、撤退路线和护法",
+          "id": "prepare_route",
+          "text": "准备补给、撤退路线和最低自保手段",
           "done": false
         },
         {
-          "id": "approach_site",
-          "text": "接近目标区域但不贸然收服",
+          "id": "scout_edge",
+          "text": "先侦察外围风险，不贸然深入核心",
+          "done": false
+        },
+        {
+          "id": "claim_discovery",
+          "text": "获得资源、秘密、地点入口或后续线索",
           "done": false
         }
       ],
       "rewards": {
-        "exp": 20,
+        "exp": 30,
         "coins": [
-          5,
-          20
+          0,
+          30
         ],
         "items": [],
-        "relationship": "相关 NPC 或势力态度可能变化"
+        "relationship": "根据任务线相关 NPC 或势力结算关系、人情、敌意或声望。",
+        "canon_rewards": [
+          "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火",
+          "玩家可通过地图、情报、药老指导和高风险探索追寻异火"
+        ]
       },
       "failure_consequences": [
-        "时间窗口错过",
-        "竞争者介入",
-        "关系或声望下降"
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险。"
       ],
-      "source": "adventure_hooks.json"
+      "source": "story_arcs.json",
+      "story_arc_id": "arc_37a48c3308",
+      "arc_type": "exploration_secret",
+      "canon_strength": "medium",
+      "key_terms": [
+        "情报",
+        "追寻"
+      ]
     },
     {
-      "quest_id": "quest_c50369eb35",
+      "quest_id": "quest_f188b7a895",
       "name": "炼药线",
       "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
       "status": "available",
       "objectives": [
         {
-          "id": "find_materials",
-          "text": "确认所需药材、魔核或药方来源",
+          "id": "discover_need",
+          "text": "确认需要什么资源、价格或替代路线",
           "done": false
         },
         {
-          "id": "find_alchemist",
-          "text": "找到可信炼药师或学习基础炼药",
+          "id": "earn_or_trade",
+          "text": "通过低风险委托、交易、跑腿或狩猎筹措筹码",
           "done": false
         },
         {
-          "id": "make_or_trade",
-          "text": "炼制、购买或交换一份可用资源",
+          "id": "secure_source",
+          "text": "确认可靠来源并防止赝品、截胡或涨价",
+          "done": false
+        },
+        {
+          "id": "convert_reward",
+          "text": "把资源转化为修炼、装备、关系或下一条线索",
           "done": false
         }
       ],
       "rewards": {
-        "exp": 20,
+        "exp": 15,
         "coins": [
-          5,
-          20
+          3,
+          12
         ],
         "items": [],
-        "relationship": "相关 NPC 或势力态度可能变化"
+        "relationship": "根据任务线相关 NPC 或势力结算关系、人情、敌意或声望。",
+        "canon_rewards": [
+          "借丹药提升修炼或换取资源与人情"
+        ]
       },
       "failure_consequences": [
-        "时间窗口错过",
-        "竞争者介入",
-        "关系或声望下降"
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险。"
       ],
-      "source": "adventure_hooks.json"
+      "source": "story_arcs.json",
+      "story_arc_id": "arc_beda1fa391",
+      "arc_type": "resource_pursuit",
+      "canon_strength": "medium",
+      "key_terms": [
+        "人情",
+        "修炼",
+        "炼药",
+        "药材",
+        "资源",
+        "魔核"
+      ]
     },
     {
       "quest_id": "quest_9f764c5292",

@@ -28,8 +28,9 @@ Allowed fact types:
 - `technique`: arts, spells, methods, formations, weapon skills.
 - `event`: timeline events, competitions, wars, auctions, hunts, openings.
 - `relationship`: master-disciple, ally, enemy, debt, kinship, hidden identity.
+- `story_arc`: long-running canon arc that shapes multiple scenes or chapters, with start condition, progress pressure, stakes, and likely payoff.
+- `recurring_mission`: repeatable or repeatedly referenced mission loop grounded in the novel, such as earning resources, training, gathering materials, intelligence work, escorting, crafting, trust-building, or preparation for a named arc.
 - `style_signal`: narration rhythm, dialogue tone, conflict pattern, genre flavor.
 - `playable_hook`: concrete opportunity for player action, risk, reward, or quest.
 
 Good facts are atomic. Prefer several small claims over one long summary.
-

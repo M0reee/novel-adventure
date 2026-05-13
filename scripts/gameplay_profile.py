@@ -22,6 +22,7 @@ CANON_FILES = [
     "playable_canon.json",
     "rpg_profile.json",
     "item_market.json",
+    "story_arcs.json",
 ]
 
 DIRECT_MECHANISM_SOURCES = {
@@ -34,6 +35,7 @@ DIRECT_MECHANISM_SOURCES = {
     "npcs.json",
     "timeline.json",
     "adventure_hooks.json",
+    "story_arcs.json",
 }
 
 MECHANISM_KEYWORDS: dict[str, tuple[str, ...]] = {
@@ -128,6 +130,10 @@ def text_of(row: dict[str, Any]) -> str:
         if row.get(key):
             parts.append(str(row[key]))
     for key in ("requirements", "risks", "rewards", "source_entities", "aliases"):
+        value = row.get(key)
+        if isinstance(value, list):
+            parts.extend(str(item) for item in value[:20])
+    for key in ("why_it_matters", "entry_conditions", "progression_loops", "key_terms"):
         value = row.get(key)
         if isinstance(value, list):
             parts.extend(str(item) for item in value[:20])
@@ -351,6 +357,7 @@ def build_gameplay_profile(world: str) -> dict[str, Any]:
     market_items = choose_market_items(market_rows, item_rows, 3)
     locations = choose_named(by_file.get("locations.json", []), ("城", "市场", "拍卖", "禁地", "入口", "区域", "地点", "学院"), 3)
     factions = choose_named(by_file.get("factions.json", []), ("家族", "宗门", "公司", "教会", "军团", "公会", "势力", "阵营"), 3)
+    story_arcs = top_names(by_file.get("story_arcs.json", []), 6)
     confidence_counts = Counter(source for values in hits.values() for row in values[:5] for source in [row["source"]])
     profile = {
         "version": 1,
@@ -369,6 +376,7 @@ def build_gameplay_profile(world: str) -> dict[str, Any]:
             "market_items": market_items,
             "locations": locations,
             "factions": factions,
+            "story_arcs": story_arcs,
         },
         "mechanisms": {
             key: {

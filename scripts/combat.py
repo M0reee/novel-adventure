@@ -9,6 +9,7 @@ from typing import Any
 
 from common import migrate_player_state, read_json, write_json, world_dir
 from combat_profiles import combat_profile_for, combat_risk_note
+from enemy_ai import choose_enemy_action
 from game_math import computed_stats, damage_roll, skill_by_id, tick_effects
 from rpg_profile import apply_rpg_profile_to_state, load_rpg_profile
 from runtime_effects import apply_effects
@@ -34,6 +35,7 @@ ENEMY_TEMPLATES: dict[str, dict[str, Any]] = {
             "damage_bonus": 0.0,
             "damage_reduction": 0.0,
         },
+        "ai_profile": {"style": "defensive", "can_retreat": False},
         "rewards": {"exp": 5, "coins": [0, 0], "items": []},
     },
     "low_thug": {
@@ -55,6 +57,7 @@ ENEMY_TEMPLATES: dict[str, dict[str, Any]] = {
             "damage_bonus": 0.0,
             "damage_reduction": 0.0,
         },
+        "ai_profile": {"style": "aggressive", "can_retreat": True},
         "rewards": {
             "exp": 20,
             "coins": [3, 8],
@@ -62,6 +65,13 @@ ENEMY_TEMPLATES: dict[str, dict[str, Any]] = {
         },
     },
 }
+
+
+def compact(text: str, limit: int = 120) -> str:
+    value = str(text or "").replace("\n", " ").strip()
+    if len(value) <= limit:
+        return value
+    return value[: limit - 1].rstrip("，。；： ") + "…"
 
 
 def enemy_stats(enemy: dict[str, Any]) -> dict[str, float]:
@@ -130,12 +140,16 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
 
     player_attack = damage_roll(p_stats, e_stats, skill, rng)
     enemy["stats"]["hp"] = max(0, int(enemy["stats"].get("hp", 0)) - int(player_attack["damage"]))
+    for effect in skill.get("effects", []):
+        if isinstance(effect, dict):
+            player.setdefault("active_effects", []).append(effect)
     messages = [
         f"你使用 {skill.get('name')}。",
         "攻击未命中。" if not player_attack["hit"] else f"造成 {player_attack['damage']} 点伤害" + ("（暴击）。" if player_attack["critical"] else "。"),
-        combat_risk_note(genre_profile),
+        compact(combat_risk_note(genre_profile)),
     ]
-    effect_messages = apply_effects(world, state, genre_profile.get("effects_on_attack", []), "原著证据战斗后果")
+    raw_effect_messages = apply_effects(world, state, genre_profile.get("effects_on_attack", []), "原著证据战斗后果")
+    effect_messages = [f"战斗风险标记已更新：{len(raw_effect_messages)} 项。"] if len(raw_effect_messages) > 2 else raw_effect_messages
 
     rewards: list[str] = []
     if int(enemy["stats"].get("hp", 0)) <= 0:
@@ -144,9 +158,15 @@ def resolve_combat_round(state: dict[str, Any], enemy: dict[str, Any], skill_id:
             messages.append(str(genre_profile["victory_note"]))
         rewards = apply_rewards(state, enemy.get("rewards", {}), rng, rpg_profile)
     elif float(e_stats.get("attack", 0)) > 0:
-        enemy_attack = damage_roll(e_stats, computed_stats(state), {"name": "反击", "power": 1.0}, rng)
-        player["stats"]["hp"] = max(0, int(player["stats"].get("hp", 0)) - int(enemy_attack["damage"]))
-        messages.append("敌人反击未命中。" if not enemy_attack["hit"] else f"敌人反击造成 {enemy_attack['damage']} 点伤害。")
+        enemy_action = choose_enemy_action(enemy, computed_stats(state), int(enemy.get("round", 0)))
+        messages.append(str(enemy_action.get("message", "敌人寻找机会反击。")))
+        if enemy_action.get("action") in {"guard", "retreat_or_guard"}:
+            enemy.setdefault("runtime", {})["guarding"] = True
+            messages.append("敌人本轮没有造成伤害，但下一步会更谨慎。")
+        else:
+            enemy_attack = damage_roll(e_stats, computed_stats(state), enemy_action.get("skill", {"name": "反击", "power": 1.0}), rng)
+            player["stats"]["hp"] = max(0, int(player["stats"].get("hp", 0)) - int(enemy_attack["damage"]))
+            messages.append("敌人反击未命中。" if not enemy_attack["hit"] else f"敌人造成 {enemy_attack['damage']} 点伤害。")
 
     tick_effects(player)
     return {

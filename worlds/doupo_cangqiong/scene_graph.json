@@ -1,0 +1,671 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Scene graph is a cleaned, playable projection of distilled canon. Runtime scene generation should prefer this over raw entity files.",
+  "locations": [
+    {
+      "id": "location:乌坦城",
+      "name": "乌坦城",
+      "kind": "location",
+      "summary": "加玛帝国东北部城市，萧家早期根基所在；适合低阶玩家打听情报、购买基础资源、接触家族与拍卖场事件",
+      "risk": "low",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ],
+      "score": 14.5,
+      "source": "distilled_entity"
+    },
+    {
+      "id": "location:魔兽山脉",
+      "name": "魔兽山脉",
+      "kind": "location",
+      "summary": "乌坦城外的高风险野外区域，盛产魔核、药材和魔兽踪迹；低阶玩家必须结伴、准备疗伤物品和撤退路线",
+      "score": 14.48,
+      "source": "distilled_entity",
+      "risk": "high",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ]
+    },
+    {
+      "id": "location:云岚宗",
+      "name": "云岚宗",
+      "kind": "location",
+      "summary": "加玛帝国强大宗门，和退婚、三年之约等主线冲突有关；贸然挑衅会引来宗门级后果",
+      "score": 14.47,
+      "source": "distilled_entity",
+      "risk": "medium",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ]
+    },
+    {
+      "id": "location:迦南学院",
+      "name": "迦南学院",
+      "kind": "location",
+      "summary": "大陆知名学院，适合中期修炼、试炼和结交天才；入院、内院竞争与天焚炼气塔是重要玩法入口",
+      "score": 14.46,
+      "source": "distilled_entity",
+      "risk": "low",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ]
+    },
+    {
+      "id": "location:黑角域",
+      "name": "黑角域",
+      "kind": "location",
+      "summary": "秩序混乱、强者和交易并存的区域；适合高风险交易、争夺功法斗技和卷入势力冲突",
+      "score": 14.45,
+      "source": "distilled_entity",
+      "risk": "high",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ]
+    },
+    {
+      "id": "location:萧家",
+      "name": "萧家",
+      "kind": "location",
+      "summary": "乌坦城三大家族之一，是萧炎出身势力；家族声望、人情与内部评价会影响玩家早期资源和任务",
+      "score": 12.49,
+      "source": "distilled_entity",
+      "risk": "low",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ]
+    },
+    {
+      "id": "location:中州",
+      "name": "中州",
+      "kind": "location",
+      "summary": "斗气大陆强者和顶级势力集中的核心舞台；玩家低阶时只能通过传闻和远期目标接触",
+      "score": 12.44,
+      "source": "distilled_entity",
+      "risk": "high",
+      "actions": [
+        "观察局势",
+        "寻找 NPC",
+        "打听资源",
+        "确认出口"
+      ]
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc:药老",
+      "name": "药老",
+      "kind": "npc",
+      "summary": "高阶炼药师灵魂体，能提供炼药、功法和修炼判断；他的建议是情报和指导，不等于自动成功或无代价通关",
+      "score": 13.8,
+      "source": "distilled_entity",
+      "relationship_target": "药老",
+      "actions": [
+        "搭话",
+        "询问规矩",
+        "提出交换",
+        "打听传闻"
+      ]
+    },
+    {
+      "id": "npc:萧炎",
+      "name": "萧炎",
+      "kind": "npc",
+      "summary": "萧家少年，主线气运与成长压力集中在其身上；与他的关系会影响萧家、药老、异火和三年之约相关事件",
+      "score": 13.79,
+      "source": "distilled_entity",
+      "relationship_target": "萧炎",
+      "actions": [
+        "搭话",
+        "询问规矩",
+        "提出交换",
+        "打听传闻"
+      ]
+    },
+    {
+      "id": "npc:薰儿",
+      "name": "薰儿",
+      "kind": "npc",
+      "summary": "萧家中身份特殊的少女，背景深厚；她的信任、保护或疏离会影响早期安全与后续远古种族线索",
+      "score": 13.78,
+      "source": "distilled_entity",
+      "relationship_target": "薰儿",
+      "actions": [
+        "搭话",
+        "询问规矩",
+        "提出交换",
+        "打听传闻"
+      ]
+    },
+    {
+      "id": "npc:纳兰嫣然",
+      "name": "纳兰嫣然",
+      "kind": "npc",
+      "summary": "云岚宗弟子，退婚事件核心人物；相关互动会影响萧家名誉、云岚宗态度和三年之约走向",
+      "score": 13.77,
+      "source": "distilled_entity",
+      "relationship_target": "纳兰嫣然",
+      "actions": [
+        "搭话",
+        "询问规矩",
+        "提出交换",
+        "打听传闻"
+      ]
+    },
+    {
+      "id": "npc:雅妃",
+      "name": "雅妃",
+      "kind": "npc",
+      "summary": "米特尔拍卖场人物，擅长交易与人脉经营；玩家可通过她获取资源、情报或商业合作，但需付出利益交换",
+      "score": 13.76,
+      "source": "distilled_entity",
+      "relationship_target": "雅妃",
+      "actions": [
+        "搭话",
+        "询问规矩",
+        "提出交换",
+        "打听传闻"
+      ]
+    },
+    {
+      "id": "npc:美杜莎",
+      "name": "美杜莎",
+      "kind": "npc",
+      "summary": "蛇人族女王级强者，危险而强势；低阶玩家不能正面对抗，只能依靠谈判、筹码、时机或外力周旋",
+      "score": 13.75,
+      "source": "distilled_entity",
+      "relationship_target": "美杜莎",
+      "actions": [
+        "搭话",
+        "询问规矩",
+        "提出交换",
+        "打听传闻"
+      ]
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction:萧家",
+      "name": "萧家",
+      "kind": "faction",
+      "summary": "乌坦城本土家族，早期提供身份、庇护和限制；玩家行为会改变家族声望、资源支持和敌对关系",
+      "score": 14.2,
+      "source": "distilled_entity"
+    },
+    {
+      "id": "faction:云岚宗",
+      "name": "云岚宗",
+      "kind": "faction",
+      "summary": "加玛帝国宗门级势力，拥有强者、弟子和政治影响；冲突必须考虑追杀、封锁和声望代价",
+      "score": 14.19,
+      "source": "distilled_entity"
+    },
+    {
+      "id": "faction:米特尔家族",
+      "name": "米特尔家族",
+      "kind": "faction",
+      "summary": "加玛帝国商业与拍卖势力，可提供交易、情报和资源渠道；关系建立依赖信誉与利益",
+      "score": 14.18,
+      "source": "distilled_entity"
+    },
+    {
+      "id": "faction:迦南学院",
+      "name": "迦南学院",
+      "kind": "faction",
+      "summary": "以培养修炼者为核心的学院势力，适合试炼、晋升和结交同辈；规则竞争多于直接江湖厮杀",
+      "score": 14.17,
+      "source": "distilled_entity"
+    },
+    {
+      "id": "faction:魂殿",
+      "name": "魂殿",
+      "kind": "faction",
+      "summary": "暗中猎取灵魂、布局大陆的危险势力；过早暴露会带来远超玩家等级的追踪风险",
+      "score": 14.16,
+      "source": "distilled_entity"
+    },
+    {
+      "id": "faction:丹塔",
+      "name": "丹塔",
+      "kind": "faction",
+      "summary": "炼药师体系的重要高阶势力，和丹药、药方、炼药师身份认证相关",
+      "score": 11.65,
+      "source": "distilled_entity"
+    }
+  ],
+  "resources": [
+    {
+      "id": "resource:斗之气",
+      "name": "斗之气",
+      "kind": "resource",
+      "summary": "斗气修炼的基础阶段，通常以段位衡量；达到足够段位后可凝聚斗之气旋，迈入斗者",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗者",
+      "name": "斗者",
+      "kind": "resource",
+      "summary": "正式踏入斗气修炼门槛，形成斗之气旋，可系统修习功法与斗技",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗师",
+      "name": "斗师",
+      "kind": "resource",
+      "summary": "斗气掌控力明显增强，可外放斗气并支撑更稳定的战斗消耗",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗灵",
+      "name": "斗灵",
+      "kind": "resource",
+      "summary": "能够更成熟地调动斗气战斗，是地方势力中的重要战力",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗王",
+      "name": "斗王",
+      "kind": "resource",
+      "summary": "可以斗气化翼、短距离飞行，开始具备跨区域行动和压制低阶修炼者的能力",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗皇",
+      "name": "斗皇",
+      "kind": "resource",
+      "summary": "加玛帝国层面的顶尖强者，能显著影响宗门、家族与帝国格局",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗宗",
+      "name": "斗宗",
+      "kind": "resource",
+      "summary": "可踏空而行，是大陆强者分水岭，对低阶修炼者具有压倒性威胁",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗尊",
+      "name": "斗尊",
+      "kind": "resource",
+      "summary": "中州高阶强者层次，拥有极强空间与斗气掌控力",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:半圣",
+      "name": "半圣",
+      "kind": "resource",
+      "summary": "斗尊与斗圣之间的过渡层次，已接近圣者领域",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗圣",
+      "name": "斗圣",
+      "kind": "resource",
+      "summary": "远古种族与大陆顶级势力的核心战力，可开辟或影响空间",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗帝",
+      "name": "斗帝",
+      "kind": "resource",
+      "summary": "斗气大陆传说中的终极境界，长期绝迹；成帝需要极稀缺的源气",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗气体系",
+      "name": "斗气体系",
+      "kind": "resource",
+      "summary": "斗气大陆没有花俏魔法，主流力量是斗气；修炼依赖功法、斗技、资源、体质和机缘",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:境界压制",
+      "name": "境界压制",
+      "kind": "resource",
+      "summary": "高境界通常对低境界形成压制；越级战斗需要异火、强斗技、特殊体质、经验或外力支撑",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:功法等级",
+      "name": "功法等级",
+      "kind": "resource",
+      "summary": "功法通常分为天、地、玄、黄四阶，每阶又有低中高等层次；高阶功法决定修炼速度和斗气质量",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:斗技等级",
+      "name": "斗技等级",
+      "kind": "resource",
+      "summary": "斗技同样有品阶差异，高阶斗技威力强但消耗和修习门槛更高",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:炼药师",
+      "name": "炼药师",
+      "kind": "resource",
+      "summary": "炼药师能炼制提升实力、疗伤或辅助突破的丹药，因此地位高且容易被势力拉拢",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:异火",
+      "name": "异火",
+      "kind": "resource",
+      "summary": "异火是天地奇火，威力狂暴，可增强战斗和炼药，但收服失败会造成重伤甚至死亡",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:药老指导",
+      "name": "药老指导",
+      "kind": "resource",
+      "summary": "药老拥有高阶炼药与修炼经验，可提供指导，但不能让玩家无视资源、境界和风险直接成功",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:纳戒",
+      "name": "纳戒",
+      "kind": "resource",
+      "summary": "储物戒指，常用于隐藏物品、灵魂寄居或携带资源；检查纳戒可能触发秘密、机缘或风险",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    },
+    {
+      "id": "resource:玄重尺",
+      "name": "玄重尺",
+      "kind": "resource",
+      "summary": "沉重尺类武器，适合压制速度、锤炼力量和施展尺法；使用者需要足够体魄与斗气支撑",
+      "actions": [
+        "确认来源",
+        "询价",
+        "评估用途",
+        "检查风险"
+      ],
+      "score": 4.0,
+      "source": "playable_canon"
+    }
+  ],
+  "hooks": [
+    {
+      "id": "hook:乌坦城开局",
+      "name": "乌坦城开局",
+      "kind": "hook",
+      "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险",
+      "actions": [
+        "确认入口",
+        "打听相关人物",
+        "评估风险"
+      ],
+      "score": 10.0,
+      "source": "adventure_hooks"
+    },
+    {
+      "id": "hook:异火线",
+      "name": "异火线",
+      "kind": "hook",
+      "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路",
+      "actions": [
+        "确认入口",
+        "打听相关人物",
+        "评估风险"
+      ],
+      "score": 11.99,
+      "source": "adventure_hooks"
+    },
+    {
+      "id": "hook:炼药线",
+      "name": "炼药线",
+      "kind": "hook",
+      "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情",
+      "actions": [
+        "确认入口",
+        "打听相关人物",
+        "评估风险"
+      ],
+      "score": 11.48,
+      "source": "adventure_hooks"
+    },
+    {
+      "id": "hook:势力线",
+      "name": "势力线",
+      "kind": "hook",
+      "summary": "玩家可与萧家、云岚宗、米特尔家族、炼药师公会等势力结交或冲突",
+      "actions": [
+        "确认入口",
+        "打听相关人物",
+        "评估风险"
+      ],
+      "score": 9.47,
+      "source": "adventure_hooks"
+    }
+  ],
+  "links": [
+    {
+      "from": "location:乌坦城",
+      "to": "npc:药老",
+      "type": "present_or_reachable"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "npc:萧炎",
+      "type": "present_or_reachable"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "npc:薰儿",
+      "type": "present_or_reachable"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "npc:纳兰嫣然",
+      "type": "present_or_reachable"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "npc:雅妃",
+      "type": "present_or_reachable"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "npc:美杜莎",
+      "type": "present_or_reachable"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "resource:斗之气",
+      "type": "can_ask_about"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "resource:斗者",
+      "type": "can_ask_about"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "resource:斗师",
+      "type": "can_ask_about"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "resource:斗灵",
+      "type": "can_ask_about"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "resource:斗王",
+      "type": "can_ask_about"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "resource:斗皇",
+      "type": "can_ask_about"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "hook:乌坦城开局",
+      "type": "opportunity"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "hook:异火线",
+      "type": "opportunity"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "hook:炼药线",
+      "type": "opportunity"
+    },
+    {
+      "from": "location:乌坦城",
+      "to": "hook:势力线",
+      "type": "opportunity"
+    }
+  ]
+}

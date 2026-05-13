@@ -1,0 +1,84 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Skill nodes are derived from distilled techniques/playable canon. Missing numeric values are low-impact playable parameters, not hard canon.",
+  "resource_name": "斗气",
+  "skill_name": "斗技",
+  "nodes": [
+    {
+      "skill_id": "skill_61769ae83d",
+      "name": "三千雷动",
+      "category": "attack",
+      "tier": 3,
+      "unlock": {
+        "level": 3,
+        "requires": []
+      },
+      "runtime": {
+        "mp_cost": 9,
+        "power": 1.45,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.03
+      },
+      "canon_summary": "高阶身法斗技，适合闪避、追击和脱身；修炼门槛与消耗较高。",
+      "source": "profile_seed"
+    },
+    {
+      "skill_id": "skill_31dffbb3d1",
+      "name": "八极崩",
+      "category": "attack",
+      "tier": 3,
+      "unlock": {
+        "level": 3,
+        "requires": []
+      },
+      "runtime": {
+        "mp_cost": 9,
+        "power": 1.45,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.03
+      },
+      "canon_summary": "近身爆发型斗技，适合贴身破防；需要判断距离、体魄和敌人防御。",
+      "source": "profile_seed"
+    },
+    {
+      "skill_id": "skill_b06a30dd60",
+      "name": "佛怒火莲",
+      "category": "attack",
+      "tier": 5,
+      "unlock": {
+        "level": 5,
+        "requires": [
+          "skill_31dffbb3d1"
+        ]
+      },
+      "runtime": {
+        "mp_cost": 15,
+        "power": 1.75,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.05
+      },
+      "canon_summary": "融合多种火焰形成的高风险高爆发斗技；威力巨大，但对控制力、火焰条件和自身承受力要求极高。",
+      "source": "profile_seed"
+    },
+    {
+      "skill_id": "skill_ade5eba5ff",
+      "name": "焚诀",
+      "category": "attack",
+      "tier": 5,
+      "unlock": {
+        "level": 5,
+        "requires": [
+          "skill_31dffbb3d1"
+        ]
+      },
+      "runtime": {
+        "mp_cost": 15,
+        "power": 1.75,
+        "accuracy_modifier": 0.0,
+        "crit_modifier": 0.05
+      },
+      "canon_summary": "可随吞噬异火进化的特殊功法，成长潜力极高但风险极大；每次进化都需要异火线索、护法和失败预案。",
+      "source": "profile_seed"
+    }
+  ]
+}

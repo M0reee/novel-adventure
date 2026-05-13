@@ -5,7 +5,7 @@
     {
       "event_id": "event_7a6ddc4c80",
       "title": "乌坦城开局",
-      "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
+      "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。；这是原著中反复出现或能持续推动玩家行动的目标线。；围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险",
       "type": "auction",
       "status": "active",
       "visibility": "known",
@@ -73,13 +73,13 @@
           }
         }
       ],
-      "source": "adventure_hooks.json",
+      "source": "story_arcs.json",
       "event_chain_id": "chain_4b521adbd6"
     },
     {
       "event_id": "event_2b6c39112e",
       "title": "异火线",
-      "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
+      "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。；这是原著中反复出现或能持续推动玩家行动的目标线。；异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火；玩家可通过地图、情报、药老指导和高风险探索追寻异火",
       "type": "exploration",
       "status": "scheduled",
       "visibility": "known",
@@ -112,13 +112,13 @@
         ]
       },
       "triggers": [],
-      "source": "adventure_hooks.json",
+      "source": "story_arcs.json",
       "event_chain_id": "chain_ba486a8ee3"
     },
     {
       "event_id": "event_c50369eb35",
       "title": "炼药线",
-      "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
+      "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。；借丹药提升修炼或换取资源与人情；炼药线 玩家可收集药材、魔核和药方；学习炼药",
       "type": "training",
       "status": "scheduled",
       "visibility": "known",
@@ -151,7 +151,7 @@
         ]
       },
       "triggers": [],
-      "source": "adventure_hooks.json",
+      "source": "story_arcs.json",
       "event_chain_id": "chain_271fdc28cb"
     },
     {

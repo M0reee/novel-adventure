@@ -46,4 +46,5 @@ htmlcov/
 *.log
 *.sqlite
 *.sqlite-journal
+distill_inputs/
 !worlds/doupo_cangqiong/retrieval.sqlite

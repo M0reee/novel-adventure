@@ -73,11 +73,38 @@ def score_event_chains(data: dict[str, Any]) -> tuple[int, list[str]]:
     return ratio(complete, len(rows)), ([] if complete == len(rows) else [f"事件链完整度 {complete}/{len(rows)}。"])
 
 
+def score_story_arcs(data: dict[str, Any]) -> tuple[int, list[str]]:
+    rows = data.get("arcs", [])
+    if not rows:
+        return 0, ["长期任务线为空，原著反复出现的目标没有沉淀成可玩结构。"]
+    complete = 0
+    strong = 0
+    for row in rows:
+        if row.get("canon_strength") in {"high", "medium"}:
+            strong += 1
+        if (
+            row.get("summary")
+            and nonempty_list(row, "entry_conditions")
+            and nonempty_list(row, "progression_loops")
+            and nonempty_list(row, "risks")
+            and nonempty_list(row, "rewards")
+            and nonempty_list(row, "stages")
+        ):
+            complete += 1
+    score = round((ratio(complete, len(rows)) * 0.75) + (ratio(strong, len(rows)) * 0.25))
+    notes = []
+    if complete != len(rows):
+        notes.append(f"长期任务线完整度 {complete}/{len(rows)}。")
+    if strong < max(1, len(rows) // 3):
+        notes.append(f"中高置信任务线偏少 {strong}/{len(rows)}，建议增加 LLM-assisted chunk 数。")
+    return score, notes
+
+
 def score_evidence_quality(*datasets: dict[str, Any]) -> tuple[int, list[str]]:
     total = 0
     with_evidence = 0
     for data in datasets:
-        for key in ("npcs", "abilities", "foreshadows", "chains"):
+        for key in ("npcs", "abilities", "foreshadows", "chains", "arcs"):
             for row in data.get(key, []):
                 total += 1
                 if row.get("evidence") or row.get("confidence", 0) >= 0.8:
@@ -122,6 +149,7 @@ def distillation_qa(world: str) -> dict[str, Any]:
     ability = read_json(wdir / "ability_boundaries.json", {})
     foreshadow = read_json(wdir / "foreshadowing.json", {})
     chains = read_json(wdir / "event_chains.json", {})
+    story_arcs = read_json(wdir / "story_arcs.json", {})
     direct_world = " ".join(
         str(read_json(wdir / filename, {}))
         for filename in ["world_bible.json", "power_system.json", "items.json", "techniques.json", "factions.json", "locations.json", "npcs.json"]
@@ -132,8 +160,9 @@ def distillation_qa(world: str) -> dict[str, Any]:
         "ability_boundaries_quality": score_ability_boundaries(ability),
         "foreshadowing_quality": score_foreshadowing(foreshadow),
         "event_chains_quality": score_event_chains(chains),
-        "canon_evidence_quality": score_evidence_quality(npc, ability, foreshadow, chains),
-        "template_pollution_risk": score_template_pollution(direct_world, npc, ability, foreshadow, chains),
+        "story_arcs_quality": score_story_arcs(story_arcs),
+        "canon_evidence_quality": score_evidence_quality(npc, ability, foreshadow, chains, story_arcs),
+        "template_pollution_risk": score_template_pollution(direct_world, npc, ability, foreshadow, chains, story_arcs),
     }
     scores = {key: value[0] for key, value in checks.items()}
     notes = [note for _, result_notes in checks.values() for note in result_notes]
@@ -147,6 +176,8 @@ def distillation_qa(world: str) -> dict[str, Any]:
         recommendations.append("补充伏笔 surface_clue、reveal_conditions 和 payoff；不要提前剧透 hidden_truth。")
     if scores.get("event_chains_quality", 0) < 85:
         recommendations.append("补充事件链 deadline、intervention outcome、ignored consequence 和 follow-up。")
+    if scores.get("story_arcs_quality", 0) < 85:
+        recommendations.append("补充 story_arcs：长期目标、入口条件、推进循环、风险、奖励和阶段；LLM-assisted 时重点抽反复出现的重要任务。")
     if scores.get("template_pollution_risk", 100) < 100:
         recommendations.append("检查疑似题材模板污染词，确认它们是否有原著证据。")
     if not recommendations:

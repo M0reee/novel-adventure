@@ -3,8 +3,8 @@
 - Score: 100/100
 - Genre: unknown
 - Profile: doupo
-- Retrieval rows: 158
-- Playable canon: 56
+- Retrieval rows: 165
+- Playable canon: 59
 
 ## Strengths
 - 成长/能力体系已有基础，可转成突破条件和能力边界。
@@ -15,6 +15,7 @@
 - NPC 动机层可用，社交、交易和求助裁定不再只看好感分。
 - 特殊能力边界层可用，能力使用有 can/cannot/cost/risk/requirement 约束。
 - 事件链层可用，冒险钩子可以转成因果推进和忽略后果。
+- 长期任务线层可用，原著反复出现的重要目标会进入任务、事件和检索。
 - 蒸馏质量评分 100/100，叙事智能层完整度较好。
 - 玩法机制已从 canon 证据中启用 9 项，战斗和事件不再只依赖题材标签。
 

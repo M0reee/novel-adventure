@@ -7,6 +7,7 @@
 - ability_boundaries_quality: 100/100
 - foreshadowing_quality: 100/100
 - event_chains_quality: 100/100
+- story_arcs_quality: 100/100
 - canon_evidence_quality: 100/100
 - template_pollution_risk: 100/100
 

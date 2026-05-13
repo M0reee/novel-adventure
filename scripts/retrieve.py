@@ -21,26 +21,28 @@ PREFERRED_TYPES = {
     "item": 7,
     "technique": 8,
     "event": 9,
-    "playable_hook": 10,
-    "playable_location": 11,
-    "playable_npc": 12,
-    "playable_faction": 13,
-    "playable_item": 14,
-    "playable_technique": 15,
-    "playable_power_realm": 16,
-    "playable_cultivation_rule": 17,
-    "npc_motive": 18,
-    "ability_boundary": 19,
-    "event_chain": 20,
-    "foreshadowing": 21,
-    "game_rule": 22,
-    "style_signal": 23,
+    "story_arc": 10,
+    "recurring_mission": 11,
+    "playable_hook": 12,
+    "playable_location": 13,
+    "playable_npc": 14,
+    "playable_faction": 15,
+    "playable_item": 16,
+    "playable_technique": 17,
+    "playable_power_realm": 18,
+    "playable_cultivation_rule": 19,
+    "npc_motive": 20,
+    "ability_boundary": 21,
+    "event_chain": 22,
+    "foreshadowing": 23,
+    "game_rule": 24,
+    "style_signal": 25,
 }
 
 
 ACTION_TERMS = [
     "修炼", "突破", "斗气", "斗技", "功法", "炼药", "丹药", "异火", "拍卖", "交易",
-    "打听", "调查", "探索", "追杀", "试炼", "招生", "退婚", "三年之约",
+    "打听", "调查", "探索", "追杀", "试炼", "招生", "退婚", "三年之约", "赚钱", "筹钱", "委托",
 ]
 
 

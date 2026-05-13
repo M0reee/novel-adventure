@@ -53,6 +53,11 @@ TYPE_RULES: dict[str, dict[str, list[str]]] = {
         "risks": ["任务失败", "关系变化", "时间压力", "资源消耗"],
         "rewards": ["冒险入口", "成长机会", "新关系", "世界动态"],
     },
+    "story_arc": {
+        "entry_conditions": ["确认长期目标", "知道当前阶段", "准备资源、情报、关系或安全路线"],
+        "risks": ["主线升级", "竞争者介入", "势力敌意", "错过窗口", "资源消耗"],
+        "rewards": ["原著任务线推进", "长期成长", "关键关系", "地点入口", "世界动态"],
+    },
 }
 
 
@@ -68,6 +73,7 @@ SOURCE_FILES = {
     "technique": ("techniques.json", "techniques"),
     "event": ("timeline.json", "events"),
     "playable_hook": ("adventure_hooks.json", "hooks"),
+    "story_arc": ("story_arcs.json", "arcs"),
 }
 
 

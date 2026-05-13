@@ -1,0 +1,196 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Story arcs are canon-derived long-running goals and repeatable mission loops. They may guide quests and world events, but must not override retrieved canon, canon patches, or player state.",
+  "arcs": [
+    {
+      "arc_id": "arc_ba67764340",
+      "name": "乌坦城开局",
+      "type": "revenge_or_vow",
+      "summary": "玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。",
+      "why_it_matters": [
+        "这是原著中反复出现或能持续推动玩家行动的目标线。"
+      ],
+      "entry_conditions": [
+        "玩家需要先获得线索、地点入口、关系许可或基础资源。"
+      ],
+      "progression_loops": [
+        "围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险"
+      ],
+      "risks": [
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险。"
+      ],
+      "rewards": [
+        "成功推进可获得资源、关系、情报、地点入口或成长机会。"
+      ],
+      "stages": [
+        {
+          "stage_id": "name_stake",
+          "objective": "确认约定、羞辱、仇怨或长期目标的来源",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "grow_power",
+          "objective": "围绕资源、训练、关系和情报积累胜算",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "face_pressure",
+          "objective": "处理竞争者、势力阻挠、时间窗口和名声压力",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "attempt_payoff",
+          "objective": "在满足条件后挑战、赴约、和解或改写局势",
+          "done_by_default": false
+        }
+      ],
+      "recurrence": "major_arc",
+      "key_terms": [
+        "修炼",
+        "拍卖",
+        "退婚"
+      ],
+      "source_rows": [
+        "adventure_hook",
+        "curated:playable_hook"
+      ],
+      "evidence_chunk_ids": [],
+      "mentions": 2,
+      "canon_strength": "medium",
+      "confidence": 1.0
+    },
+    {
+      "arc_id": "arc_37a48c3308",
+      "name": "异火线",
+      "type": "exploration_secret",
+      "summary": "玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。",
+      "why_it_matters": [
+        "这是原著中反复出现或能持续推动玩家行动的目标线。"
+      ],
+      "entry_conditions": [
+        "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火",
+        "但必须准备丹药、护体手段和退路",
+        "玩家可通过地图、情报、药老指导和高风险探索追寻异火"
+      ],
+      "progression_loops": [
+        "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火",
+        "玩家可通过地图、情报、药老指导和高风险探索追寻异火"
+      ],
+      "risks": [
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险。"
+      ],
+      "rewards": [
+        "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火",
+        "玩家可通过地图、情报、药老指导和高风险探索追寻异火"
+      ],
+      "stages": [
+        {
+          "stage_id": "find_clue",
+          "objective": "取得可靠线索、地图、向导或入口条件",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "prepare_route",
+          "objective": "准备补给、撤退路线和最低自保手段",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "scout_edge",
+          "objective": "先侦察外围风险，不贸然深入核心",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "claim_discovery",
+          "objective": "获得资源、秘密、地点入口或后续线索",
+          "done_by_default": false
+        }
+      ],
+      "recurrence": "major_arc",
+      "key_terms": [
+        "情报",
+        "追寻"
+      ],
+      "source_rows": [
+        "adventure_hook",
+        "curated:playable_hook"
+      ],
+      "evidence_chunk_ids": [],
+      "mentions": 2,
+      "canon_strength": "medium",
+      "confidence": 1.0
+    },
+    {
+      "arc_id": "arc_beda1fa391",
+      "name": "炼药线",
+      "type": "resource_pursuit",
+      "summary": "玩家可收集药材、魔核和药方，学习炼药，借丹药提升修炼或换取资源与人情。",
+      "why_it_matters": [
+        "借丹药提升修炼或换取资源与人情"
+      ],
+      "entry_conditions": [
+        "玩家需要先获得线索、地点入口、关系许可或基础资源。"
+      ],
+      "progression_loops": [
+        "炼药线 玩家可收集药材、魔核和药方",
+        "学习炼药",
+        "借丹药提升修炼或换取资源与人情",
+        "玩家可收集药材、魔核和药方"
+      ],
+      "risks": [
+        "推进过急会带来竞争者、敌意、资源损耗或地点风险。"
+      ],
+      "rewards": [
+        "借丹药提升修炼或换取资源与人情"
+      ],
+      "stages": [
+        {
+          "stage_id": "discover_need",
+          "objective": "确认需要什么资源、价格或替代路线",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "earn_or_trade",
+          "objective": "通过低风险委托、交易、跑腿或狩猎筹措筹码",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "secure_source",
+          "objective": "确认可靠来源并防止赝品、截胡或涨价",
+          "done_by_default": false
+        },
+        {
+          "stage_id": "convert_reward",
+          "objective": "把资源转化为修炼、装备、关系或下一条线索",
+          "done_by_default": false
+        }
+      ],
+      "recurrence": "repeatable_loop",
+      "key_terms": [
+        "人情",
+        "修炼",
+        "炼药",
+        "药材",
+        "资源",
+        "魔核"
+      ],
+      "source_rows": [
+        "adventure_hook",
+        "curated:playable_hook"
+      ],
+      "evidence_chunk_ids": [],
+      "mentions": 2,
+      "canon_strength": "medium",
+      "confidence": 1.0
+    }
+  ],
+  "stats": {
+    "source_rows": 8,
+    "candidate_rows": 6,
+    "arc_count": 3,
+    "type_counts": {
+      "exploration_secret": 1,
+      "resource_pursuit": 1,
+      "revenge_or_vow": 1
+    }
+  }
+}

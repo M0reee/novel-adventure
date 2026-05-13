@@ -37,8 +37,15 @@ def find_ability_boundary(world: str, player_input: str) -> dict[str, Any] | Non
     return None
 
 
-def _join(values: list[Any], limit: int = 3) -> str:
-    return "；".join(str(value) for value in values[:limit] if str(value))
+def _short(value: Any, limit: int = 42) -> str:
+    text = str(value or "").replace("\n", " ").strip()
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1].rstrip("，。；： ") + "…"
+
+
+def _join(values: list[Any], limit: int = 2) -> str:
+    return "；".join(_short(value) for value in values[:limit] if str(value))
 
 
 def _clean(text: str) -> str:
@@ -97,7 +104,7 @@ def evaluate_ability_use(world: str, player_input: str, state: dict[str, Any]) -
         "kind": "ability_boundary",
         "status": "allowed",
         "verdict": f"「{name}」可尝试但需结算代价",
-        "consequence": f"「{name}」可以支持本行动：{can_do}。使用时仍需满足：{requirements}；代价：{costs}；风险：{risks}。",
+        "consequence": f"「{name}」可支持本行动，但只提供有限优势；仍需结算资源消耗、地点条件和失败风险。",
         "state_changes": [f"检查能力边界：{name}"],
         "options": [
             f"按「{name}」的安全用法推进。",

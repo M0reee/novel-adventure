@@ -24,11 +24,16 @@ FULL_REQUIRED_FILES = [
     "quest_templates.json",
     "location_runtime.json",
     "relationship_rules.json",
+    "scene_graph.json",
+    "skill_tree.json",
+    "equipment_sets.json",
+    "economy_state.json",
     "encounter_state.json",
     "npc_motives.json",
     "ability_boundaries.json",
     "foreshadowing.json",
     "event_chains.json",
+    "story_arcs.json",
     "distillation_score.json",
     "gameplay_profile.json",
     "world_events.json",
@@ -50,11 +55,16 @@ PRESET_REQUIRED_FILES = [
     "quest_templates.json",
     "location_runtime.json",
     "relationship_rules.json",
+    "scene_graph.json",
+    "skill_tree.json",
+    "equipment_sets.json",
+    "economy_state.json",
     "encounter_state.json",
     "npc_motives.json",
     "ability_boundaries.json",
     "foreshadowing.json",
     "event_chains.json",
+    "story_arcs.json",
     "distillation_score.json",
     "gameplay_profile.json",
     "world_events.json",
@@ -168,6 +178,11 @@ def build_readable_report(
     else:
         risks.append("事件链不足，世界事件容易是孤立事件，缺少后续因果。")
         recommendations.append("补充 event_chains：节点、触发条件、介入收益、忽略后果、后续 effects。")
+    if "story_arcs" not in failed:
+        strengths.append("长期任务线层可用，原著反复出现的重要目标会进入任务、事件和检索。")
+    else:
+        risks.append("长期任务线不足，玩家容易只看到零散委托，缺少原著主线/支线代入感。")
+        recommendations.append("重跑 story_arcs 或启用 LLM-assisted，重点抽反复出现的重要任务、资源追求、训练目标和势力冲突。")
     distillation_score = read_json(world_dir(world) / "distillation_score.json", {})
     score_value = int(distillation_score.get("overall_score", 0) or 0)
     if score_value >= 85:
@@ -243,11 +258,16 @@ def qa(world: str) -> None:
     quests = read_json(wdir / "quest_templates.json", {})
     location_runtime = read_json(wdir / "location_runtime.json", {})
     relationship_rules = read_json(wdir / "relationship_rules.json", {})
+    scene_graph = read_json(wdir / "scene_graph.json", {})
+    skill_tree = read_json(wdir / "skill_tree.json", {})
+    equipment_sets = read_json(wdir / "equipment_sets.json", {})
+    economy_state = read_json(wdir / "economy_state.json", {})
     encounter_state = read_json(wdir / "encounter_state.json", {})
     npc_motives = read_json(wdir / "npc_motives.json", {})
     ability_boundaries = read_json(wdir / "ability_boundaries.json", {})
     foreshadowing = read_json(wdir / "foreshadowing.json", {})
     event_chains = read_json(wdir / "event_chains.json", {})
+    story_arcs = read_json(wdir / "story_arcs.json", {})
     distillation_score = read_json(wdir / "distillation_score.json", {})
     gameplay_profile = read_json(wdir / "gameplay_profile.json", {})
     world_events = read_json(wdir / "world_events.json", {})
@@ -276,11 +296,16 @@ def qa(world: str) -> None:
         ("quest_templates", len(quests.get("quests", [])) >= 1, str(len(quests.get("quests", [])))),
         ("location_runtime", len(location_runtime.get("locations", [])) >= 3, str(len(location_runtime.get("locations", [])))),
         ("relationship_rules", len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])) >= 3, str(len(relationship_rules.get("npcs", [])) + len(relationship_rules.get("factions", [])))),
+        ("scene_graph", len(scene_graph.get("locations", [])) >= 1 and len(scene_graph.get("npcs", [])) >= 1, f"locations={len(scene_graph.get('locations', []))} npcs={len(scene_graph.get('npcs', []))}"),
+        ("skill_tree", len(skill_tree.get("nodes", [])) >= 1, str(len(skill_tree.get("nodes", [])))),
+        ("equipment_sets", len(equipment_sets.get("sets", [])) >= 1, str(len(equipment_sets.get("sets", [])))),
+        ("economy_state", "items" in economy_state, str(len(economy_state.get("items", [])))),
         ("encounter_state", "active" in encounter_state and "history" in encounter_state, "present" if "active" in encounter_state and "history" in encounter_state else "missing"),
         ("npc_motives", len(npc_motives.get("npcs", [])) >= min(3, max(1, int(entity_counts.get("npc", 0)))), str(len(npc_motives.get("npcs", [])))),
         ("ability_boundaries", len(ability_boundaries.get("abilities", [])) >= 5, str(len(ability_boundaries.get("abilities", [])))),
         ("foreshadowing", "foreshadows" in foreshadowing, str(len(foreshadowing.get("foreshadows", [])))),
         ("event_chains", len(event_chains.get("chains", [])) >= 1, str(len(event_chains.get("chains", [])))),
+        ("story_arcs", len(story_arcs.get("arcs", [])) >= 1, str(len(story_arcs.get("arcs", [])))),
         ("distillation_score", int(distillation_score.get("overall_score", 0) or 0) >= 75, str(distillation_score.get("overall_score", "missing"))),
         (
             "gameplay_profile",

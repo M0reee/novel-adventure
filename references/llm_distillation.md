@@ -66,6 +66,7 @@ The LLM extractor should prioritize facts that improve the narrative intelligenc
 - Ability boundaries: can-do, cannot-do, cost, risk, requirement, failure mode, scaling limit.
 - Foreshadowing: player-visible clue, hidden truth if explicit, reveal condition, payoff.
 - Event chains: cause, deadline, intervention outcome, ignored consequence, follow-up hook.
+- Story arcs / recurring missions: goals that appear across multiple scenes, why they matter, entry conditions, progression loop, risk, reward, and staged payoff.
 
 These are still returned as normal `facts`; `scripts/narrative_intelligence.py` turns them into:
 
@@ -74,6 +75,7 @@ npc_motives.json
 ability_boundaries.json
 foreshadowing.json
 event_chains.json
+story_arcs.json
 ```
 
 Do not invent hidden truth or future payoffs that are not in the chunk. If a clue is only suggestive, record the surface clue and keep hidden truth host-only/unknown.

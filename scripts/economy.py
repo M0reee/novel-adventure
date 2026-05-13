@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from common import load_manifest, read_json, save_manifest, world_dir, write_json
+from economy_runtime import apply_economy_state_to_market, build_economy_state
 from rpg_profile import load_rpg_profile
 
 
@@ -67,6 +68,58 @@ DOUPO_OVERRIDES = {
     },
 }
 
+BAD_MARKET_NAMES = {
+    "炼药",
+    "炼丹",
+    "炼制丹药",
+    "卷轴",
+    "丹药",
+    "药材",
+    "这些药",
+    "听得药",
+    "一名炼药",
+    "那神秘炼药",
+    "罪一名六品炼药",
+    "这座丹",
+    "收入纳戒",
+    "一些药",
+    "四品炼药",
+    "传出药",
+    "两种丹药",
+    "其纳戒",
+    "七瓶筑基灵液",
+    "当筑基灵液",
+    "第一瓶筑基灵液",
+    "场中剑",
+}
+BAD_MARKET_FRAGMENTS = ("。", "，", "、", "：", "；", "？", "！", "\n", "听得", "这些", "一名", "那神秘", "罪一名", "这座", "收入", "炼制")
+ITEM_NAME_WORDS = (
+    "丹",
+    "灵液",
+    "药",
+    "魔核",
+    "晶核",
+    "灵石",
+    "戒指",
+    "纳戒",
+    "枪",
+    "剑",
+    "尺",
+    "刀",
+    "火焰",
+    "异火",
+    "骨",
+    "环",
+    "令牌",
+    "残图",
+    "地图",
+    "乳",
+    "鼎",
+    "草",
+    "花",
+    "果",
+)
+
 
 def stable_id(prefix: str, name: str) -> str:
     digest = hashlib.sha1(name.encode("utf-8")).hexdigest()[:10]
@@ -79,6 +132,19 @@ def infer_rarity(name: str, summary: str) -> str:
         if any(keyword in text for keyword in keywords):
             return rarity
     return "common"
+
+
+def valid_market_name(name: str) -> bool:
+    stripped = name.strip(" 「」《》[]()（）")
+    if not stripped or stripped in BAD_MARKET_NAMES:
+        return False
+    if len(stripped) > 12:
+        return False
+    if any(fragment in stripped for fragment in BAD_MARKET_FRAGMENTS):
+        return False
+    if stripped.startswith(("这", "那", "此", "该", "一名", "一种", "其", "当", "第一", "一瓶", "七瓶")):
+        return False
+    return any(word in stripped for word in ITEM_NAME_WORDS)
 
 
 def market_entry(item: dict[str, Any], profile: dict[str, Any], world: str) -> dict[str, Any]:
@@ -100,7 +166,7 @@ def market_entry(item: dict[str, Any], profile: dict[str, Any], world: str) -> d
         "use_effect": {},
         "canon_summary": summary,
     }
-    if world == "doupo_cangqiong" and name in DOUPO_OVERRIDES:
+    if world.startswith("doupo") and name in DOUPO_OVERRIDES:
         entry.update(DOUPO_OVERRIDES[name])
         entry["currency"] = profile.get("systems", {}).get("currency_name", entry["currency"])
     return entry
@@ -110,7 +176,7 @@ def build_economy(world: str) -> dict[str, Any]:
     wdir = world_dir(world)
     profile = load_rpg_profile(world)
     items = read_json(wdir / "items.json", {}).get("items", [])
-    entries = [market_entry(item, profile, world) for item in items if item.get("name")]
+    entries = [market_entry(item, profile, world) for item in items if item.get("name") and valid_market_name(str(item.get("name")))]
     output = {
         "world": world,
         "currency": profile.get("systems", {}).get("currency_name", "货币"),
@@ -118,6 +184,7 @@ def build_economy(world: str) -> dict[str, Any]:
         "items": entries,
     }
     write_json(wdir / "item_market.json", output)
+    build_economy_state(world)
     manifest = load_manifest(wdir, world)
     manifest["item_market"] = "item_market.json"
     save_manifest(wdir, manifest)
@@ -128,7 +195,8 @@ def build_economy(world: str) -> dict[str, Any]:
 def load_market(world: str) -> dict[str, Any]:
     wdir = world_dir(world)
     market = read_json(wdir / "item_market.json", {})
-    return market if market else build_economy(world)
+    market = market if market else build_economy(world)
+    return apply_economy_state_to_market(world, market)
 
 
 def find_market_item(player_input: str, canon_rows: list[dict[str, Any]], market: dict[str, Any]) -> dict[str, Any] | None:
@@ -143,7 +211,7 @@ def find_market_item(player_input: str, canon_rows: list[dict[str, Any]], market
 
 
 def price_text(item: dict[str, Any]) -> str:
-    low, high = item.get("price_range", [0, 0])
+    low, high = item.get("effective_price_range") or item.get("price_range", [0, 0])
     currency = item.get("currency", "货币")
     if int(low) <= 0 and int(high) <= 0:
         return f"不可常规购买（{currency}价格无效）"
@@ -152,7 +220,7 @@ def price_text(item: dict[str, Any]) -> str:
 
 def can_afford(player: dict[str, Any], item: dict[str, Any]) -> tuple[bool, int, int]:
     coins = int(player.get("currencies", {}).get("coins", 0))
-    low = int(item.get("price_range", [0, 0])[0])
+    low = int((item.get("effective_price_range") or item.get("price_range", [0, 0]))[0])
     return coins >= low > 0, coins, low
 
 

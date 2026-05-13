@@ -13,8 +13,11 @@ from index import build_index
 from ingest import ingest
 from merge import merge
 from narrative_intelligence import build_narrative_intelligence
+from opening import build_opening
 from qa_world import qa
 from common import read_jsonl, world_dir
+from scene_graph import build_scene_graph
+from story_arcs import build_story_arcs
 from world_events import build_world_events
 
 
@@ -61,9 +64,12 @@ def import_prompt_pack(world: str, responses: Path, profile: str) -> None:
         raise SystemExit(f"Response file not found: {responses}")
     extract(world, profile, llm_responses=responses)
     merge(world)
+    build_opening(world)
     distill(world)
     build_narrative_intelligence(world)
+    build_story_arcs(world)
     build_gameplay_profile(world)
+    build_scene_graph(world)
     build_world_events(world)
     build_index(world)
     distillation_qa(world)

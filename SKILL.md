@@ -50,7 +50,7 @@ Optional LLM-assisted offline distillation:
 
 Use `--llm-provider prompt-pack` when the host platform model should perform extraction without an API call. See `references/llm_distillation.md`.
 
-This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, `world_events.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
+This also creates `opening.json`, `rpg_profile.json`, `item_market.json`, `economy_state.json`, `skill_tree.json`, `equipment_sets.json`, `story_arcs.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `scene_graph.json`, `encounter_state.json`, `world_events.json`, `distillation_score.md/json`, a readable `quality_report.md/json`, and a RPG-ready `player_state.json` schema for custom worlds.
 
 ### First-Run Use
 
@@ -80,29 +80,35 @@ Manual build:
    `python scripts/rpg_profile.py --world <slug> --rebuild`
 6. Generate item economy:
    `python scripts/economy.py --world <slug> --rebuild`
-7. Generate quest templates:
+7. Generate runtime economy, skill tree, and equipment sets:
+   `python scripts/economy_runtime.py --world <slug> --rebuild`
+   `python scripts/skill_tree.py --world <slug> --rebuild`
+   `python scripts/equipment_sets.py --world <slug> --rebuild`
+8. Generate quest templates:
    `python scripts/quest_runtime.py --world <slug> --rebuild`
-8. Generate location runtime:
+9. Generate location runtime:
    `python scripts/location_runtime.py --world <slug> --rebuild`
-9. Generate relationship rules:
+10. Generate relationship rules:
    `python scripts/relationship_runtime.py --world <slug> --rebuild`
-10. Initialize encounter state:
+11. Generate cleaned scene graph:
+   `python scripts/scene_graph.py --world <slug>`
+12. Initialize encounter state:
    `python scripts/encounter_runtime.py --world <slug>`
-11. Generate narrative intelligence:
+13. Generate narrative intelligence:
    `python scripts/narrative_intelligence.py --world <slug> --rebuild`
-12. Generate canon-first gameplay profile:
+14. Generate canon-first gameplay profile:
    `python scripts/gameplay_profile.py --world <slug> --rebuild`
-13. Generate long-running world events:
+15. Generate long-running world events:
    `python scripts/world_events.py --world <slug> --rebuild`
-14. Generate opening:
+16. Generate opening:
    `python scripts/opening.py --world <slug> --rebuild`
-15. Distill merged canon into game-ready rules:
+17. Distill merged canon into game-ready rules:
    `python scripts/distill_playable.py --world <slug>`
-16. Build retrieval index:
+18. Build retrieval index:
    `python scripts/index.py --world <slug>`
-17. Score narrative distillation quality:
+19. Score narrative distillation quality:
    `python scripts/distillation_qa.py --world <slug>`
-18. Optional deterministic QA:
+20. Optional deterministic QA:
    `python scripts/qa_world.py --world <slug>`
 
 ### Update World
@@ -137,13 +143,21 @@ For immediate testing, use the included redacted preset:
 
 Each turn must use retrieved canon, update `player_state.json`, and return scene narration, action result, state changes, world dynamics, 3-5 action options, and a custom action prompt.
 
+Scene rule: runtime scene generation must prefer `scene_graph.json` over raw `locations.json`, `npcs.json`, or `factions.json`. Raw entity files can contain extraction noise; `scene_graph.json` is the cleaned playable projection used to produce current location, visible NPCs, resources, hooks, and free-roam options.
+
 Most important rule: the agent is a game master and rules judge, not a wish fulfiller. Player actions must be checked against canon, current state, resources, risk, time, location, relationships, and power limits before success is granted.
+
+Runtime-memory rule: every turn should preserve what the player has actually learned or changed. `run_turn.py` writes scene visits, NPC interaction memory, investigated resources, opportunity progress, and long-arc attention into `player_state.json` under `runtime.scenes` and `runtime.story_arcs`. Do not re-offer task-step checklists as if they were free-roam options; use the runtime memory to make later options more specific and grounded.
 
 RPG rule: numeric outcomes must come from structured state and scripts. Character stats live in `player_state.json` under `stats`, `equipment`, `skills`, `active_effects`, and `inventory`. World-facing names live in `rpg_profile.json`: do not assume every world has "MP", "法力", or generic equipment. Use `scripts/action_resolver.py` as the first stop for trade, cultivation, combat, quest, location, social, inventory, and info actions; it routes to `item_market.json`, `quest_templates.json`, `location_runtime.json`, `relationship_rules.json`, `encounter_state.json`, `scripts/game_math.py`, and `scripts/combat.py`. Do not invent HP, resource, damage, EXP, currency, equipment, skill, quest, relationship, location, encounter, or Buff changes in narration without writing them into state.
 
+Progression rule: learnable skills live in `skill_tree.json`; equipment set bonuses live in `equipment_sets.json`; runtime supply and price pressure live in `economy_state.json`. Learning a skill must write to `player.skills`, equipping a set must write to `equipment_set_bonuses`, and market checks/purchases must update economy runtime state. These files are canon-derived playable projections, not genre templates.
+
 World-event rule: long-running events live in `world_events.json` and are advanced by `run_turn.py`. Mention active or expired events when relevant; ignored events may expire and change the world, while intervened events may create quests, access, resources, relationships, or risk reduction. Event effects must be applied through `runtime_effects.py` so market, location, relationship, state flags, and follow-up events are structured.
 
-Narrative intelligence rule: `npc_motives.json`, `ability_boundaries.json`, `foreshadowing.json`, and `event_chains.json` are host-facing canon-derived guidance. Use NPC motives for social offers/refusals, ability boundaries for special powers and item/technique use, foreshadowing to avoid premature spoilers, and event chains for cause-and-effect pressure. These files guide rulings but cannot override canon patches, retrieved canon, or player state.
+Narrative intelligence rule: `npc_motives.json`, `ability_boundaries.json`, `foreshadowing.json`, `event_chains.json`, and `story_arcs.json` are host-facing canon-derived guidance. Use NPC motives for social offers/refusals, ability boundaries for special powers and item/technique use, foreshadowing to avoid premature spoilers, event chains for cause-and-effect pressure, and story arcs for original-novel long-running goals or recurring mission loops. These files guide rulings but cannot override canon patches, retrieved canon, or player state.
+
+Story-arc rule: important recurring novel goals live in `story_arcs.json` and may seed `quest_templates.json`, `world_events.json`, retrieval, and long-term player goals. Treat them as staged arcs, not instant objectives: players must satisfy entry conditions, progress loops, risks, and canon rewards before payoff.
 
 Ability-boundary rule: when the player uses, attacks with, consumes, equips, activates, breaks through with, or overstates a special ability/item/technique, check `ability_boundaries.json` through `scripts/action_resolver.py` or `scripts/inventory_runtime.py`. Overreach such as automatic victory, no-cost use, forced breakthrough, or realm-defying "I just win" claims must be blocked or downgraded into preparation, probing, retreat, or prerequisite gathering.
 

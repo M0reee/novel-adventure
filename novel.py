@@ -29,6 +29,7 @@ from scripts.rpg_profile import build_rpg_profile
 from scripts.run_turn import run_turn
 from scripts.save_manager import copy_save, delete_save, format_saves
 from scripts.start_game import initialize_state
+from scripts.story_arcs import build_story_arcs
 
 
 def _save_summary(world: str) -> str:
@@ -226,6 +227,7 @@ def cmd_rebuild_gameplay(args: argparse.Namespace) -> None:
 
 def cmd_rebuild_narrative(args: argparse.Namespace) -> None:
     build_narrative_intelligence(args.world)
+    build_story_arcs(args.world)
 
 
 def cmd_pipeline(args: argparse.Namespace) -> None:
@@ -249,6 +251,9 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
         build_opening(args.world)
     elif args.step == "narrative":
         build_narrative_intelligence(args.world)
+        build_story_arcs(args.world)
+    elif args.step == "story-arcs":
+        build_story_arcs(args.world)
     elif args.step == "gameplay":
         build_gameplay_profile(args.world)
     elif args.step == "index":
@@ -390,12 +395,12 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_gameplay)
 
-    p = sub.add_parser("rebuild-narrative", help="Rebuild NPC motives, ability boundaries, foreshadowing, and event chains.")
+    p = sub.add_parser("rebuild-narrative", help="Rebuild NPC motives, ability boundaries, foreshadowing, event chains, and story arcs.")
     p.add_argument("world")
     p.set_defaults(func=cmd_rebuild_narrative)
 
     p = sub.add_parser("pipeline", help="Advanced single pipeline step.")
-    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "gameplay", "index"])
+    p.add_argument("step", choices=["ingest", "extract", "merge", "opening", "narrative", "story-arcs", "gameplay", "index"])
     p.add_argument("world")
     p.add_argument("input", nargs="?", type=Path)
     p.add_argument("--profile", default="auto")

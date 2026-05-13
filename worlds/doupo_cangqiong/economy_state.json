@@ -1,0 +1,57 @@
+{
+  "world": "doupo_cangqiong",
+  "policy": "Runtime economy tracks stock, price modifiers and reliability hints. It modifies playable prices but does not override canon.",
+  "items": [
+    {
+      "item_id": "item_9d157dbb93",
+      "name": "异火",
+      "rarity": "mythic",
+      "stock": 0,
+      "price_modifier": 1.0,
+      "reliability": "unknown",
+      "last_checked_turn": null,
+      "flags": []
+    },
+    {
+      "item_id": "item_388d248a49",
+      "name": "纳戒",
+      "rarity": "rare",
+      "stock": 2,
+      "price_modifier": 1.0,
+      "reliability": "unknown",
+      "last_checked_turn": null,
+      "flags": []
+    },
+    {
+      "item_id": "item_6f0c68a49a",
+      "name": "玄重尺",
+      "rarity": "epic",
+      "stock": 1,
+      "price_modifier": 1.0,
+      "reliability": "unknown",
+      "last_checked_turn": null,
+      "flags": []
+    },
+    {
+      "item_id": "item_957a6e91f8",
+      "name": "筑基灵液",
+      "rarity": "rare",
+      "stock": 2,
+      "price_modifier": 1.0,
+      "reliability": "unknown",
+      "last_checked_turn": null,
+      "flags": []
+    },
+    {
+      "item_id": "item_fbd3e6ede1",
+      "name": "魔核",
+      "rarity": "uncommon",
+      "stock": 5,
+      "price_modifier": 1.0,
+      "reliability": "ordinary",
+      "last_checked_turn": null,
+      "flags": []
+    }
+  ],
+  "market_events": []
+}

@@ -56,11 +56,21 @@ def effect_modifiers(player: dict[str, Any]) -> dict[str, float]:
     return mods
 
 
+def equipment_set_modifiers(player: dict[str, Any]) -> dict[str, float]:
+    mods: dict[str, float] = {}
+    for row in player.get("equipment_set_bonuses", []):
+        if not isinstance(row, dict):
+            continue
+        for key, value in row.get("modifiers", {}).items():
+            _add_stat(mods, key, value)
+    return mods
+
+
 def computed_stats(state: dict[str, Any]) -> dict[str, float]:
     state = migrate_player_state(state, state.get("meta", {}).get("world", "unknown"))
     player = state["player"]
     stats = base_player_stats(state)
-    for mods in (equipment_modifiers(player), effect_modifiers(player)):
+    for mods in (equipment_modifiers(player), equipment_set_modifiers(player), effect_modifiers(player)):
         for key, value in mods.items():
             _add_stat(stats, key, value)
     stats["hp"] = clamp(stats["hp"], 0, stats["max_hp"])

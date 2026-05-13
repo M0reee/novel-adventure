@@ -25,7 +25,42 @@ CANON_FILES = [
     "ability_boundaries.json",
     "foreshadowing.json",
     "event_chains.json",
+    "story_arcs.json",
 ]
+
+BAD_ACTION_NAMES = {
+    "炼药",
+    "炼丹",
+    "修炼",
+    "突破",
+    "拍卖",
+    "交易",
+    "试炼",
+    "争夺",
+    "追杀",
+    "线索",
+    "任务",
+    "目标",
+    "继续",
+}
+
+
+def compact_parts(parts: list[Any], limit: int = 900) -> str:
+    cleaned: list[str] = []
+    for part in parts:
+        if isinstance(part, list):
+            values = part
+        else:
+            values = [part]
+        for value in values:
+            text = " ".join(str(value or "").split())
+            if not text or len(text) > 180:
+                continue
+            if any(noise in text for noise in ("['", "']", "{", "}", "目光", "脸色", "手掌", "微微", "笑道")):
+                continue
+            if text not in cleaned:
+                cleaned.append(text)
+    return " ".join(cleaned)[:limit]
 
 
 def infer_type(source: str, path: str) -> str:
@@ -39,6 +74,8 @@ def infer_type(source: str, path: str) -> str:
         return "foreshadowing"
     if source == "event_chains.json":
         return "event_chain"
+    if source == "story_arcs.json":
+        return "story_arc"
     checks = [
         ("world_laws", "world_law"),
         ("style_signals", "style_signal"),
@@ -66,6 +103,17 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
     def visit(node: Any, path: str) -> None:
         if isinstance(node, dict):
             if source == "playable_canon.json" and "name" in node and "play_rule" in node:
+                if (
+                    node.get("source_type") in {"playable_hook", "item"}
+                    and str(node.get("name") or "") in BAD_ACTION_NAMES
+                ):
+                    return
+                if (
+                    node.get("source_type") == "playable_hook"
+                    and float(node.get("source_quality") or 0) < 0.7
+                    and any(noise in str(node.get("summary") or "") for noise in ("目光", "脸色", "手掌", "微微", "笑道"))
+                ):
+                    return
                 claim = " ".join(
                     str(part)
                     for part in [
@@ -91,17 +139,16 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
                     }
                 )
             elif source == "npc_motives.json" and "npc" in node:
-                claim = " ".join(
-                    str(part)
-                    for part in [
-                        node.get("public_goal", ""),
-                        node.get("private_goal", ""),
-                        " ".join(node.get("fears", [])),
-                        " ".join(node.get("leverage", [])),
-                        " ".join(node.get("boundaries", [])),
-                        " ".join(node.get("player_hooks", [])),
-                    ]
-                    if part
+                claim = compact_parts(
+                    [
+                        f"公开目标：{node.get('public_goal', '')}",
+                        f"隐藏目标：{node.get('private_goal', '')}",
+                        [f"担忧：{item}" for item in node.get("fears", [])[:2]],
+                        [f"筹码：{item}" for item in node.get("leverage", [])[:3]],
+                        [f"底线：{item}" for item in node.get("boundaries", [])[:3]],
+                        [f"互动入口：{item}" for item in node.get("player_hooks", [])[:3]],
+                    ],
+                    900,
                 )[:800]
                 rows.append(
                     {
@@ -113,10 +160,12 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
                         "evidence": node.get("evidence", ""),
                         "source_json": source,
                         "quality": float(node.get("confidence", 0.7)),
-                        "score": 300.0,
+                        "score": 380.0 if node.get("source") == "llm_aggregated" else 300.0,
                     }
                 )
             elif source == "ability_boundaries.json" and "ability_id" in node:
+                if str(node.get("name") or "") in BAD_ACTION_NAMES:
+                    return
                 claim = " ".join(
                     str(part)
                     for part in [
@@ -188,12 +237,40 @@ def flatten_json(data: Any, source: str) -> list[dict[str, Any]]:
                         "score": 280.0,
                     }
                 )
+            elif source == "story_arcs.json" and "arc_id" in node:
+                claim = compact_parts(
+                    [
+                        node.get("summary", ""),
+                        node.get("why_it_matters", []),
+                        node.get("entry_conditions", []),
+                        node.get("progression_loops", []),
+                        node.get("risks", []),
+                        node.get("rewards", []),
+                    ],
+                    700,
+                )
+                rows.append(
+                    {
+                        "id": node.get("arc_id"),
+                        "type": "story_arc",
+                        "name": node.get("name", ""),
+                        "claim": claim,
+                        "aliases": node.get("type", ""),
+                        "evidence": " ".join(node.get("evidence_chunk_ids", [])),
+                        "source_json": source,
+                        "quality": float(node.get("confidence", 0.68)),
+                        "score": 520.0 if int(node.get("source_priority") or 0) >= 5 else 340.0 if node.get("canon_strength") == "high" else 300.0,
+                    }
+                )
             elif "name" in node and ("summary" in node or "claims" in node):
+                inferred = infer_type(source, path)
+                if inferred in {"item", "playable_hook"} and str(node.get("name") or "") in BAD_ACTION_NAMES:
+                    return
                 claim = str(node.get("summary", ""))[:520]
                 rows.append(
                     {
                         "id": f"{source}:{path}:{node.get('name')}",
-                        "type": infer_type(source, path),
+                        "type": inferred,
                         "name": node.get("name", ""),
                         "claim": claim,
                         "aliases": " ".join(node.get("aliases", [])),

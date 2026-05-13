@@ -10,10 +10,15 @@ from common import read_json, write_json, world_dir
 
 
 PROGRESS_WORDS = ("确认", "找到", "收集", "完成", "交付", "学习", "炼制", "购买", "交换", "接近", "准备", "获得")
+GENERIC_PROGRESS_WORDS = {"确认", "找到", "收集", "完成", "准备", "获得"}
 
 
 def active_quests(state: dict[str, Any]) -> list[dict[str, Any]]:
     return [quest for quest in state.setdefault("active_quests", []) if isinstance(quest, dict)]
+
+
+def is_background_quest(quest: dict[str, Any]) -> bool:
+    return quest.get("source") == "story_arcs.json" or bool(quest.get("story_arc_id"))
 
 
 def first_incomplete_objective(quest: dict[str, Any]) -> dict[str, Any] | None:
@@ -24,12 +29,22 @@ def first_incomplete_objective(quest: dict[str, Any]) -> dict[str, Any] | None:
 
 
 def quest_matches_input(quest: dict[str, Any], player_input: str) -> bool:
-    if quest.get("name") and quest["name"] in player_input:
-        return True
     objective = first_incomplete_objective(quest)
-    if objective and any(token in player_input for token in str(objective.get("text", "")).split("、")):
+    if not objective:
+        return False
+    objective_text = str(objective.get("text", ""))
+    tokens = [
+        token.strip(" ，。；、")
+        for token in objective_text.replace("、", " ").replace("，", " ").replace("。", " ").replace("；", " ").split()
+    ]
+    meaningful_tokens = [token for token in tokens if len(token) >= 2 and token not in GENERIC_PROGRESS_WORDS]
+    if any(token in player_input for token in meaningful_tokens):
         return True
-    return any(word in player_input for word in PROGRESS_WORDS)
+    quest_name = str(quest.get("name", ""))
+    if not quest_name or quest_name not in player_input:
+        return False
+    target_words = [word for word in ("目标", "委托", "来源", "实力", "报酬", "期限", "违约", "撤退", "报复", "路线") if word in objective_text]
+    return bool(target_words and any(word in player_input for word in target_words))
 
 
 def apply_quest_rewards(state: dict[str, Any], quest: dict[str, Any]) -> list[str]:
@@ -61,7 +76,7 @@ def progress_quests(state: dict[str, Any], player_input: str) -> tuple[list[str]
     for quest in active_quests(state):
         if quest.get("status") != "active" or not quest_matches_input(quest, player_input):
             objective = first_incomplete_objective(quest)
-            if objective:
+            if objective and not is_background_quest(quest):
                 options.append(objective.get("text", "推进任务目标"))
             continue
         objective = first_incomplete_objective(quest)
@@ -70,7 +85,7 @@ def progress_quests(state: dict[str, Any], player_input: str) -> tuple[list[str]
         objective["done"] = True
         messages.append(f"任务「{quest.get('name')}」目标完成：{objective.get('text')}")
         next_objective = first_incomplete_objective(quest)
-        if next_objective:
+        if next_objective and not is_background_quest(quest):
             options.append(next_objective.get("text", "推进下一目标"))
         else:
             quest["status"] = "completed"

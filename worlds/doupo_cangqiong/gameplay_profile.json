@@ -30,6 +30,11 @@
       "萧家",
       "云岚宗",
       "米特尔家族"
+    ],
+    "story_arcs": [
+      "乌坦城开局",
+      "异火线",
+      "炼药线"
     ]
   },
   "mechanisms": {
@@ -101,7 +106,7 @@
     },
     "consumable_crafting": {
       "enabled": true,
-      "evidence_count": 15,
+      "evidence_count": 17,
       "evidence": [
         {
           "source": "world_bible.json",
@@ -200,7 +205,7 @@
     },
     "market_window": {
       "enabled": true,
-      "evidence_count": 9,
+      "evidence_count": 10,
       "evidence": [
         {
           "source": "world_bible.json",
@@ -236,7 +241,7 @@
     },
     "faction_reaction": {
       "enabled": true,
-      "evidence_count": 19,
+      "evidence_count": 21,
       "evidence": [
         {
           "source": "world_bible.json",
@@ -272,7 +277,7 @@
     },
     "location_access": {
       "enabled": true,
-      "evidence_count": 4,
+      "evidence_count": 7,
       "evidence": [
         {
           "source": "factions.json",
@@ -297,6 +302,12 @@
           "name": "异火线",
           "matched": "探索",
           "claim": "异火线 玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。 玩家可通过地图、情报、药老指导和高风险探索追寻异火，但必须准备丹药、护体手段和退路。"
+        },
+        {
+          "source": "story_arcs.json",
+          "name": "乌坦城开局",
+          "matched": "入口",
+          "claim": "乌坦城开局 玩家可从乌坦城出发，围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险。 推进过急会带来竞争者、敌意、资源损耗或地点风险。 成功推进可获得资源、关系、情报、地点入口或成长机会。 这是原著中反复出现或能持续推动玩家行动的目标线。 玩家需要先获得线索、地点入口、关系许可或基础资源。 围绕萧家、退婚风波、拍卖场、筑基灵液和斗气修炼展开早期冒险 "
         }
       ]
     }
@@ -371,7 +382,7 @@
     ],
     "victory_note": "胜利仍需结算资源消耗、关系/声望、追踪痕迹和地点后果；只结算有 canon 证据支持的后果。",
     "fallback_used": false,
-    "evidence_count": 64
+    "evidence_count": 72
   },
   "events": {
     "enabled_mechanisms": [
@@ -479,7 +490,7 @@
     "fallback_used": false
   },
   "evidence_summary": {
-    "total_evidence_rows": 122,
+    "total_evidence_rows": 128,
     "sources": {
       "adventure_hooks.json": 1,
       "factions.json": 6,
@@ -487,6 +498,7 @@
       "locations.json": 3,
       "npcs.json": 1,
       "power_system.json": 11,
+      "story_arcs.json": 1,
       "techniques.json": 1,
       "world_bible.json": 5
     }

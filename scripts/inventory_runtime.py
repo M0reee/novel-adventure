@@ -7,6 +7,7 @@ from typing import Any
 
 from ability_runtime import evaluate_ability_use
 from common import read_json, write_json, world_dir
+from equipment_sets import refresh_player_set_bonuses
 from economy import load_market
 
 
@@ -69,7 +70,7 @@ def use_item(world: str, state: dict[str, Any], player_input: str) -> dict[str, 
     }
 
 
-def equip_item(state: dict[str, Any], player_input: str) -> dict[str, Any] | None:
+def equip_item(world: str, state: dict[str, Any], player_input: str) -> dict[str, Any] | None:
     if not any(word in player_input for word in EQUIP_WORDS):
         return None
     player = state.setdefault("player", {})
@@ -90,18 +91,19 @@ def equip_item(state: dict[str, Any], player_input: str) -> dict[str, Any] | Non
     del player.setdefault("inventory", [])[idx]
     if before:
         player["inventory"].append(before)
+    set_changes = refresh_player_set_bonuses(world, state)
     return {
         "kind": "inventory",
         "status": "resolved",
         "verdict": "装备已更换",
         "consequence": f"你将「{item.get('name')}」装备到「{slot}」。",
-        "state_changes": [f"装备槽 {slot} 更新为：{item.get('name')}"],
+        "state_changes": [f"装备槽 {slot} 更新为：{item.get('name')}", *set_changes],
         "options": ["查看最终属性。", "测试新装备。", "继续探索。"],
     }
 
 
 def resolve_inventory_action(world: str, state: dict[str, Any], player_input: str) -> dict[str, Any] | None:
-    return use_item(world, state, player_input) or equip_item(state, player_input)
+    return use_item(world, state, player_input) or equip_item(world, state, player_input)
 
 
 def main() -> None:

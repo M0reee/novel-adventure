@@ -126,35 +126,6 @@
       "canon_summary": "早期辅助修炼资源，可改善低阶修炼效率；需要药材、炼制能力或可靠购买渠道。"
     },
     {
-      "item_id": "item_afd95e4750",
-      "name": "聚气散",
-      "aliases": [],
-      "summary": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。",
-      "rarity": "epic",
-      "currency": "金币",
-      "price_range": [
-        6000,
-        15000
-      ],
-      "purchase_conditions": [
-        "拍卖或高阶炼药渠道",
-        "有足够金币或势力担保",
-        "确认适合冲击斗者"
-      ],
-      "alternate_acquisition": [
-        "取得药方与材料后请炼药师炼制",
-        "完成势力任务换取",
-        "等待拍卖会机会"
-      ],
-      "use_requirements": [
-        "拥有该物品",
-        "满足境界/身份/技能条件",
-        "有安全使用环境"
-      ],
-      "use_effect": {},
-      "canon_summary": "辅助凝聚斗之气旋、冲击斗者的重要丹药；来源稀缺，可能引发竞争和交易条件。"
-    },
-    {
       "item_id": "item_fbd3e6ede1",
       "name": "魔核",
       "aliases": [],
